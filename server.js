@@ -23,7 +23,7 @@ app.get("*", function(req, res) {
 
 //setting up MongoDB
 mongoose
-  .connect(`mongodb://localhost/Phit_DB`)
+  .connect(`mongodb://localhost/TEST_WORKOUT`)
   .then(() => console.log(`connected to mongoDB`))
   .catch(err => console.error(`No connection to mongoDB`, err));
 

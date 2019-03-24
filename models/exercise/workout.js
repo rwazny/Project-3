@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const resistance = require("./resistance");
-const cardio = require("./cardio");
+const cardio = require("./exercise/cardio");
 
 const workOutSchema = new mongoose.Schema({
   name: { type: String, required: true },
