@@ -6,14 +6,22 @@ const resistanceSchema = new mongoose.Schema({
   name: { type: String, required: true, min: 1, max: 250 },
   sets: { type: Number, required: true, min: 1, max: 250 },
   reps: {
-    type: Number,
+    type: [Number],
     required: function() {
-      return this.sets.toString().length || 1;
+      return 1 || this.sets;
     },
     min: 1,
     max: 250
   },
-  weight: { type: Number, required: true, min: 1, max: 250 }
+  weight: {
+    type: [Number],
+    required: true,
+    required: function() {
+      return 1 || this.sets;
+    },
+    min: 1,
+    max: 250
+  }
 });
 
 const cardioSchema = new mongoose.Schema({
