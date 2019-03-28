@@ -5,6 +5,11 @@ export default {
   getWorkOuts: function() {
     return axios.get("/api/workouts");
   },
+
+  //Gets all Nutrition
+  getNutrition: function(){
+    return axios.get("/api/nutrition");
+  },
   // Gets the book with the given id
   getBook: function(id) {
     return axios.get("/api/workouts/" + id);
