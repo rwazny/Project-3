@@ -1,18 +1,22 @@
-import React, { Component } from "react";
-import API from "../src/utils/API";
-import TableRow from "./components/TableRow";
+import React, { Component } from 'react';
+import API from '../src/utils/API';
+import auth from './firebase.js';
+import LogIn from './components/LogIn';
+import TableRow from './components/TableRow';
+
 class App extends Component {
   state = {
     resistanceToAdd: [],
-    cardioToAdd: []
+    cardioToAdd: [],
+    user: null
   };
   styles = {
     table: {
       table: {
-        borderCollapse: "collapse"
+        borderCollapse: 'collapse'
       },
       border: {
-        border: "1px solid #dddddd",
+        border: '1px solid #dddddd',
         width: 140
       }
     }
@@ -21,10 +25,22 @@ class App extends Component {
     API.getAllWorkOuts().then(res => {
       console.log(res);
     });
+    auth.onAuthStateChanged(firebaseUser => {
+      this.setState({
+        user: firebaseUser
+      });
+
+      if (firebaseUser) {
+        console.log(firebaseUser);
+      } else {
+        console.log('not logged in');
+      }
+    });
   };
+
   addExercise = event => {
     const { name } = event.target;
-    var joined = this.state[name].concat({ name: "" });
+    var joined = this.state[name].concat({ name: '' });
     this.setState({ [name]: joined });
   };
   handleInputChange = event => {
@@ -47,6 +63,10 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <div className="App">
+          {this.state.user && <h1>{this.state.user.email}</h1>}
+          <LogIn />
+        </div>
         <div>
           <button name="resistanceToAdd" onClick={this.addExercise}>
             Add Resistance Exercise
@@ -76,7 +96,7 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ""
+            ''
           )}
           <br />
           {this.state.cardioToAdd.length ? (
@@ -94,13 +114,13 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ""
+            ''
           )}
           {this.state.resistanceToAdd.length ||
           this.state.cardioToAdd.length ? (
             <button onClick={this.saveDay}>Save Day</button>
           ) : (
-            ""
+            ''
           )}
         </div>
       </React.Fragment>
