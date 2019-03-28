@@ -2,12 +2,16 @@ import axios from "axios";
 
 export default {
   // Gets all WorkOuts
-  getWorkOuts: function() {
+  getAllWorkOuts: function() {
     return axios.get("/api/workouts");
   },
-  // Gets the book with the given id
-  getBook: function(id) {
-    return axios.get("/api/workouts/" + id);
+  // Gets all WorkOuts
+  getSavedWorkOuts: function() {
+    return axios.get("/api/savedworkouts");
+  },
+  //
+  addExercise: function(data) {
+    return axios.post("/api/workouts", data);
   },
   // Deletes the book with the given id
   deleteBook: function(id) {

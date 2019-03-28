@@ -1,17 +1,17 @@
 // ~~~Worry about breaking into seperate file later~~~
 const mongoose = require(`mongoose`);
 
-//Required portion for reps schema does not work
 const resistanceSchema = new mongoose.Schema({
-  name: { type: String, required: true, min: 1, max: 250 },
-  sets: { type: Number, required: true, min: 1, max: 250 },
+  name: { type: String, required: true, min: 1, max: 10000, trim: true },
+  sets: { type: Number, required: true, min: 1, max: 10000, trim: true },
   reps: {
     type: [Number],
     required: function() {
       return 1 || this.sets;
     },
-    min: 1,
-    max: 250
+    min: 0,
+    max: 10000,
+    trim: true
   },
   weight: {
     type: [Number],
@@ -19,34 +19,37 @@ const resistanceSchema = new mongoose.Schema({
     required: function() {
       return 1 || this.sets;
     },
-    min: 1,
-    max: 250
+    min: 0,
+    max: 10000,
+    trim: true
   }
 });
 
 const cardioSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, trim: true },
   distance: {
     type: Number,
     required: function() {
       return !this.time; //only required if there is no time
     },
-    min: 1,
-    max: 250
+    min: 0,
+    max: 10000,
+    trim: true
   },
   time: {
     type: Number,
     required: function() {
       return !this.distance; //only required if there is no distance
     },
-    min: 1,
-    max: 250
+    min: 0,
+    max: 10000,
+    trim: true
   }
 });
 
 const workOutSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
-  name: { type: String, unique: true, min: 1, max: 250 },
+  name: { type: String, unique: true, min: 1, max: 250, trim: true },
   resistance: {
     type: [resistanceSchema],
     required: function() {
@@ -62,4 +65,5 @@ const workOutSchema = new mongoose.Schema({
 });
 
 const WorkOut = mongoose.model("WorkOut", workOutSchema);
+
 module.exports = WorkOut;
