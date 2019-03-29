@@ -17,9 +17,9 @@ export default {
   getNutrition: function() {
     return axios.get("/api/nutrition");
   },
-  // Gets the book with the given id
-  getBook: function(id) {
-    return axios.get("/api/workouts/" + id);
+
+  saveWorkOut: function(data) {
+    return axios.post("/api/savedworkouts", data);
   },
   // Deletes the book with the given id
   deleteBook: function(id) {

@@ -18,6 +18,10 @@ module.exports = {
   addExercise: function(req, res) {
     console.log(req.body);
     db.create(req.body);
+  },
+
+  saveWorkOut: function(req, res) {
+    db.create(req.body);
   }
   // deleteWorkOut: function(req, res) {
   //   db.findById({ _id: req.params.id })
