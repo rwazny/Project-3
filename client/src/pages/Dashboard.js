@@ -104,9 +104,9 @@ class Dashboard extends Component {
   };
 
   handleInputChange = event => {
-    console.log(event.target);
-    // this.state.resistanceToAdd[id][name] = value;
-    // this.setState({ resistanceToAdd: this.state.resistanceToAdd });
+    const { value, id, name } = event.currentTarget;
+    this.state.resistanceToAdd[id][name] = value;
+    this.setState({ resistanceToAdd: this.state.resistanceToAdd });
   };
 
   saveDay = () => {
@@ -114,7 +114,7 @@ class Dashboard extends Component {
       WorkOut: {
         name: this.state.woName,
         resistance: {
-          name: this.state.resistanceToAdd[0].exerciseName,
+          name: this.state.resistanceToAdd[0].name,
           sets: parseInt(this.state.resistanceToAdd[0].sets),
           reps: parseInt(this.state.resistanceToAdd[0].reps),
           weight: parseInt(this.state.resistanceToAdd[0].weight)
@@ -246,6 +246,7 @@ class Dashboard extends Component {
 
                 {this.state.resistanceToAdd.length ? (
                   <SimpleTable
+                    exerciseType="resistanceToAdd"
                     changeHandler={this.handleInputChange}
                     newValue={this.state.resistanceToAdd}
                     headings={["Exercise", "Sets", "Reps", "Weight"]}
@@ -270,6 +271,7 @@ class Dashboard extends Component {
                     variant="contained"
                     size="small"
                     color="primary"
+                    onClick={this.saveDay}
                     className={classes.button}
                   >
                     Save

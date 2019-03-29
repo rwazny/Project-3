@@ -42,7 +42,8 @@ function SimpleTable(props) {
             <TableRow key={index}>
               <TableCell style={{ padding: 10 }}>
                 <TextField
-                  id="standard-name"
+                  id={index}
+                  name="name"
                   value={props.newValue[index].value}
                   onChange={props.changeHandler}
                   label="Exercise"
@@ -52,9 +53,11 @@ function SimpleTable(props) {
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
                 <TextField
-                  id="standard-number"
+                  id={index}
                   label={props.headings[1]}
+                  name={props.headings[1].toLowerCase()}
                   type="number"
+                  onChange={props.changeHandler}
                   className={classes.numberField}
                   InputLabelProps={{
                     shrink: true
@@ -64,10 +67,12 @@ function SimpleTable(props) {
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
                 <TextField
-                  id="standard-number"
+                  id={index}
                   label={props.headings[2]}
+                  name={props.headings[2].toLowerCase()}
                   type="number"
                   className={classes.numberField}
+                  onChange={props.changeHandler}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -77,10 +82,12 @@ function SimpleTable(props) {
               {props.headings.length > 3 ? (
                 <TableCell style={{ padding: 10 }} align="right">
                   <TextField
-                    id="standard-number"
-                    label="Weight"
+                    id={index}
+                    label={props.headings[3]}
+                    name={props.headings[3].toLowerCase()}
                     type="number"
                     className={classes.numberField}
+                    onChange={props.changeHandler}
                     InputLabelProps={{
                       shrink: true
                     }}
