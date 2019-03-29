@@ -1,46 +1,58 @@
-import React, { Component } from 'react';
-import API from '../src/utils/API';
-import auth from './firebase.js';
-import LogIn from './components/LogIn';
-import TableRow from './components/TableRow';
+import React, { Component } from "react";
+import API from "../src/utils/API";
+import auth from "./firebase.js";
+import LogIn from "./components/LogIn";
+import TableRow from "./components/TableRow";
+import Tab from "./components/Tab";
 
 class App extends Component {
   state = {
     resistanceToAdd: [],
     cardioToAdd: [],
-    user: null
+    user: null,
+    workoutDate: null,
+    selectedWorkout: null
   };
   styles = {
     table: {
       table: {
-        borderCollapse: 'collapse'
+        borderCollapse: "collapse"
       },
       border: {
-        border: '1px solid #dddddd',
+        border: "1px solid #dddddd",
         width: 140
       }
     }
   };
   componentDidMount = () => {
     API.getAllWorkOuts().then(res => {
-      console.log(res);
-    });
-    auth.onAuthStateChanged(firebaseUser => {
-      this.setState({
-        user: firebaseUser
-      });
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, "0");
+      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      var yyyy = today.getFullYear();
+      today = yyyy + "-" + mm + "-" + dd;
+      console.log(today);
+      this.setState({ workoutDate: today });
 
-      if (firebaseUser) {
-        console.log(firebaseUser);
-      } else {
-        console.log('not logged in');
-      }
+      console.log(res);
+
+      auth.onAuthStateChanged(firebaseUser => {
+        this.setState({
+          user: firebaseUser
+        });
+
+        if (firebaseUser) {
+          console.log(firebaseUser);
+        } else {
+          console.log("not logged in");
+        }
+      });
     });
   };
 
   addExercise = event => {
     const { name } = event.target;
-    var joined = this.state[name].concat({ name: '' });
+    var joined = this.state[name].concat({ name: "" });
     this.setState({ [name]: joined });
   };
   handleInputChange = event => {
@@ -60,6 +72,15 @@ class App extends Component {
     API.addExercise(data);
     console.log(data);
   };
+
+  selectDate = event => {
+    this.setState({ workoutDate: event.target.value });
+  };
+
+  selectWorktout = event => {
+    this.setState({ selectedWorkout: event.target.value });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -67,7 +88,32 @@ class App extends Component {
           {this.state.user && <h1>{this.state.user.email}</h1>}
           <LogIn />
         </div>
-        <div>
+        <br />
+        <br />
+        <Tab>
+          <select onChange={this.selectWorktout}>
+            <option value="" disabled selected>
+              Select a workout
+            </option>
+            <option>Bench</option>
+          </select>
+          <input
+            value={this.state.workoutDate}
+            onChange={this.selectDate}
+            type="date"
+            name="workoutDate"
+          />
+          {this.state.selectedWorkout ? (
+            <button>Save Workout</button>
+          ) : (
+            <button disabled>Save Workout</button>
+          )}
+
+          <button>New Workout</button>
+          <br />
+          <input type="text" value={this.state.selectedWorkout} />
+          <br />
+
           <button name="resistanceToAdd" onClick={this.addExercise}>
             Add Resistance Exercise
           </button>
@@ -96,7 +142,7 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ''
+            ""
           )}
           <br />
           {this.state.cardioToAdd.length ? (
@@ -114,15 +160,15 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ''
+            ""
           )}
           {this.state.resistanceToAdd.length ||
           this.state.cardioToAdd.length ? (
             <button onClick={this.saveDay}>Save Day</button>
           ) : (
-            ''
+            ""
           )}
-        </div>
+        </Tab>
       </React.Fragment>
     );
   }
