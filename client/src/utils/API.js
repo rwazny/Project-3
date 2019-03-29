@@ -5,6 +5,7 @@ export default {
   getAllWorkOuts: function() {
     return axios.get("/api/workouts");
   },
+<<<<<<< HEAD
   // Gets all WorkOuts
   getSavedWorkOuts: function() {
     return axios.get("/api/savedworkouts");
@@ -12,6 +13,16 @@ export default {
   //
   addExercise: function(data) {
     return axios.post("/api/workouts", data);
+=======
+
+  //Gets all Nutrition
+  getNutrition: function(){
+    return axios.get("/api/nutrition");
+  },
+  // Gets the book with the given id
+  getBook: function(id) {
+    return axios.get("/api/workouts/" + id);
+>>>>>>> Meal
   },
   // Deletes the book with the given id
   deleteBook: function(id) {
