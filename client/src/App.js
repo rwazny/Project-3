@@ -11,7 +11,8 @@ class App extends Component {
     cardioToAdd: [],
     user: null,
     workoutDate: null,
-    selectedWorkout: null
+    selectedWorkout: null,
+    woName: ""
   };
   styles = {
     table: {
@@ -62,14 +63,18 @@ class App extends Component {
   };
   saveDay = () => {
     const data = {
-      resistance: {
-        name: this.state.resistanceToAdd[0].exerciseName,
-        sets: parseInt(this.state.resistanceToAdd[0].sets),
-        reps: parseInt(this.state.resistanceToAdd[0].reps),
-        weight: parseInt(this.state.resistanceToAdd[0].weight)
+      WorkOut: {
+        name: this.state.woName,
+        resistance: {
+          name: this.state.resistanceToAdd[0].exerciseName,
+          sets: parseInt(this.state.resistanceToAdd[0].sets),
+          reps: parseInt(this.state.resistanceToAdd[0].reps),
+          weight: parseInt(this.state.resistanceToAdd[0].weight)
+        }
       }
     };
-    API.addExercise(data);
+    //SAVE WORKOUT, NOT SINGLE EXERCISE
+    API.saveWorkOut(data.WorkOut);
     console.log(data);
   };
 
