@@ -11,7 +11,8 @@ class App extends Component {
     cardioToAdd: [],
     user: null,
     workoutDate: null,
-    selectedWorkout: null
+    selectedWorkout: null,
+    woName: ""
   };
   styles = {
     table: {
