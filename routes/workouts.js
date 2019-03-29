@@ -8,8 +8,10 @@ router
   .post(workOutController.addExercise);
 
 //gets presaved workouts
-router.route("/api/savedworkouts").get(workOutController.findSavedWorkOuts);
-// .post(workOutController.create);
+router
+  .route("/api/savedworkouts")
+  .get(workOutController.findSavedWorkOuts)
+  .post(workOutController.saveWorkOut);
 
 // router
 //   .route("/api/workouts/:id")

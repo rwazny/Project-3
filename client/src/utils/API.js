@@ -13,6 +13,10 @@ export default {
   addExercise: function(data) {
     return axios.post("/api/workouts", data);
   },
+
+  saveWorkOut: function(data) {
+    return axios.post("/api/savedworkouts", data);
+  },
   // Deletes the book with the given id
   deleteBook: function(id) {
     return axios.delete("/api/workouts/" + id);

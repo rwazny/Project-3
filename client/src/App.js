@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import API from '../src/utils/API';
-import auth from './firebase.js';
-import LogIn from './components/LogIn';
-import TableRow from './components/TableRow';
+import React, { Component } from "react";
+import API from "../src/utils/API";
+import auth from "./firebase.js";
+import LogIn from "./components/LogIn";
+import TableRow from "./components/TableRow";
 
 class App extends Component {
   state = {
     resistanceToAdd: [],
     cardioToAdd: [],
-    user: null
+    user: null,
+    woName: "HELLO"
   };
   styles = {
     table: {
       table: {
-        borderCollapse: 'collapse'
+        borderCollapse: "collapse"
       },
       border: {
-        border: '1px solid #dddddd',
+        border: "1px solid #dddddd",
         width: 140
       }
     }
@@ -33,14 +34,14 @@ class App extends Component {
       if (firebaseUser) {
         console.log(firebaseUser);
       } else {
-        console.log('not logged in');
+        console.log("not logged in");
       }
     });
   };
 
   addExercise = event => {
     const { name } = event.target;
-    var joined = this.state[name].concat({ name: '' });
+    var joined = this.state[name].concat({ name: "" });
     this.setState({ [name]: joined });
   };
   handleInputChange = event => {
@@ -50,14 +51,18 @@ class App extends Component {
   };
   saveDay = () => {
     const data = {
-      resistance: {
-        name: this.state.resistanceToAdd[0].exerciseName,
-        sets: parseInt(this.state.resistanceToAdd[0].sets),
-        reps: parseInt(this.state.resistanceToAdd[0].reps),
-        weight: parseInt(this.state.resistanceToAdd[0].weight)
+      WorkOut: {
+        name: this.state.woName,
+        resistance: {
+          name: this.state.resistanceToAdd[0].exerciseName,
+          sets: parseInt(this.state.resistanceToAdd[0].sets),
+          reps: parseInt(this.state.resistanceToAdd[0].reps),
+          weight: parseInt(this.state.resistanceToAdd[0].weight)
+        }
       }
     };
-    API.addExercise(data);
+    //SAVE WORKOUT, NOT SINGLE EXERCISE
+    API.saveWorkOut(data.WorkOut);
     console.log(data);
   };
   render() {
@@ -68,6 +73,7 @@ class App extends Component {
           <LogIn />
         </div>
         <div>
+          <div>{this.state.woName}</div>
           <button name="resistanceToAdd" onClick={this.addExercise}>
             Add Resistance Exercise
           </button>
@@ -96,7 +102,7 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ''
+            ""
           )}
           <br />
           {this.state.cardioToAdd.length ? (
@@ -114,13 +120,13 @@ class App extends Component {
               </tbody>
             </table>
           ) : (
-            ''
+            ""
           )}
           {this.state.resistanceToAdd.length ||
           this.state.cardioToAdd.length ? (
             <button onClick={this.saveDay}>Save Day</button>
           ) : (
-            ''
+            ""
           )}
         </div>
       </React.Fragment>
