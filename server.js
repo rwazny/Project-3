@@ -23,8 +23,9 @@ app.get("*", function(req, res) {
 });
 
 //setting up MongoDB
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/TEST_WORKOUT";
 mongoose
-  .connect(`mongodb://localhost/TEST_WORKOUT`)
+  .connect(MONGODB_URI)
   .then(() => console.log(`connected to mongoDB`))
   .catch(err => console.error(`No connection to mongoDB`, err));
 
