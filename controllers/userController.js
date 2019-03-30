@@ -14,6 +14,10 @@ module.exports = {
     })
       .then(yeet => console.log(yeet))
       .catch(err => console.log(err));
-    console.log(`THIS!!! ${req.body.userId}`);
+  },
+  findUserWorkOuts: function(req, res) {
+    db.User.findById({ _id: req.params.id })
+      .populate("workouts")
+      .then(data => res.json(data));
   }
 };
