@@ -1,5 +1,6 @@
 // ~~~Worry about breaking into seperate file later~~~
 const mongoose = require(`mongoose`);
+const Schema = mongoose.Schema;
 
 const resistanceSchema = new mongoose.Schema({
   name: { type: String, required: true, min: 1, max: 10000, trim: true },

@@ -121,9 +121,10 @@ class Dashboard extends Component {
         }
       }
     };
-    //SAVE WORKOUT, NOT SINGLE EXERCISE
-    API.saveWorkOut(data.WorkOut);
-    console.log(data);
+    // SAVE WORKOUT, NOT SINGLE EXERCISE
+    API.saveWorkOut(data.WorkOut).then(res =>
+      API.pushWorkOut({ userId: localStorage.userId, id: res.data._id })
+    );
   };
 
   selectDate = event => {

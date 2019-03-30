@@ -1,15 +1,15 @@
-const db = require("../../models/exercise/workout");
+const db = require("../../models");
 
 module.exports = {
   findSavedWorkOuts: function(req, res) {
-    db.WorkOut.find({ name: { $ne: null } })
+    db.find({ name: { $ne: null } })
       .sort({ name: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
 
   findAllWorkOuts: function(req, res) {
-    db.find({})
+    db.WorkOut.find({})
       .sort({ date: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
@@ -17,11 +17,18 @@ module.exports = {
 
   addExercise: function(req, res) {
     console.log(req.body);
-    db.create(req.body);
+    db.WorkOut.create(req.body);
   },
 
   saveWorkOut: function(req, res) {
-    db.create(req.body);
+    console.log(req.body);
+    db.WorkOut.create(req.body)
+      .then(dbData => {
+        res.json(dbData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
   // deleteWorkOut: function(req, res) {
   //   db.findById({ _id: req.params.id })

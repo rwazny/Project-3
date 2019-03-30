@@ -1,15 +1,15 @@
 const router = require("express").Router();
-const workOutController = require("../controllers/workout/workOutController");
+const workOutController = require("../../controllers/workout/workOutController");
 
 //gets all workouts, used for finding individual exercises
 router
-  .route("/api/workouts")
+  .route("/")
   .get(workOutController.findAllWorkOuts)
   .post(workOutController.addExercise);
 
 //gets presaved workouts
 router
-  .route("/api/savedworkouts")
+  .route("/savedworkouts")
   .get(workOutController.findSavedWorkOuts)
   .post(workOutController.saveWorkOut);
 
