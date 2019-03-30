@@ -1,6 +1,12 @@
 const router = require("express").Router();
 const workOutController = require("../controllers/workout/workOutController");
+const userController = require("../controllers/userController");
 
+//gets all workouts, used for finding individual exercises
+router
+  .route("/api/users")
+  .get(userController.findUser)
+  .post(userController.createUser);
 //gets all workouts, used for finding individual exercises
 router
   .route("/api/workouts")

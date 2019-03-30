@@ -1,19 +1,17 @@
-import React from 'react';
-import auth from '../firebase';
-
+import React from "react";
+import auth from "../firebase";
+import API from "../utils/API";
 class Login extends React.Component {
   state = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     errors: null
   };
-
   handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
   };
-
   createAccount = () => {
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -21,6 +19,7 @@ class Login extends React.Component {
         this.setState({
           errors: null
         });
+        API.createUser({ email: this.state.email });
       })
       .catch(error => {
         this.setState({
@@ -28,7 +27,6 @@ class Login extends React.Component {
         });
       });
   };
-
   signIn = () => {
     auth
       .signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -43,11 +41,9 @@ class Login extends React.Component {
         });
       });
   };
-
   signOut = () => {
     auth.signOut();
   };
-
   render() {
     return (
       <div>
@@ -57,7 +53,6 @@ class Login extends React.Component {
           value={this.state.email}
           onChange={this.handleChange}
         />
-
         <input
           placeholder="Password"
           type="password"
@@ -65,7 +60,6 @@ class Login extends React.Component {
           value={this.state.password}
           onChange={this.handleChange}
         />
-
         <button onClick={this.createAccount}>Create Account</button>
         <button onClick={this.signIn}>Sign In</button>
         <button onClick={this.signOut}>Sign Out</button>
@@ -74,5 +68,4 @@ class Login extends React.Component {
     );
   }
 }
-
 export default Login;

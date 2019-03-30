@@ -62,9 +62,14 @@ class App extends Component {
     this.setState({ resistanceToAdd: this.state.resistanceToAdd });
   };
   saveDay = () => {
+    API.findUser({}).then(res => {
+      console.log(res);
+    });
+
     const data = {
       WorkOut: {
         name: this.state.woName,
+        user: this.state.user._id,
         resistance: {
           name: this.state.resistanceToAdd[0].exerciseName,
           sets: parseInt(this.state.resistanceToAdd[0].sets),
@@ -74,8 +79,8 @@ class App extends Component {
       }
     };
     //SAVE WORKOUT, NOT SINGLE EXERCISE
-    API.saveWorkOut(data.WorkOut);
-    console.log(data);
+    // API.saveWorkOut(data.WorkOut);
+    // console.log(data.WorkOut);
   };
 
   selectDate = event => {

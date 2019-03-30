@@ -21,6 +21,17 @@ export default {
   saveWorkOut: function(data) {
     return axios.post("/api/savedworkouts", data);
   },
+
+  //--------------------USER--------------------------
+
+  createUser: function(data) {
+    console.log(`hey qt 3.14`);
+    return axios.post("/api/users", data);
+  },
+
+  findUser: function(data) {
+    return axios.get("/api/users");
+  },
   // Deletes the book with the given id
   deleteBook: function(id) {
     return axios.delete("/api/workouts/" + id);
