@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Meal from "./pages/Meal";
+import Dashboard from "./pages/Dashboard";
 //import NoMatch from "./pages/NoMatch";
 
 function App() {
@@ -8,7 +9,8 @@ function App() {
     <Router>
       <div>
         <Switch>
-          <Route exact path="/" component={Meal} />
+          <Route exact path="/meal" component={Meal} />
+          <Route exact path="/dashboard" component={Dashboard} />
           {/* <Route component={NoMatch} /> */}
         </Switch>
       </div>
@@ -17,4 +19,3 @@ function App() {
 }
 
 export default App;
-
