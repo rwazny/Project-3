@@ -24,7 +24,7 @@ export default {
   },
 
   saveWorkOut: function(data) {
-    return axios.post("/api/savedworkouts", data);
+    return axios.post("/api/workouts/savedworkouts", data);
   },
 
   //--------------------USER--------------------------

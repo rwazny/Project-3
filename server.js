@@ -3,7 +3,7 @@ const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const mongoose = require("mongoose");
-const workoutRoute = require("./routes/workouts");
+const routes = require("./routes");
 
 //Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 //adding routes
-app.use(workoutRoute);
+app.use(routes);
 
 // Send every request to the React app
 // Define any API routes before this runs
