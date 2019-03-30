@@ -3,7 +3,8 @@ const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const mongoose = require("mongoose");
-const routes = require("./routes/workouts");
+// const routes = require("./routes/workouts");
+const routes = require("./routes");
 
 //Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -22,8 +23,9 @@ app.get("*", function(req, res) {
 });
 
 //setting up MongoDB
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/TEST_WORKOUT";
 mongoose
-  .connect(`mongodb://localhost/TEST_WORKOUT`)
+  .connect(MONGODB_URI)
   .then(() => console.log(`connected to mongoDB`))
   .catch(err => console.error(`No connection to mongoDB`, err));
 
