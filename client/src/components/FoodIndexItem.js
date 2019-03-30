@@ -2,6 +2,7 @@ import React from "react";
 
 export function FoodIndexItem({
   name,
+  brand_name,
   calories,
   protein,
   carbohydrates,
@@ -14,6 +15,7 @@ export function FoodIndexItem({
           <b>
             {name}
           </b>
+          <p>brand_name: {brand_name}</p>
           <p>Calories: {calories}</p>
           <p>Protein: {protein} g</p>
           <p>Total Carbs: {carbohydrates} g</p>

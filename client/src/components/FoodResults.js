@@ -26,6 +26,7 @@ class FoodResults extends Component {
         <div id="food-results">
           {this.props.results.map((element, index) => {
             const name = element.food_name;
+            const brand_name = element.brand_name;
             const calories = element.nf_calories;
             const protein = element.nf_protein;
             const carbohydrates = element.nf_total_carbohydrate;
@@ -35,10 +36,12 @@ class FoodResults extends Component {
               <FoodIndexItem
                 name={name}
                 key={`food-idx-${index}`}
+                brand_name={brand_name}
                 calories={calories}
                 protein={protein}
                 carbohydrates={carbohydrates}
                 fats={fats}
+              
               />
             );
           })}
