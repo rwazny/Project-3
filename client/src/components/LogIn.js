@@ -19,7 +19,9 @@ class Login extends React.Component {
         this.setState({
           errors: null
         });
-        API.createUser({ email: this.state.email });
+        API.createUser({ email: this.state.email }).then(
+          res => (localStorage.userId = res.data._id)
+        );
       })
       .catch(error => {
         this.setState({

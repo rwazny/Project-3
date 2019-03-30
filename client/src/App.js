@@ -75,7 +75,7 @@ class App extends Component {
     };
     // SAVE WORKOUT, NOT SINGLE EXERCISE
     API.saveWorkOut(data.WorkOut).then(res =>
-      API.pushWorkOut({ email: this.state.user.email, id: res._id })
+      API.pushWorkOut({ userId: localStorage.userId, id: res.data._id })
     );
   };
 

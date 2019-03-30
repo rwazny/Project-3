@@ -30,7 +30,6 @@ export default {
   //--------------------USER--------------------------
 
   createUser: function(data) {
-    console.log(`hey qt 3.14`);
     return axios.post("/api/users", data);
   },
 

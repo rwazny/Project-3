@@ -3,15 +3,17 @@ const ObjectId = require("mongodb").ObjectID;
 module.exports = {
   createUser: function(req, res) {
     console.log(req.body);
-    db.User.create(req.body);
+    db.User.create(req.body).then(userData => res.json(userData));
   },
   findUser: function(req, res) {
     db.User.findOne(req.body).then(dbData => res.json(dbData));
   },
   pushWorkOut: function(req, res) {
-    db.User.findOneAndUpdate(
-      { email: req.body.email },
-      { $push: { workouts: ObjectId(req.body.id) } }
-    );
+    db.User.findByIdAndUpdate(req.body.userId, {
+      $push: { workouts: req.body.id }
+    })
+      .then(yeet => console.log(yeet))
+      .catch(err => console.log(err));
+    console.log(`THIS!!! ${req.body.userId}`);
   }
 };
