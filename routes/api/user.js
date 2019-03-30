@@ -7,4 +7,5 @@ router
   .post(userController.createUser)
   .put(userController.pushWorkOut);
 
+router.route("/workouts/:id").get(userController.findUserWorkOuts);
 module.exports = router;

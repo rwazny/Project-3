@@ -36,6 +36,9 @@ class Login extends React.Component {
         this.setState({
           errors: null
         });
+        API.findUser({ email: this.state.email }).then(
+          res => (localStorage.userId = res.data._id)
+        );
       })
       .catch(function(error) {
         this.setState({

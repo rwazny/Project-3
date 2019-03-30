@@ -73,28 +73,24 @@ class Dashboard extends Component {
   };
 
   componentDidMount = () => {
-    API.getAllWorkOuts().then(res => {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
-      today = yyyy + "-" + mm + "-" + dd;
-      console.log(today);
-      this.setState({ workoutDate: today });
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    console.log(today);
+    this.setState({ workoutDate: today });
 
-      console.log(res);
-
-      auth.onAuthStateChanged(firebaseUser => {
-        this.setState({
-          user: firebaseUser
-        });
-
-        if (firebaseUser) {
-          console.log(firebaseUser);
-        } else {
-          console.log("not logged in");
-        }
+    auth.onAuthStateChanged(firebaseUser => {
+      this.setState({
+        user: firebaseUser
       });
+
+      if (firebaseUser) {
+        console.log(firebaseUser);
+      } else {
+        console.log("not logged in");
+      }
     });
   };
 
@@ -108,19 +104,38 @@ class Dashboard extends Component {
     this.state.resistanceToAdd[id][name] = value;
     this.setState({ resistanceToAdd: this.state.resistanceToAdd });
   };
-
+  handleCardio = event => {
+    const { value, id, name } = event.currentTarget;
+    this.state.cardioToAdd[id][name] = value;
+    this.setState({ cardioToAdd: this.state.cardioToAdd });
+  };
+  loadWorkOuts = event => {
+    API.findUserWorkOuts(localStorage.userId).then(res => console.log(res));
+  };
   saveDay = () => {
-    const data = {
-      WorkOut: {
-        name: this.state.woName,
-        resistance: {
-          name: this.state.resistanceToAdd[0].name,
-          sets: parseInt(this.state.resistanceToAdd[0].sets),
-          reps: parseInt(this.state.resistanceToAdd[0].reps),
-          weight: parseInt(this.state.resistanceToAdd[0].weight)
-        }
-      }
-    };
+    let data = { WorkOut: {} };
+    if (this.state.resistanceToAdd.length) {
+      data.WorkOut["resistance"] = [];
+      this.state.resistanceToAdd.map(resistance => {
+        data.WorkOut.resistance.push({
+          name: resistance.name,
+          sets: parseInt(resistance.sets),
+          reps: parseInt(resistance.reps),
+          weight: parseInt(resistance.weight)
+        });
+      });
+    }
+    if (this.state.cardioToAdd.length) {
+      data.WorkOut["cardio"] = [];
+      this.state.cardioToAdd.map(cardio => {
+        data.WorkOut.cardio.push({
+          name: cardio.name,
+          distance: parseInt(cardio.distance),
+          time: parseInt(cardio.time)
+        });
+      });
+    }
+    console.log(data);
     // SAVE WORKOUT, NOT SINGLE EXERCISE
     API.saveWorkOut(data.WorkOut).then(res =>
       API.pushWorkOut({ userId: localStorage.userId, id: res.data._id })
@@ -197,6 +212,7 @@ class Dashboard extends Component {
                     size="small"
                     color="primary"
                     className={classes.button}
+                    onClick={this.loadWorkOuts}
                   >
                     Save Workout
                   </Button>
@@ -259,6 +275,9 @@ class Dashboard extends Component {
                 <br />
                 {this.state.cardioToAdd.length ? (
                   <SimpleTable
+                    exerciseType="cardioToAdd"
+                    changeHandler={this.handleCardio}
+                    newValue={this.state.cardioToAdd}
                     headings={["Exercise", "Distance", "Time"]}
                     rows={this.state.cardioToAdd}
                   />
