@@ -6,7 +6,8 @@ const userController = require("../controllers/userController");
 router
   .route("/api/users")
   .get(userController.findUser)
-  .post(userController.createUser);
+  .post(userController.createUser)
+  .put(userController.pushWorkOut);
 //gets all workouts, used for finding individual exercises
 router
   .route("/api/workouts")

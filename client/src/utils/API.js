@@ -9,7 +9,12 @@ export default {
   getSavedWorkOuts: function() {
     return axios.get("/api/savedworkouts");
   },
-  //
+
+  //Push workout to User object
+  pushWorkOut: function(data) {
+    return axios.put("/api/users", data);
+  },
+  //add single exercise
   addExercise: function(data) {
     return axios.post("/api/workouts", data);
   },
@@ -30,7 +35,7 @@ export default {
   },
 
   findUser: function(data) {
-    return axios.get("/api/users");
+    return axios.get("/api/users", data);
   },
   // Deletes the book with the given id
   deleteBook: function(id) {

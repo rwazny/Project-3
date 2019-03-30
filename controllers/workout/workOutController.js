@@ -21,10 +21,10 @@ module.exports = {
   },
 
   saveWorkOut: function(req, res) {
-    console.log(req.body)
+    console.log(req.body);
     db.WorkOut.create(req.body)
-      .then(res => {
-        console.log(res)
+      .then(dbData => {
+        res.json(dbData);
       })
       .catch(err => {
         console.log(err);

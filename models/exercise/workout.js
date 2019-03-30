@@ -50,7 +50,6 @@ const cardioSchema = new mongoose.Schema({
 
 const workOutSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
-  user: { type: Schema.Types.ObjectId, ref: "User", index: true },
   name: { type: String, unique: true, min: 1, max: 250, trim: true },
   resistance: {
     type: [resistanceSchema],
