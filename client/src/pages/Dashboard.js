@@ -114,7 +114,7 @@ class Dashboard extends Component {
       WorkOut: {
         name: this.state.woName,
         resistance: {
-          name: this.state.resistanceToAdd[0].exerciseName,
+          name: this.state.resistanceToAdd[0].name,
           sets: parseInt(this.state.resistanceToAdd[0].sets),
           reps: parseInt(this.state.resistanceToAdd[0].reps),
           weight: parseInt(this.state.resistanceToAdd[0].weight)
