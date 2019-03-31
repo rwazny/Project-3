@@ -49,7 +49,8 @@ class Dashboard extends Component {
     user: null,
     workoutDate: null,
     selectedWorkout: null,
-    woName: ""
+    woName: "",
+    savedWorkouts: []
   };
 
   styles = {
@@ -73,6 +74,10 @@ class Dashboard extends Component {
   };
 
   componentDidMount = () => {
+    API.findUserWorkOuts(localStorage.userId).then(res => {
+      let savedArray = res.data.workouts.filter(workout => workout.name);
+      this.setState({ savedWorkouts: savedArray });
+    });
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -104,6 +109,10 @@ class Dashboard extends Component {
     this.state.resistanceToAdd[id][name] = value;
     this.setState({ resistanceToAdd: this.state.resistanceToAdd });
   };
+  handleNameChange = event => {
+    const { value } = event.currentTarget;
+    this.setState({ woName: value });
+  };
   handleCardio = event => {
     const { value, id, name } = event.currentTarget;
     this.state.cardioToAdd[id][name] = value;
@@ -113,9 +122,14 @@ class Dashboard extends Component {
     API.findUserWorkOuts(localStorage.userId).then(res => console.log(res));
   };
   saveDay = () => {
-    let data = { WorkOut: {} };
+    let data = {
+      WorkOut: { date: this.state.workoutDate, resistance: [], cardio: [] }
+    };
+
+    if (this.state.woName) {
+      data.WorkOut["name"] = this.state.woName;
+    }
     if (this.state.resistanceToAdd.length) {
-      data.WorkOut["resistance"] = [];
       this.state.resistanceToAdd.map(resistance => {
         data.WorkOut.resistance.push({
           name: resistance.name,
@@ -126,7 +140,6 @@ class Dashboard extends Component {
       });
     }
     if (this.state.cardioToAdd.length) {
-      data.WorkOut["cardio"] = [];
       this.state.cardioToAdd.map(cardio => {
         data.WorkOut.cardio.push({
           name: cardio.name,
@@ -135,15 +148,99 @@ class Dashboard extends Component {
         });
       });
     }
+
     console.log(data);
     // SAVE WORKOUT, NOT SINGLE EXERCISE
-    API.saveWorkOut(data.WorkOut).then(res =>
-      API.pushWorkOut({ userId: localStorage.userId, id: res.data._id })
-    );
+    API.saveWorkOut(data.WorkOut).then(res => {
+      if (res.data.upserted) {
+        API.pushWorkOut({
+          userId: localStorage.userId,
+          id: res.data.upserted[0]._id
+        });
+      }
+    });
+  };
+
+  clickSavedWorkout = event => {
+    const date = event.target.value;
+    console.log("hit");
+    this.setState({ workoutDate: date }, () => {
+      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
+        console.log(res.data);
+        if (res.data.length) {
+          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
+          if (res.data[0].resistance) {
+            res.data[0].resistance.map(resistance => {
+              newWorkOutState.resistanceToAdd.push({
+                name: resistance.name,
+                sets: resistance.sets,
+                reps: resistance.reps,
+                weight: resistance.weight
+              });
+            });
+          }
+          if (res.data[0].cardio) {
+            res.data[0].cardio.map(cardio => {
+              newWorkOutState.cardioToAdd.push({
+                name: cardio.name,
+                time: cardio.time,
+                distance: cardio.distance
+              });
+            });
+          }
+
+          this.setState({
+            resistanceToAdd: newWorkOutState.resistanceToAdd,
+            cardioToAdd: newWorkOutState.cardioToAdd
+          });
+        } else {
+          this.setState({
+            resistanceToAdd: [],
+            cardioToAdd: []
+          });
+        }
+      });
+    });
   };
 
   selectDate = event => {
-    this.setState({ workoutDate: event.target.value });
+    this.setState({ workoutDate: event.target.value }, () => {
+      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
+        console.log(res.data);
+        if (res.data.length) {
+          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
+          if (res.data[0].resistance) {
+            res.data[0].resistance.map(resistance => {
+              newWorkOutState.resistanceToAdd.push({
+                name: resistance.name,
+                sets: resistance.sets,
+                reps: resistance.reps,
+                weight: resistance.weight
+              });
+            });
+          }
+          if (res.data[0].cardio) {
+            res.data[0].cardio.map(cardio => {
+              newWorkOutState.cardioToAdd.push({
+                name: cardio.name,
+                time: cardio.time,
+                distance: cardio.distance
+              });
+            });
+          }
+
+          this.setState({
+            resistanceToAdd: newWorkOutState.resistanceToAdd,
+            cardioToAdd: newWorkOutState.cardioToAdd
+          });
+        } else {
+          this.setState({
+            resistanceToAdd: [],
+            cardioToAdd: []
+          });
+        }
+      });
+    });
   };
 
   selectWorktout = event => {
@@ -181,16 +278,19 @@ class Dashboard extends Component {
                     margin="normal"
                     variant="outlined"
                     defaultValue="None"
+                    onClick={this.clickSavedWorkout}
                   >
                     <option>None</option>
-                    <option>Chest Day</option>
-                    <option>Leg Day</option>
-                    <option>Arm Day</option>
-                    ))}
+                    {this.state.savedWorkouts.length
+                      ? this.state.savedWorkouts.map(workout => (
+                          <option value={workout.date}>{workout.name}</option>
+                        ))
+                      : null}
                   </TextField>
 
                   <DatePickers
                     style={{ float: "right" }}
+                    value={this.state.workoutDate}
                     defaultDate={this.state.workoutDate}
                     changeHandler={this.selectDate}
                     name="workoutDate"
@@ -201,6 +301,8 @@ class Dashboard extends Component {
                     style={{ width: "45%" }}
                     id="outlined-name"
                     label="Name"
+                    value={this.state.woName}
+                    onChange={this.handleNameChange}
                     className={classes.textField}
                     margin="normal"
                     variant="outlined"
