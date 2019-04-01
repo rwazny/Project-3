@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -39,7 +38,7 @@ function SimpleTable(props) {
       <Table style={{ width: "auto", tableLayout: "auto" }}>
         <TableBody>
           {props.rows.map((row, index) => (
-            <TableRow key={index}>
+            <TableRow hover={true} style={{ height: 60 }} key={index}>
               <TableCell style={{ padding: 10 }}>
                 <TextField
                   id={index.toString()}
