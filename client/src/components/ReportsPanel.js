@@ -16,72 +16,220 @@ class ReportsPanel extends Component {
     name: "hai",
     labelWidth: 0,
     data: {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: [],
       datasets: [
         {
-          label: "My First dataset",
+          label: "Workout",
           backgroundColor: "rgba(255,99,132,0.2)",
           borderColor: "rgba(255,99,132,1)",
           borderWidth: 1,
           hoverBackgroundColor: "rgba(255,99,132,0.4)",
           hoverBorderColor: "rgba(255,99,132,1)",
-          data: [65, 59, 80, 81, 56, 55, 40]
+          data: []
+        }
+      ]
+    },
+    mixedData: {
+      datasets: [
+        {
+          label: "Sales",
+          type: "line",
+          data: [51, 65, 40, 49, 60, 37, 40],
+          fill: false,
+          borderColor: "#EC932F",
+          backgroundColor: "#EC932F",
+          pointBorderColor: "#EC932F",
+          pointBackgroundColor: "#EC932F",
+          pointHoverBackgroundColor: "#EC932F",
+          pointHoverBorderColor: "#EC932F",
+          yAxisID: "y-axis-2"
+        },
+        {
+          type: "bar",
+          label: "Visitor",
+          data: [200, 185, 590, 621, 250, 400, 95],
+          fill: false,
+          backgroundColor: "#71B37C",
+          borderColor: "#71B37C",
+          hoverBackgroundColor: "#71B37C",
+          hoverBorderColor: "#71B37C",
+          yAxisID: "y-axis-1"
         }
       ]
     }
   };
 
   clickExerciseType = name => event => {
-    this.setState({ [name]: event.target.value }, () => {
-      if (this.state.type === "cardio") {
-        let cardioArray = [];
-        if (this.props.workOuts) {
-          for (let i = 0; i < this.props.workOuts.length; i++) {
-            if (this.props.workOuts[i].cardio.length) {
-              cardioArray.push(this.props.workOuts[i].cardio[0].name);
-            }
-          }
-          console.log(cardioArray);
-          this.setState({ cardioExerciseNames: cardioArray });
-        }
-      } else {
-        let resistanceArray = [];
-        if (this.props.workOuts) {
-          for (let i = 0; i < this.props.workOuts.length; i++) {
-            if (this.props.workOuts[i].resistance.length) {
-              resistanceArray.push(this.props.workOuts[i].resistance[0].name);
-            }
-          }
-          console.log(resistanceArray);
-          this.setState({ resistanceExerciseNames: resistanceArray });
-        }
-      }
-    });
-  };
+    const { value } = event.target;
 
-  clickCardioType = name => event => {
-    this.setState({ [name]: event.target.value }, () => {
+    if (value === "cardio") {
       let cardioArray = [];
       if (this.props.workOuts) {
-        for (let i = 0; i < this.props.workOuts.length; i++) {
-          if (this.props.workOuts[i].cardio.length) {
-            cardioArray.push(this.props.workOuts[i].cardio[0].name);
-          }
-        }
-        console.log(cardioArray);
-        this.setState({ cardioExerciseNames: cardioArray });
+        this.setExerciseArray(value, name, cardioArray, "cardioExerciseNames");
       }
+    } else {
+      let resistanceArray = [];
+      if (this.props.workOuts) {
+        this.setExerciseArray(
+          value,
+          name,
+          resistanceArray,
+          "resistanceExerciseNames"
+        );
+      }
+    }
+  };
+
+  setExerciseArray = (value, name, array, nameArray) => {
+    for (let i = 0; i < this.props.workOuts.length; i++) {
+      for (let j = 0; j < this.props.workOuts[i][value].length; j++) {
+        if (
+          this.props.workOuts[i][value].length &&
+          !array.includes(this.props.workOuts[i][value][j].name)
+        ) {
+          array.push(this.props.workOuts[i][value][j].name);
+        }
+      }
+    }
+
+    this.setState({
+      [nameArray]: array,
+      [name]: value
     });
   };
 
-  componentDidUpdate = () => {};
+  clickExerciseName = name => event => {
+    const { value } = event.target;
+    this.setState({ [name]: value }, () => {
+      let newData = [];
+      let newLabels = [];
+
+      for (let i = 0; i < this.props.workOuts.length; i++) {
+        for (
+          let j = 0;
+          j < this.props.workOuts[i][this.state.type].length;
+          j++
+        ) {
+          if (this.props.workOuts[i][this.state.type][j].name === value) {
+            let measure = "";
+            this.state.type === "resistance"
+              ? (measure = "weight")
+              : (measure = "distance");
+            newData.push(this.props.workOuts[i][this.state.type][j][measure]);
+            newLabels.push(this.props.workOuts[i].date);
+          }
+        }
+      }
+
+      let newChartData = Object.assign({}, this.state.data);
+      newChartData.labels = newLabels;
+      newChartData.datasets[0].data = newData;
+      newChartData.datasets[0].label =
+        value.charAt(0).toUpperCase() + value.slice(1);
+      this.setState({ data: newChartData });
+    });
+  };
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
   render() {
-    const { classes } = this.props;
+    const mixedOptions = {
+      responsive: true,
+      tooltips: {
+        mode: "label"
+      },
+      elements: {
+        line: {
+          fill: false
+        }
+      },
+      scales: {
+        xAxes: [
+          {
+            display: true,
+            gridLines: {
+              display: false
+            },
+            labels: [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July"
+            ]
+          }
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Distance (miles)"
+            },
+            type: "linear",
+            display: true,
+            position: "left",
+            id: "y-axis-1",
+            gridLines: {
+              display: false
+            },
+            labels: {
+              show: true
+            }
+          },
+          {
+            type: "linear",
+            display: true,
+            position: "right",
+            id: "y-axis-2",
+            gridLines: {
+              display: false
+            },
+            labels: {
+              show: true
+            }
+          }
+        ]
+      }
+    };
+
+    const barOptions = {
+      maintainAspectRatio: true,
+      scales: {
+        xAxes: [
+          {
+            display: true,
+            gridLines: {
+              display: false
+            }
+          }
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            },
+            type: "linear",
+            display: true,
+            position: "left",
+            id: "y-axis-1",
+            gridLines: {
+              display: false
+            },
+            labels: {
+              show: true
+            }
+          }
+        ]
+      }
+    };
+
     return (
       <div>
         <FormControl>
@@ -108,17 +256,21 @@ class ReportsPanel extends Component {
             style={{ width: 120, marginRight: 15 }}
             native
             value={this.state.exercise}
-            onChange={this.handleChange("exercise")}
+            onChange={this.clickExerciseName("exercise")}
             inputProps={{
               name: "exercise",
               id: "exercise-native-simple"
             }}
           >
             <option value="" />
-            {this.state.resistanceExerciseNames
-              ? this.state.resistanceExerciseNames.map(exercise => (
-                  <option>{exercise}</option>
-                ))
+            {this.state.type
+              ? this.state.type === "resistance"
+                ? this.state.resistanceExerciseNames.map(exercise => (
+                    <option>{exercise}</option>
+                  ))
+                : this.state.cardioExerciseNames.map(exercise => (
+                    <option>{exercise}</option>
+                  ))
               : null}
           </Select>
         </FormControl>
@@ -160,23 +312,21 @@ class ReportsPanel extends Component {
           </Select>
         </FormControl>
 
+        {/* {this.state.type === "cardio" ? (
+          <Bar
+            data={this.state.mixedData}
+            width={100}
+            height={50}
+            options={mixedOptions}
+          />
+        ) : ( */}
         <Bar
           data={this.state.data}
           width={100}
           height={50}
-          options={{
-            maintainAspectRatio: true,
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }
-              ]
-            }
-          }}
+          options={barOptions}
         />
+        {/* )} */}
       </div>
     );
   }

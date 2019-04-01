@@ -22,18 +22,10 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
-<<<<<<< HEAD
-    "chart.js": "^2.8.0",
-    "express": "^4.16.3",
-    "if-env": "^1.0.4",
-    "mongoose": "^5.4.19",
-    "react-chartjs-2": "^2.7.6"
-=======
     "autosuggest-highlight": "^3.1.1",
     "express": "^4.16.3",
     "if-env": "^1.0.4",
     "mongoose": "^5.4.19",
     "react-autosuggest": "^9.4.3"
->>>>>>> master
   }
 }

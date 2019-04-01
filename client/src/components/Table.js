@@ -38,7 +38,7 @@ function SimpleTable(props) {
       <Table style={{ width: "auto", tableLayout: "auto" }}>
         <TableBody>
           {props.rows.map((row, index) => (
-            <TableRow key={index}>
+            <TableRow hover={true} style={{ height: 60 }} key={index}>
               <TableCell style={{ padding: 10 }}>
                 <TextField
                   id={index.toString()}

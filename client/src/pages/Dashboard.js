@@ -341,8 +341,31 @@ class Dashboard extends Component {
                     New Workout
                   </Button>
                 </div>
-                <br />
 
+                <div style={{ height: 210, overflowY: "auto" }}>
+                  {this.state.resistanceToAdd.length ? (
+                    <SimpleTable
+                      exerciseType="resistanceToAdd"
+                      changeHandler={this.handleInputChange}
+                      newValue={this.state.resistanceToAdd}
+                      headings={["Exercise", "Sets", "Reps", "Weight"]}
+                      rows={this.state.resistanceToAdd}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {this.state.cardioToAdd.length ? (
+                    <SimpleTable
+                      exerciseType="cardioToAdd"
+                      changeHandler={this.handleCardio}
+                      newValue={this.state.cardioToAdd}
+                      headings={["Exercise", "Distance", "Time"]}
+                      rows={this.state.cardioToAdd}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
                 <Button
                   aria-owns={anchorEl ? "simple-menu" : undefined}
                   aria-haspopup="true"
@@ -375,31 +398,6 @@ class Dashboard extends Component {
                     Cardio
                   </MenuItem>
                 </Menu>
-
-                {this.state.resistanceToAdd.length ? (
-                  <SimpleTable
-                    exerciseType="resistanceToAdd"
-                    changeHandler={this.handleInputChange}
-                    newValue={this.state.resistanceToAdd}
-                    headings={["Exercise", "Sets", "Reps", "Weight"]}
-                    rows={this.state.resistanceToAdd}
-                  />
-                ) : (
-                  ""
-                )}
-                <br />
-                {this.state.cardioToAdd.length ? (
-                  <SimpleTable
-                    exerciseType="cardioToAdd"
-                    changeHandler={this.handleCardio}
-                    newValue={this.state.cardioToAdd}
-                    headings={["Exercise", "Distance", "Time"]}
-                    rows={this.state.cardioToAdd}
-                  />
-                ) : (
-                  ""
-                )}
-                <br />
                 {this.state.resistanceToAdd.length ||
                 this.state.cardioToAdd.length ? (
                   <Button
