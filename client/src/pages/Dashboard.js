@@ -4,6 +4,7 @@ import auth from "../firebase.js";
 import LogIn from "../components/LogIn";
 import SimpleTable from "../components/Table";
 import DatePickers from "../components/DatePicker";
+import ReportsPanel from "../components/ReportsPanel";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
@@ -77,7 +78,10 @@ class Dashboard extends Component {
   componentDidMount = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
       let savedArray = res.data.workouts.filter(workout => workout.name);
-      this.setState({ savedWorkouts: savedArray });
+      this.setState({
+        savedWorkouts: savedArray,
+        allWorkOuts: res.data.workouts
+      });
     });
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -162,13 +166,9 @@ class Dashboard extends Component {
     });
   };
 
-  returnWorkoutsByDate = () => {};
-
-  clickSavedWorkout = event => {
-    const date = event.target.value;
+  returnWorkoutsByDate = date => {
     this.setState({ workoutDate: date }, () => {
       API.getWorkOutsByDate(this.state.workoutDate).then(res => {
-        console.log(res.data);
         if (res.data.length) {
           let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
           if (res.data[0].resistance) {
@@ -190,9 +190,6 @@ class Dashboard extends Component {
               });
             });
           }
-
-          console.log(`Name: ${res.data[0].name}`);
-
           this.setState({
             resistanceToAdd: newWorkOutState.resistanceToAdd,
             cardioToAdd: newWorkOutState.cardioToAdd,
@@ -208,10 +205,20 @@ class Dashboard extends Component {
     });
   };
 
+  clickSavedWorkout = event => {
+    let date = "";
+    for (let i = 0; i < this.state.savedWorkouts.length; i++) {
+      if (this.state.savedWorkouts[i].name === event.target.value) {
+        date = this.state.savedWorkouts[i].date;
+      }
+    }
+
+    this.returnWorkoutsByDate(date);
+  };
+
   selectDate = event => {
     this.setState({ workoutDate: event.target.value }, () => {
       API.getWorkOutsByDate(this.state.workoutDate).then(res => {
-        console.log(res.data);
         if (res.data.length) {
           let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
           if (res.data[0].resistance) {
@@ -251,7 +258,6 @@ class Dashboard extends Component {
   };
 
   selectWorktout = name => event => {
-    console.log(event.target);
     this.setState({ [name]: event.target.value });
   };
 
@@ -271,34 +277,30 @@ class Dashboard extends Component {
             <Grid item xs={6}>
               <Paper className={classes.paper}>
                 <div style={{ display: "flex" }}>
-                  <FormControl>
-                    <TextField
-                      id="outlined-select-currency-native"
-                      select
-                      label="Saved Workouts"
-                      className={classes.textField}
-                      SelectProps={{
-                        native: true,
-                        MenuProps: {
-                          className: classes.menu
-                        }
-                      }}
-                      style={{ width: "45%" }}
-                      margin="normal"
-                      variant="outlined"
-                      value={this.state.selectedWorkout}
-                      onChange={this.selectWorktout("selectWorkout")}
-                    >
-                      <option>None</option>
-                      {this.state.savedWorkouts.length
-                        ? this.state.savedWorkouts.map(workout => (
-                            <option inputProps={{ date: workout.date }}>
-                              {workout.name}
-                            </option>
-                          ))
-                        : null}
-                    </TextField>
-                  </FormControl>
+                  <TextField
+                    id="outlined-select-currency-native"
+                    select
+                    label="Saved Workouts"
+                    className={classes.textField}
+                    SelectProps={{
+                      native: true,
+                      MenuProps: {
+                        className: classes.menu
+                      }
+                    }}
+                    style={{ width: "45%" }}
+                    margin="normal"
+                    variant="outlined"
+                    value={this.state.selectedWorkout}
+                    onChange={this.clickSavedWorkout}
+                  >
+                    <option>None</option>
+                    {this.state.savedWorkouts.length
+                      ? this.state.savedWorkouts.map(workout => (
+                          <option>{workout.name}</option>
+                        ))
+                      : null}
+                  </TextField>
                   <DatePickers
                     style={{ float: "right" }}
                     value={this.state.workoutDate}
@@ -415,7 +417,9 @@ class Dashboard extends Component {
               </Paper>
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Reports for exercise</Paper>
+              <Paper className={classes.paper}>
+                <ReportsPanel workOuts={this.state.allWorkOuts} />
+              </Paper>
             </Grid>
           </Grid>
           <Grid container spacing={8} className={classes.demo}>
