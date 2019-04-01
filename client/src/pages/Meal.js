@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import API from "../utils/API";
 import FoodResults from "../components/FoodResults";
-
+import Dropdown from "../../src/components/Dropdown"
 
 
 class Meal extends Component {
@@ -34,7 +34,7 @@ class Meal extends Component {
     const APP_KEY = '368d7805ed86900874f9dc4fb92aba0f';
 
     let foodSearchQuery = document.getElementById("foodSearchInput").value;
-
+    console.log(foodSearchQuery)
     const response = await fetch(
       'https://trackapi.nutritionix.com/v2/natural/nutrients',
       {
@@ -50,12 +50,13 @@ class Meal extends Component {
       }
     );
     if (response.status !== 200) {
-      console.log("Error: " + response.status);
+      console.log("Error: " + response);
     }
     const data = await response.json();
     //console.log(data);
+    console.log(data)
     const results = data.foods;
-    console.log(results);
+    // console.log(results);
 
     if (results !== undefined) {
       this.setState({ results });
@@ -88,17 +89,19 @@ class Meal extends Component {
   render() {
       return(
           <div className="container">
+      
             <h2>
               What did you eat?{" "}
             </h2>
+            <Dropdown />
           < form onSubmit={this.handleSubmit}>
-              <input
+              {/* <input
               id="foodSearchInput"
               placeholder="Example: chicken momo"
               type="text"
               required
-              />
-
+              /> */}
+    
               <input id="submit-button" type="submit" value="Submit" />
               <br />
             </form>
