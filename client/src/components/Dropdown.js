@@ -10,72 +10,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Popper from '@material-ui/core/Popper';
 import { withStyles } from '@material-ui/core/styles';
 
-const suggestions = [
-  { label: 'Rye Bread' },
-  { label: 'Pita Bread' },
-  { label: 'Whole-Wheat Bread' },
-  { label: 'White Bread' },
-  { label: 'Cinnamon Raisin' },
-  { label: 'Green Eggs and Ham Omelette ' },
-  { label: 'Smoked Beef Omelet' },
-  { label: 'German Omelette With Bacon' },
-  { label: 'Body Builder Omelet' },
-  { label: 'Fluffy Cheese Omelette' },
-  { label: 'Jalapeno Omelet' },
-  { label: 'Chocolate chip' },
-  { label: 'Cookies and cream' },
-  { label: 'Strawberry' },
-  { label: 'Vanilla' },
-  { label: 'Apples' },
-  { label: 'Clementine' },
-  { label: 'Bananas' },
-  { label: 'Cucumbers' },
-  { label: 'Avocados' },
-  { label: 'Apricots' },
-  { label: 'Grapefruit' },
-  { label: 'Watermelons' },
-  { label: 'Asparagus' },
-  { label: 'Cauliflower' },
-  { label: 'Broccoli' },
-  { label: 'Cabbage' },
-  { label: 'Carrot' },
-  { label: 'Brownie' },
-  { label: 'Tonic Water'},
-  { label: 'Soda Water'},
-  { label: 'Water' },
-  { label: 'Sparkling Water'},
-  { label: 'Diet Soda' },
-  { label: 'Chicken'},
-  { label: 'Grilled Chicken Breast' },
-  { label: 'Chicken Marsala ' },
-  { label: 'Chicken Parmigiana' },
-  { label: 'Rotisseri Chicken' },
-  { label: 'Chicken and Dumplings' },
-  { label: 'Pork' }, 
-  { label: 'Pork Chop' },
-  { label: 'Pork Loin' },
-  { label: 'Ribs' },
-  { label: 'Bacon' },
-  { label: 'Pork Vinadloo' },
-   { label: 'Beef' }, 
-  { label: 'Hamburger' },
-  { label: 'Roast Beef' },
-  { label: 'Beef Stroganoff' },
-  { label: 'Beef Stew' },
-  { label: 'Ginger Beef' },
-  { label: 'Fish' }, 
-  { label: 'Salmon' },
-  { label: 'Talapia' },
-  { label: 'Cod' },
-  { label: 'Trout' },
-  { label: 'Tuna Fish' },
-  { label: 'Salad' }, 
-  { label: 'Greek Salad' },
-  { label: 'South Western Salad' },
-  { label: 'Cobb Salad' },
-  { label: 'Ceaser Salad' },
-  { label: 'Spinach Salad' },
-];
+var userInput = '';
+var suggestions = [];
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
@@ -190,10 +126,54 @@ class IntegrationAutosuggest extends React.Component {
   };
 
   handleChange = name => (event, { newValue }) => {
+    userInput = newValue;
+    if(userInput !== undefined){
+        this.getSuggestionsFromAPI();
+    }
     this.setState({
       [name]: newValue,
     });
   };
+
+  getSuggestionsFromAPI = async event => {
+    const APP_ID = 'eb95abc3';
+    const APP_KEY = '368d7805ed86900874f9dc4fb92aba0f';
+
+    let foodSearchQuery = userInput;
+    console.log(foodSearchQuery)
+    const response = await fetch(
+      'https://trackapi.nutritionix.com/v2/search/instant',
+      {
+        method: "post",
+        headers: {
+          "x-app-key": APP_KEY,
+          "x-app-id": APP_ID,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          query: foodSearchQuery
+        })
+      }
+    );
+    if (response.status !== 200) {
+      console.log("Error: " + response);
+    }
+    const data = await response.json();
+    console.log(data.branded)
+    const results = data.branded;
+    let foodItemArr = [];
+    if (results !== undefined) {
+    results.forEach(element => {
+        let food = {};
+        food['label'] = element.food_name;
+        foodItemArr.push(food);
+      });  
+    }
+    this.setState({
+        suggestions: foodItemArr,
+    });
+      console.log("new state" + suggestions);
+    };
 
   render() {
     const { classes } = this.props;
