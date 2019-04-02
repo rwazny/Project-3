@@ -7,5 +7,7 @@ router
   .post(userController.createUser)
   .put(userController.pushWorkOut);
 
+router.route("/week/:week&:name&:user").get(userController.findWorkOutsByWeek);
+
 router.route("/workouts/:id").get(userController.findUserWorkOuts);
 module.exports = router;
