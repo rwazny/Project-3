@@ -7,7 +7,6 @@ import parse from 'autosuggest-highlight/parse';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
-import Popper from '@material-ui/core/Popper';
 import { withStyles } from '@material-ui/core/styles';
 
 var userInput = '';
@@ -33,24 +32,17 @@ function renderInputComponent(inputProps) {
   );
 }
 
+
 function renderSuggestion(suggestion, { query, isHighlighted }) {
   const matches = match(suggestion.label, query);
   const parts = parse(suggestion.label, matches);
-
   return (
     <MenuItem selected={isHighlighted} component="div">
       <div>
-        {parts.map((part, index) =>
-          part.highlight ? (
-            <span key={String(index)} style={{ fontWeight: 500 }}>
-              {part.text}
+        <span style={{ fontWeight: 100, fontStyle: 'bold' }}>
+        <img height="35" width="40" src = {suggestion.img}></img>
+              {suggestion.label}
             </span>
-          ) : (
-            <strong key={String(index)} style={{ fontWeight: 300 }}>
-              {part.text}
-            </strong>
-          ),
-        )}
       </div>
     </MenuItem>
   );
@@ -82,6 +74,7 @@ function getSuggestionValue(suggestion) {
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    marginTop: 20,
   },
   container: {
     position: 'relative',
@@ -101,9 +94,7 @@ const styles = theme => ({
     padding: 0,
     listStyleType: 'none',
   },
-  /* divider: {
-    height: theme.spacing.unit * 2,
-  }, */
+
 });
 
 class IntegrationAutosuggest extends React.Component {
@@ -112,6 +103,7 @@ class IntegrationAutosuggest extends React.Component {
     popper: '',
     suggestions: [],
   };
+
 
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
@@ -166,13 +158,14 @@ class IntegrationAutosuggest extends React.Component {
     results.forEach(element => {
         let food = {};
         food['label'] = element.food_name;
+        food['img'] = element.photo.thumb;
         foodItemArr.push(food);
       });  
     }
     this.setState({
         suggestions: foodItemArr,
-    });
-      console.log("new state" + suggestions);
+      });
+      //console.log("new state" + JSON.stringify(suggestions));
     };
 
   render() {
@@ -194,7 +187,7 @@ class IntegrationAutosuggest extends React.Component {
           inputProps={{
             classes,
             id:"foodSearchInput",
-            placeholder:"Example: chicken",
+            placeholder:"Enter your meal here",
      
             value: this.state.single,
             onChange: this.handleChange('single'),
@@ -212,37 +205,7 @@ class IntegrationAutosuggest extends React.Component {
           )}
         />
         <div className={classes.divider} />
-        {/* <Autosuggest
-          {...autosuggestProps}
-          inputProps={{
-            classes,
-            label: 'Label',
-            placeholder: 'With Popper',
-            value: this.state.popper,
-            onChange: this.handleChange('popper'),
-            inputRef: node => {
-              this.popperNode = node;
-            },
-            InputLabelProps: {
-              shrink: true,
-            },
-          }}
-          theme={{
-            suggestionsList: classes.suggestionsList,
-            suggestion: classes.suggestion,
-          }}
-          renderSuggestionsContainer={options => (
-            <Popper anchorEl={this.popperNode} open={Boolean(options.children)}>
-              <Paper
-                square
-                {...options.containerProps}
-                style={{ width: this.popperNode ? this.popperNode.clientWidth : null }}
-              >
-                {options.children}
-              </Paper>
-            </Popper>
-          )}
-        /> */}
+
       </div>
     );
   }
