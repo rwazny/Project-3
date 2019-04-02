@@ -1,7 +1,6 @@
 // ~~~Worry about breaking into seperate file later~~~
 const mongoose = require(`mongoose`);
 
-
 const resistanceSchema = new mongoose.Schema({
   name: { type: String, required: true, min: 1, max: 10000, trim: true },
   sets: { type: Number, required: true, min: 1, max: 10000, trim: true },
@@ -50,7 +49,16 @@ const cardioSchema = new mongoose.Schema({
 
 const workOutSchema = new mongoose.Schema({
   date: { type: String },
-  name: { type: String,  min: 1, unique:true,sparse:true,max: 250, trim: true },
+  week: { type: Number },
+  user: { type: String },
+  name: {
+    type: String,
+    min: 1,
+    unique: true,
+    sparse: true,
+    max: 250,
+    trim: true
+  },
   resistance: {
     type: [resistanceSchema],
     required: function() {

@@ -36,7 +36,7 @@ export default {
   },
 
   workOutByWeek: function(data) {
-    return axios.get(`/api/users/week/${data.date}&${data.name}`);
+    return axios.get(`/api/users/week/${data.week}&${data.name}&${data.user}`);
   },
 
   //------------------------------------MEAL---------------------------

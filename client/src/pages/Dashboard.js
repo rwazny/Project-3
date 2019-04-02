@@ -6,6 +6,7 @@ import SimpleTable from "../components/Table";
 import DatePickers from "../components/DatePicker";
 import Meal from "./Meal";
 import ReportsPanel from "../components/ReportsPanel";
+import moment from "moment";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
@@ -17,14 +18,13 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 
-
 const styles = theme => ({
   demo: {
     [theme.breakpoints.up("lg")]: {
       width: 1170
     }
   },
-    formControl: {
+  formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
   },
@@ -80,11 +80,18 @@ class Dashboard extends Component {
   componentDidMount = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
       let savedArray = res.data.workouts.filter(workout => workout.name);
-      this.setState({
-        savedWorkouts: savedArray,
-        allWorkOuts: res.data.workouts
-      });
+      this.setState(
+        {
+          savedWorkouts: savedArray,
+          allWorkOuts: res.data.workouts
+        },
+        () => {
+          this.setExerciseArrays("resistance", "resistanceExerciseNames");
+          this.setExerciseArrays("cardio", "cardioExerciseNames");
+        }
+      );
     });
+
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -103,6 +110,24 @@ class Dashboard extends Component {
       } else {
         console.log("not logged in");
       }
+    });
+  };
+
+  setExerciseArrays = (value, nameArray) => {
+    let array = [];
+    for (let i = 0; i < this.state.allWorkOuts.length; i++) {
+      for (let j = 0; j < this.state.allWorkOuts[i][value].length; j++) {
+        if (
+          this.state.allWorkOuts[i][value].length &&
+          !array.includes(this.state.allWorkOuts[i][value][j].name)
+        ) {
+          array.push(this.state.allWorkOuts[i][value][j].name);
+        }
+      }
+    }
+
+    this.setState({
+      [nameArray]: array
     });
   };
 
@@ -130,7 +155,13 @@ class Dashboard extends Component {
   };
   saveDay = () => {
     let data = {
-      WorkOut: { date: this.state.workoutDate, resistance: [], cardio: [] }
+      WorkOut: {
+        date: this.state.workoutDate,
+        week: moment(this.state.workoutDate, "YYYY-MM-DD").week(),
+        user: localStorage.userId,
+        resistance: [],
+        cardio: []
+      }
     };
 
     if (this.state.woName) {
@@ -311,7 +342,7 @@ class Dashboard extends Component {
                     name="workoutDate"
                   />
                 </div>
-                <div >
+                <div>
                   <TextField
                     style={{ width: "45%" }}
                     id="outlined-name"
@@ -418,20 +449,23 @@ class Dashboard extends Component {
             </Grid>
             <Grid item xs={6}>
               <Paper className={classes.paper}>
-                <ReportsPanel workOuts={this.state.allWorkOuts} />
+                <ReportsPanel
+                  workOuts={this.state.allWorkOuts}
+                  cardioArray={this.state.cardioExerciseNames}
+                  resistanceArray={this.state.resistanceExerciseNames}
+                />
               </Paper>
             </Grid>
           </Grid>
           <Grid container spacing={8} className={classes.demo}>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Nutrition tab
-              <Meal />              
+              <Paper className={classes.paper}>
+                Nutrition tab
+                <Meal />
               </Paper>
-
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Reports for nutrition
-              </Paper>
+              <Paper className={classes.paper}>Reports for nutrition</Paper>
             </Grid>
           </Grid>
         </Grid>
