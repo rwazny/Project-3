@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import API from "../utils/API";
 import FoodResults from "../components/FoodResults";
-import Dropdown from "../../src/components/Dropdown"
+import Dropdown from "../../src/components/Dropdown";
+import Button from "@material-ui/core/Button";
+
 
 
 class Meal extends Component {
@@ -89,22 +91,24 @@ class Meal extends Component {
   render() {
       return(
           <div className="container">
-      
-            <h2>
-              What did you eat?{" "}
-            </h2>
+          <div style={{ display: 'flex' }}>
+          <div>
             <Dropdown />
-          < form onSubmit={this.handleSubmit}>
-              {/* <input
-              id="foodSearchInput"
-              placeholder="Example: chicken momo"
-              type="text"
-              required
-              /> */}
-    
-              <input id="submit-button" type="submit" value="Submit" />
+            </div>
+            <div>
+            <Button 
+              style={{ margin: "25px 10px" }}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.handleSubmit}>
+              Submit
+              </Button>
+
+
               <br />
-            </form>
+            </div>
+            </div>
                 <FoodResults results={this.state.results}/>
           </div>
       );

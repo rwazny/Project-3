@@ -4,6 +4,7 @@ import auth from "../firebase.js";
 import LogIn from "../components/LogIn";
 import SimpleTable from "../components/Table";
 import DatePickers from "../components/DatePicker";
+import Meal from "./Meal";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
@@ -14,13 +15,14 @@ import TextField from "@material-ui/core/TextField";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
+
 const styles = theme => ({
   demo: {
     [theme.breakpoints.up("lg")]: {
       width: 1170
     }
   },
-  formControl: {
+    formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
   },
@@ -307,10 +309,14 @@ class Dashboard extends Component {
           </Grid>
           <Grid container spacing={8} className={classes.demo}>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Nutrition tab</Paper>
+              <Paper className={classes.paper}>Nutrition tab
+              <Meal />              
+              </Paper>
+
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Reports for nutrition</Paper>
+              <Paper className={classes.paper}>Reports for nutrition
+              </Paper>
             </Grid>
           </Grid>
         </Grid>
