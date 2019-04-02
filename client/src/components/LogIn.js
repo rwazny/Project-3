@@ -1,10 +1,11 @@
-import React from "react";
-import auth from "../firebase";
-import API from "../utils/API";
+import React from 'react';
+import auth from '../firebase';
+import API from '../utils/API';
+
 class Login extends React.Component {
   state = {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
     errors: null
   };
   handleChange = e => {
