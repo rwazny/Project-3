@@ -134,7 +134,7 @@ class IntegrationAutosuggest extends React.Component {
     let foodSearchQuery = userInput;
     console.log(foodSearchQuery)
     const response = await fetch(
-      'https://trackapi.nutritionix.com/v2/search/instant',
+      'https://trackapi.nutritionix.com/v2/search/instant/test',
       {
         method: "post",
         headers: {

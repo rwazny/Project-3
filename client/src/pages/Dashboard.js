@@ -195,6 +195,7 @@ class Dashboard extends Component {
                     style={{ float: "right" }}
                     defaultDate={this.state.workoutDate}
                     changeHandler={this.selectDate}
+                    label="Workout Date"
                     name="workoutDate"
                   />
                 </div>

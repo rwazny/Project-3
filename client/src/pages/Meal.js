@@ -1,23 +1,45 @@
 import React, { Component } from "react";
 import API from "../utils/API";
+import auth from "../firebase.js";
 import FoodResults from "../components/FoodResults";
 import Dropdown from "../../src/components/Dropdown";
 import Button from "@material-ui/core/Button";
+import DatePickers from "../components/DatePicker";
 
 
 
 class Meal extends Component {
   state = {
+    mealDate: null,
     results: [],
     food: ""
   };
 
-  componentDidMount() {
-    this.load();
-  }
+  componentDidMount = () => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    console.log(today);
+    this.setState({ mealDate: today });
 
-  load = () => {
-      console.log("method to call on loading");
+    auth.onAuthStateChanged(firebaseUser => {
+      this.setState({
+        user: firebaseUser
+      });
+
+      if (firebaseUser) {
+        console.log(firebaseUser);
+      } else {
+        console.log("not logged in");
+      }
+    });
+  };
+
+  selectDate = event => {
+    this.setState({ mealDate: event.target.value });
+  
   };
 
   saveMeal(mealData){
@@ -85,6 +107,7 @@ class Meal extends Component {
     else {
       alert("invalid food");
     }
+    
   };
 
 
@@ -96,7 +119,14 @@ class Meal extends Component {
             <Dropdown />
             </div>
             <div>
-            <Button 
+              <DatePickers
+                    style={{ float: "right" }}
+                    defaultDate={this.state.mealDate}
+                    changeHandler={this.selectDate}
+                    label="Meal Date"
+                    name="mealDate"
+                  />
+              <Button 
               style={{ margin: "25px 10px" }}
               variant="contained"
               size="small"
@@ -104,8 +134,6 @@ class Meal extends Component {
               onClick={this.handleSubmit}>
               Submit
               </Button>
-
-
               <br />
             </div>
             </div>

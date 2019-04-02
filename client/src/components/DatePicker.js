@@ -24,7 +24,7 @@ function DatePickers(props) {
         id="date"
         name={props.name}
         onChange={props.changeHandler}
-        label="Workout Date"
+        label={props.label}
         type="date"
         defaultValue={props.defaultDate}
         className={classes.textField}
