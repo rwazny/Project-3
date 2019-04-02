@@ -20,14 +20,6 @@ export default {
   addExercise: function(data) {
     return axios.post("/api/workouts", data);
   },
-  //Gets all Meal
-  getMeal: function() {
-    return axios.get("/api/meals");
-  },
-
-  saveWorkOut: function(data) {
-    return axios.post("/api/workouts/savedworkouts", data);
-  },
 
   //--------------------USER--------------------------
 
@@ -42,13 +34,23 @@ export default {
   findUserWorkOuts: function(id) {
     return axios.get("/api/users/workouts/" + id);
   },
-  // Deletes the book with the given id
-  deleteBook: function(id) {
-    return axios.delete("/api/workouts/" + id);
+
+  workOutByWeek: function(data) {
+    return axios.get(`/api/users/week/${data.date}&${data.name}`);
   },
+
+  //------------------------------------MEAL---------------------------
   // Saves meal to the database
   saveMeal: function(mealData) {
     console.log("inside API saveMeal");
     return axios.post("/api/meals", mealData);
+  },
+  //Gets all Meal
+  getMeal: function() {
+    return axios.get("/api/meals");
+  },
+
+  saveWorkOut: function(data) {
+    return axios.post("/api/workouts/savedworkouts", data);
   }
 };

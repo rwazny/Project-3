@@ -309,7 +309,7 @@ class Dashboard extends Component {
                     name="workoutDate"
                   />
                 </div>
-                <div>
+                <div >
                   <TextField
                     style={{ width: "45%" }}
                     id="outlined-name"

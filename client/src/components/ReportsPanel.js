@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
-
+import API from "../utils/API";
 // Material UI imports
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -67,7 +67,7 @@ class ReportsPanel extends Component {
       if (this.props.workOuts) {
         this.setExerciseArray(value, name, cardioArray, "cardioExerciseNames");
       }
-    } else {
+    } else if (value === "resistance") {
       let resistanceArray = [];
       if (this.props.workOuts) {
         this.setExerciseArray(
@@ -77,6 +77,8 @@ class ReportsPanel extends Component {
           "resistanceExerciseNames"
         );
       }
+    } else {
+      this.setState({ [name]: value });
     }
   };
 
@@ -132,6 +134,19 @@ class ReportsPanel extends Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
+    if (name === "timeframe") {
+      this.getWorkOutByTimeFrame();
+    }
+  };
+  getWorkOutByTimeFrame = () => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    API.workOutByWeek({ date: today, name: this.state.exercise }).then(res => {
+      console.log(res);
+    });
   };
 
   render() {
@@ -306,9 +321,8 @@ class ReportsPanel extends Component {
             }}
           >
             <option value="" />
-            <option value={10}>Year</option>
-            <option value={20}>Month</option>
-            <option value={20}>Week</option>
+            <option value={"thisWeek"}>This Week</option>
+            <option value={"thisMonth"}>This Month</option>
           </Select>
         </FormControl>
 
