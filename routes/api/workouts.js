@@ -7,6 +7,8 @@ router
   .get(workOutController.findAllWorkOuts)
   .post(workOutController.addExercise);
 
+router.route("/:date").get(workOutController.findWorkOutsByDate);
+
 //gets presaved workouts
 router
   .route("/savedworkouts")
