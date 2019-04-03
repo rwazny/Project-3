@@ -2,27 +2,35 @@ const db = require("../../models");
 
 module.exports = {
   findSavedWorkOuts: function(req, res) {
-    db.find({ name: { $ne: null } })
+    db.WorkOut.find({ name: { $ne: null } })
       .sort({ name: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
 
   findAllWorkOuts: function(req, res) {
-    db.WorkOut.find({})
+    db.WorkOut.find()
       .sort({ date: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
 
+  findWorkOutsByDate: function(req, res) {
+    db.WorkOut.find({ date: req.params.date }).then(workOutData =>
+      res.json(workOutData)
+    );
+  },
+
   addExercise: function(req, res) {
-    console.log(req.body);
-    db.WorkOut.create(req.body);
+    db.WorkOut.update({ date: req.body.date }, req.body, { upsert: true });
   },
 
   saveWorkOut: function(req, res) {
-    console.log(req.body);
-    db.WorkOut.create(req.body)
+    db.WorkOut.updateOne(
+      { date: req.body.date },
+      { $set: req.body },
+      { upsert: true }
+    )
       .then(dbData => {
         res.json(dbData);
       })

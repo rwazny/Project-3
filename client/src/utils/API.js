@@ -7,9 +7,11 @@ export default {
   },
   // Gets all WorkOuts
   getSavedWorkOuts: function() {
-    return axios.get("/api/savedworkouts");
+    return axios.get("/api/workouts/saved");
   },
-
+  getWorkOutsByDate: function(date) {
+    return axios.get("/api/workouts/" + date);
+  },
   //Push workout to User object
   pushWorkOut: function(data) {
     return axios.put("/api/users", data);

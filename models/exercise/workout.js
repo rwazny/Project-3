@@ -49,7 +49,7 @@ const cardioSchema = new mongoose.Schema({
 });
 
 const workOutSchema = new mongoose.Schema({
-  date: { type: Date, default: Date.now },
+  date: { type: String },
   name: { type: String, unique: true, sparse: true, min: 1, max: 250, trim: true },
   resistance: {
     type: [resistanceSchema],

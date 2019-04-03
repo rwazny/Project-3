@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -39,12 +38,12 @@ function SimpleTable(props) {
       <Table style={{ width: "auto", tableLayout: "auto" }}>
         <TableBody>
           {props.rows.map((row, index) => (
-            <TableRow key={index}>
+            <TableRow hover={true} style={{ height: 60 }} key={index}>
               <TableCell style={{ padding: 10 }}>
                 <TextField
-                  id={index}
+                  id={index.toString()}
                   name="name"
-                  value={props.newValue[index].value}
+                  value={props.newValue[index].name}
                   onChange={props.changeHandler}
                   label="Exercise"
                   className={classes.textField}
@@ -53,10 +52,15 @@ function SimpleTable(props) {
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
                 <TextField
-                  id={index}
+                  id={index.toString()}
                   label={props.headings[1]}
                   name={props.headings[1].toLowerCase()}
                   type="number"
+                  value={
+                    props.newValue[index].distance
+                      ? props.newValue[index].distance
+                      : props.newValue[index].sets
+                  }
                   onChange={props.changeHandler}
                   className={classes.numberField}
                   InputLabelProps={{
@@ -67,10 +71,15 @@ function SimpleTable(props) {
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
                 <TextField
-                  id={index}
+                  id={index.toString()}
                   label={props.headings[2]}
                   name={props.headings[2].toLowerCase()}
                   type="number"
+                  value={
+                    props.newValue[index].time
+                      ? props.newValue[index].time
+                      : props.newValue[index].reps
+                  }
                   className={classes.numberField}
                   onChange={props.changeHandler}
                   InputLabelProps={{
@@ -82,7 +91,7 @@ function SimpleTable(props) {
               {props.headings.length > 3 ? (
                 <TableCell style={{ padding: 10 }} align="right">
                   <TextField
-                    id={index}
+                    id={index.toString()}
                     label={props.headings[3]}
                     name={props.headings[3].toLowerCase()}
                     type="number"

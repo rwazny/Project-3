@@ -5,6 +5,7 @@ import LogIn from "../components/LogIn";
 import SimpleTable from "../components/Table";
 import DatePickers from "../components/DatePicker";
 import Meal from "./Meal";
+import ReportsPanel from "../components/ReportsPanel";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
@@ -14,6 +15,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
 
 
 const styles = theme => ({
@@ -50,8 +52,9 @@ class Dashboard extends Component {
     cardioToAdd: [],
     user: null,
     workoutDate: null,
-    selectedWorkout: null,
-    woName: ""
+    selectedWorkout: "None",
+    woName: "",
+    savedWorkouts: []
   };
 
   styles = {
@@ -75,6 +78,13 @@ class Dashboard extends Component {
   };
 
   componentDidMount = () => {
+    API.findUserWorkOuts(localStorage.userId).then(res => {
+      let savedArray = res.data.workouts.filter(workout => workout.name);
+      this.setState({
+        savedWorkouts: savedArray,
+        allWorkOuts: res.data.workouts
+      });
+    });
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -106,6 +116,10 @@ class Dashboard extends Component {
     this.state.resistanceToAdd[id][name] = value;
     this.setState({ resistanceToAdd: this.state.resistanceToAdd });
   };
+  handleNameChange = event => {
+    const { value } = event.currentTarget;
+    this.setState({ woName: value });
+  };
   handleCardio = event => {
     const { value, id, name } = event.currentTarget;
     this.state.cardioToAdd[id][name] = value;
@@ -115,9 +129,14 @@ class Dashboard extends Component {
     API.findUserWorkOuts(localStorage.userId).then(res => console.log(res));
   };
   saveDay = () => {
-    let data = { WorkOut: {} };
+    let data = {
+      WorkOut: { date: this.state.workoutDate, resistance: [], cardio: [] }
+    };
+
+    if (this.state.woName) {
+      data.WorkOut["name"] = this.state.woName;
+    }
     if (this.state.resistanceToAdd.length) {
-      data.WorkOut["resistance"] = [];
       this.state.resistanceToAdd.map(resistance => {
         data.WorkOut.resistance.push({
           name: resistance.name,
@@ -128,7 +147,6 @@ class Dashboard extends Component {
       });
     }
     if (this.state.cardioToAdd.length) {
-      data.WorkOut["cardio"] = [];
       this.state.cardioToAdd.map(cardio => {
         data.WorkOut.cardio.push({
           name: cardio.name,
@@ -137,19 +155,112 @@ class Dashboard extends Component {
         });
       });
     }
+
     console.log(data);
     // SAVE WORKOUT, NOT SINGLE EXERCISE
-    API.saveWorkOut(data.WorkOut).then(res =>
-      API.pushWorkOut({ userId: localStorage.userId, id: res.data._id })
-    );
+    API.saveWorkOut(data.WorkOut).then(res => {
+      if (res.data.upserted) {
+        API.pushWorkOut({
+          userId: localStorage.userId,
+          id: res.data.upserted[0]._id
+        });
+      }
+    });
+  };
+
+  returnWorkoutsByDate = date => {
+    this.setState({ workoutDate: date }, () => {
+      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
+        if (res.data.length) {
+          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
+          if (res.data[0].resistance) {
+            res.data[0].resistance.map(resistance => {
+              newWorkOutState.resistanceToAdd.push({
+                name: resistance.name,
+                sets: resistance.sets,
+                reps: resistance.reps,
+                weight: resistance.weight
+              });
+            });
+          }
+          if (res.data[0].cardio) {
+            res.data[0].cardio.map(cardio => {
+              newWorkOutState.cardioToAdd.push({
+                name: cardio.name,
+                time: cardio.time,
+                distance: cardio.distance
+              });
+            });
+          }
+          this.setState({
+            resistanceToAdd: newWorkOutState.resistanceToAdd,
+            cardioToAdd: newWorkOutState.cardioToAdd,
+            selectedWorkout: res.data[0].name
+          });
+        } else {
+          this.setState({
+            resistanceToAdd: [],
+            cardioToAdd: []
+          });
+        }
+      });
+    });
+  };
+
+  clickSavedWorkout = event => {
+    let date = "";
+    for (let i = 0; i < this.state.savedWorkouts.length; i++) {
+      if (this.state.savedWorkouts[i].name === event.target.value) {
+        date = this.state.savedWorkouts[i].date;
+      }
+    }
+
+    this.returnWorkoutsByDate(date);
   };
 
   selectDate = event => {
-    this.setState({ workoutDate: event.target.value });
+    this.setState({ workoutDate: event.target.value }, () => {
+      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
+        if (res.data.length) {
+          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
+          if (res.data[0].resistance) {
+            res.data[0].resistance.map(resistance => {
+              newWorkOutState.resistanceToAdd.push({
+                name: resistance.name,
+                sets: resistance.sets,
+                reps: resistance.reps,
+                weight: resistance.weight
+              });
+            });
+          }
+          if (res.data[0].cardio) {
+            res.data[0].cardio.map(cardio => {
+              newWorkOutState.cardioToAdd.push({
+                name: cardio.name,
+                time: cardio.time,
+                distance: cardio.distance
+              });
+            });
+          }
+
+          this.setState({
+            resistanceToAdd: newWorkOutState.resistanceToAdd,
+            cardioToAdd: newWorkOutState.cardioToAdd,
+            selectedWorkout: res.data[0].name ? res.data[0].name : "None"
+          });
+        } else {
+          this.setState({
+            resistanceToAdd: [],
+            cardioToAdd: [],
+            selectedWorkout: "None"
+          });
+        }
+      });
+    });
   };
 
-  selectWorktout = event => {
-    this.setState({ selectedWorkout: event.target.value });
+  selectWorktout = name => event => {
+    this.setState({ [name]: event.target.value });
   };
 
   render() {
@@ -182,17 +293,19 @@ class Dashboard extends Component {
                     style={{ width: "45%" }}
                     margin="normal"
                     variant="outlined"
-                    defaultValue="None"
+                    value={this.state.selectedWorkout}
+                    onChange={this.clickSavedWorkout}
                   >
                     <option>None</option>
-                    <option>Chest Day</option>
-                    <option>Leg Day</option>
-                    <option>Arm Day</option>
-                    ))}
+                    {this.state.savedWorkouts.length
+                      ? this.state.savedWorkouts.map(workout => (
+                          <option>{workout.name}</option>
+                        ))
+                      : null}
                   </TextField>
-
                   <DatePickers
                     style={{ float: "right" }}
+                    value={this.state.workoutDate}
                     defaultDate={this.state.workoutDate}
                     changeHandler={this.selectDate}
                     label="Workout Date"
@@ -204,6 +317,8 @@ class Dashboard extends Component {
                     style={{ width: "45%" }}
                     id="outlined-name"
                     label="Name"
+                    value={this.state.woName}
+                    onChange={this.handleNameChange}
                     className={classes.textField}
                     margin="normal"
                     variant="outlined"
@@ -229,8 +344,31 @@ class Dashboard extends Component {
                     New Workout
                   </Button>
                 </div>
-                <br />
 
+                <div style={{ height: 210, overflowY: "auto" }}>
+                  {this.state.resistanceToAdd.length ? (
+                    <SimpleTable
+                      exerciseType="resistanceToAdd"
+                      changeHandler={this.handleInputChange}
+                      newValue={this.state.resistanceToAdd}
+                      headings={["Exercise", "Sets", "Reps", "Weight"]}
+                      rows={this.state.resistanceToAdd}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {this.state.cardioToAdd.length ? (
+                    <SimpleTable
+                      exerciseType="cardioToAdd"
+                      changeHandler={this.handleCardio}
+                      newValue={this.state.cardioToAdd}
+                      headings={["Exercise", "Distance", "Time"]}
+                      rows={this.state.cardioToAdd}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
                 <Button
                   aria-owns={anchorEl ? "simple-menu" : undefined}
                   aria-haspopup="true"
@@ -263,31 +401,6 @@ class Dashboard extends Component {
                     Cardio
                   </MenuItem>
                 </Menu>
-
-                {this.state.resistanceToAdd.length ? (
-                  <SimpleTable
-                    exerciseType="resistanceToAdd"
-                    changeHandler={this.handleInputChange}
-                    newValue={this.state.resistanceToAdd}
-                    headings={["Exercise", "Sets", "Reps", "Weight"]}
-                    rows={this.state.resistanceToAdd}
-                  />
-                ) : (
-                  ""
-                )}
-                <br />
-                {this.state.cardioToAdd.length ? (
-                  <SimpleTable
-                    exerciseType="cardioToAdd"
-                    changeHandler={this.handleCardio}
-                    newValue={this.state.cardioToAdd}
-                    headings={["Exercise", "Distance", "Time"]}
-                    rows={this.state.cardioToAdd}
-                  />
-                ) : (
-                  ""
-                )}
-                <br />
                 {this.state.resistanceToAdd.length ||
                 this.state.cardioToAdd.length ? (
                   <Button
@@ -305,7 +418,9 @@ class Dashboard extends Component {
               </Paper>
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Reports for exercise</Paper>
+              <Paper className={classes.paper}>
+                <ReportsPanel workOuts={this.state.allWorkOuts} />
+              </Paper>
             </Grid>
           </Grid>
           <Grid container spacing={8} className={classes.demo}>
