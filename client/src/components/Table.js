@@ -40,7 +40,8 @@ function SimpleTable(props) {
           {props.rows.map((row, index) => (
             <TableRow hover={true} style={{ height: 60 }} key={index}>
               <TableCell style={{ padding: 10 }}>
-                <TextField
+                {/* <TextField
+                  style={{ height: 30 }}
                   id={index.toString()}
                   name="name"
                   value={props.newValue[index].name}
@@ -48,10 +49,11 @@ function SimpleTable(props) {
                   label="Exercise"
                   className={classes.textField}
                   margin="normal"
-                />
+                /> */}
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
-                <TextField
+                {/* <TextField
+                  style={{ height: 30 }}
                   id={index.toString()}
                   label={props.headings[1]}
                   name={props.headings[1].toLowerCase()}
@@ -67,10 +69,11 @@ function SimpleTable(props) {
                     shrink: true
                   }}
                   margin="normal"
-                />
+                /> */}
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
-                <TextField
+                {/* <TextField
+                  style={{ height: 30 }}
                   id={index.toString()}
                   label={props.headings[2]}
                   name={props.headings[2].toLowerCase()}
@@ -86,11 +89,12 @@ function SimpleTable(props) {
                     shrink: true
                   }}
                   margin="normal"
-                />
+                /> */}
               </TableCell>
-              {props.headings.length > 3 ? (
+              {/* {props.headings.length > 3 ? (
                 <TableCell style={{ padding: 10 }} align="right">
                   <TextField
+                    style={{ height: 30 }}
                     id={index.toString()}
                     label={props.headings[3]}
                     name={props.headings[3].toLowerCase()}
@@ -103,7 +107,7 @@ function SimpleTable(props) {
                     margin="normal"
                   />
                 </TableCell>
-              ) : null}
+              ) : null} */}
             </TableRow>
           ))}
         </TableBody>

@@ -11,7 +11,7 @@ module.exports = {
     db.User.findByIdAndUpdate(req.body.userId, {
       $push: { workouts: req.body.id }
     })
-      .then(yeet => console.log(yeet))
+      .then(data => res.json(data))
       .catch(err => console.log(err));
   },
   findUserWorkOuts: function(req, res) {

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import API from "../utils/API";
 import auth from "../firebase.js";
-import LogIn from "../components/LogIn";
 import SimpleTable from "../components/Table";
 import DatePickers from "../components/DatePicker";
 import Meal from "./Meal";
@@ -9,14 +8,19 @@ import ReportsPanel from "../components/ReportsPanel";
 import moment from "moment";
 
 // Material UI imports
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Grow from "@material-ui/core/Grow";
+import Popper from "@material-ui/core/Popper";
+import MenuItem from "@material-ui/core/MenuItem";
+import MenuList from "@material-ui/core/MenuList";
 
 const styles = theme => ({
   demo: {
@@ -47,6 +51,20 @@ const styles = theme => ({
 
 class Dashboard extends Component {
   state = {
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Workout",
+          backgroundColor: "rgba(255,99,132,0.2)",
+          borderColor: "rgba(255,99,132,1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(255,99,132,0.4)",
+          hoverBorderColor: "rgba(255,99,132,1)",
+          data: []
+        }
+      ]
+    },
     anchorEl: null,
     resistanceToAdd: [],
     cardioToAdd: [],
@@ -54,7 +72,8 @@ class Dashboard extends Component {
     workoutDate: null,
     selectedWorkout: "None",
     woName: "",
-    savedWorkouts: []
+    savedWorkouts: [],
+    open: false
   };
 
   styles = {
@@ -69,12 +88,54 @@ class Dashboard extends Component {
     }
   };
 
+  clickExerciseType = name => event => {
+    const { value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  clickExerciseName = name => event => {
+    const { value } = event.target;
+    this.setState({ [name]: value }, () => {
+      if (this.state.timeframe) {
+        this.getWorkOutByTimeframe(this.state.exercise);
+      }
+    });
+  };
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+    if (name === "timeframe") {
+      this.getWorkOutByTimeframe(this.state.exercise);
+    }
+  };
+
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  handleToggle = () => {
+    this.setState(state => ({ open: !state.open }));
+  };
+
+  handleClose = name => event => {
+    if (this.anchorEl.contains(event.target)) {
+      return;
+    }
+
+    if (name) {
+      let joined = this.state[name].concat({ name: "" });
+      this.setState({ open: false, [name]: joined });
+    } else {
+      this.setState({ open: false });
+    }
+  };
+
+  handleClickAway = event => {
+    if (this.anchorEl.contains(event.target)) {
+      return;
+    }
+
+    this.setState({ open: false });
   };
 
   componentDidMount = () => {
@@ -88,6 +149,7 @@ class Dashboard extends Component {
         () => {
           this.setExerciseArrays("resistance", "resistanceExerciseNames");
           this.setExerciseArrays("cardio", "cardioExerciseNames");
+          this.returnWorkoutsByDate(today);
         }
       );
     });
@@ -98,7 +160,6 @@ class Dashboard extends Component {
     var yyyy = today.getFullYear();
     today = yyyy + "-" + mm + "-" + dd;
     console.log(today);
-    this.setState({ workoutDate: today });
 
     auth.onAuthStateChanged(firebaseUser => {
       this.setState({
@@ -126,14 +187,17 @@ class Dashboard extends Component {
       }
     }
 
+    console.log(array);
+
     this.setState({
       [nameArray]: array
     });
   };
 
   addExercise = name => {
-    var joined = this.state[name].concat({ name: "" });
-    this.setState({ [name]: joined });
+    console.log(name);
+    let joined = this.state[name].concat({ name: "" });
+    this.setState({ open: false, [name]: joined });
   };
 
   handleInputChange = event => {
@@ -167,8 +231,16 @@ class Dashboard extends Component {
     if (this.state.woName) {
       data.WorkOut["name"] = this.state.woName;
     }
+
+    let resistanceNames = [...this.state.resistanceExerciseNames];
+    let cardioNames = [...this.state.cardioExerciseNames];
+
     if (this.state.resistanceToAdd.length) {
       this.state.resistanceToAdd.map(resistance => {
+        if (!resistanceNames.includes(resistance.name)) {
+          resistanceNames.push(resistance.name);
+        }
+
         data.WorkOut.resistance.push({
           name: resistance.name,
           sets: parseInt(resistance.sets),
@@ -179,6 +251,9 @@ class Dashboard extends Component {
     }
     if (this.state.cardioToAdd.length) {
       this.state.cardioToAdd.map(cardio => {
+        if (!cardioNames.includes(cardio.name)) {
+          cardioNames.push(cardio.name);
+        }
         data.WorkOut.cardio.push({
           name: cardio.name,
           distance: parseInt(cardio.distance),
@@ -188,6 +263,7 @@ class Dashboard extends Component {
     }
 
     console.log(data);
+
     // SAVE WORKOUT, NOT SINGLE EXERCISE
     API.saveWorkOut(data.WorkOut).then(res => {
       if (res.data.upserted) {
@@ -196,12 +272,22 @@ class Dashboard extends Component {
           id: res.data.upserted[0]._id
         });
       }
+
+      if (this.state.timeframe) {
+        this.getWorkOutByTimeframe(this.state.exercise);
+      }
+
+      this.setState({
+        resistanceExerciseNames: resistanceNames,
+        cardioExerciseNames: cardioNames
+      });
     });
   };
 
   returnWorkoutsByDate = date => {
     this.setState({ workoutDate: date }, () => {
       API.getWorkOutsByDate(this.state.workoutDate).then(res => {
+        console.log(res.data);
         if (res.data.length) {
           let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
           if (res.data[0].resistance) {
@@ -235,6 +321,68 @@ class Dashboard extends Component {
           });
         }
       });
+    });
+  };
+
+  getWorkOutByTimeframe = exercise => {
+    console.log(exercise);
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+
+    API.workOutByWeek({
+      week: moment().week(),
+      name: exercise,
+      user: localStorage.userId
+    }).then(res => {
+      let newChartData = Object.assign({}, this.state.data);
+
+      const dateArray = [
+        moment()
+          .day("Sunday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Monday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Tuesday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Wednesday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Thursday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Friday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Saturday")
+          .format("MM-DD-YYYY")
+      ];
+
+      newChartData.labels = [
+        ["Sunday", dateArray[0]],
+        ["Monday", dateArray[1]],
+        ["Tuesday", dateArray[2]],
+        ["Wednesday", dateArray[3]],
+        ["Thursday", dateArray[4]],
+        ["Friday", dateArray[5]],
+        ["Saturday", dateArray[6]]
+      ];
+
+      let newData = [null, null, null, null, null, null, null];
+
+      for (let i = 0; i < res.data.length; i++) {
+        const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
+        const id = dateArray.indexOf(dateToFind);
+        newData[id] = res.data[i].resistance.weight[0];
+      }
+      newChartData.datasets[0].data = newData;
+      console.log(newData);
+      this.setState({ data: newChartData });
     });
   };
 
@@ -296,17 +444,20 @@ class Dashboard extends Component {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, open } = this.state;
 
     return (
       <React.Fragment>
-        <div className="App">
-          {this.state.user && <h1>{this.state.user.email}</h1>}
-          <LogIn />
-        </div>
-        <br />
-        <Grid container justify="center" spacing={24}>
+        <CssBaseline />
+        <Grid container spacing={0} justify="center">
           <Grid container spacing={8} className={classes.demo}>
+            <Typography
+              style={{ width: "100%", marginTop: 20 }}
+              variant="h5"
+              gutterBottom
+            >
+              Fitness
+            </Typography>
             <Grid item xs={6}>
               <Paper className={classes.paper}>
                 <div style={{ display: "flex" }}>
@@ -330,7 +481,7 @@ class Dashboard extends Component {
                     <option>None</option>
                     {this.state.savedWorkouts.length
                       ? this.state.savedWorkouts.map(workout => (
-                          <option>{workout.name}</option>
+                          <option key={workout.name}>{workout.name}</option>
                         ))
                       : null}
                   </TextField>
@@ -375,7 +526,9 @@ class Dashboard extends Component {
                   </Button>
                 </div>
 
-                <div style={{ height: 210, overflowY: "auto" }}>
+                <div
+                  style={{ height: 190, marginBottom: 5, overflowY: "auto" }}
+                >
                   {this.state.resistanceToAdd.length ? (
                     <SimpleTable
                       exerciseType="resistanceToAdd"
@@ -400,72 +553,101 @@ class Dashboard extends Component {
                   )}
                 </div>
                 <Button
-                  aria-owns={anchorEl ? "simple-menu" : undefined}
-                  aria-haspopup="true"
                   size="small"
                   color="primary"
-                  onClick={this.handleClick}
+                  buttonRef={node => {
+                    this.anchorEl = node;
+                  }}
+                  aria-owns={open ? "menu-list-grow" : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleToggle}
                 >
                   Add Exercise
                 </Button>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={this.handleClose}
+                <Popper
+                  open={open}
+                  anchorEl={this.anchorEl}
+                  transition
+                  disablePortal
                 >
-                  <MenuItem
-                    onClick={() => {
-                      this.addExercise("resistanceToAdd");
-                      this.handleClose();
-                    }}
-                  >
-                    Resistance
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      this.addExercise("cardioToAdd");
-                      this.handleClose();
-                    }}
-                  >
-                    Cardio
-                  </MenuItem>
-                </Menu>
-                {this.state.resistanceToAdd.length ||
-                this.state.cardioToAdd.length ? (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    onClick={this.saveDay}
-                    className={classes.button}
-                  >
-                    Save
-                  </Button>
-                ) : (
-                  ""
-                )}
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      id="menu-list-grow"
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom"
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={this.handleClickAway}>
+                          <MenuList>
+                            <MenuItem
+                              onClick={this.handleClose("resistanceToAdd")}
+                            >
+                              Add Resistance
+                            </MenuItem>
+                            <MenuItem onClick={this.handleClose("cardioToAdd")}>
+                              Add Cardio
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+                <Button
+                  variant="contained"
+                  style={{ float: "right" }}
+                  size="small"
+                  color="primary"
+                  disabled={
+                    !this.state.resistanceToAdd.length &&
+                    !this.state.cardioToAdd.length
+                  }
+                  onClick={this.saveDay}
+                  className={classes.button}
+                >
+                  Save
+                </Button>
               </Paper>
             </Grid>
             <Grid item xs={6}>
               <Paper className={classes.paper}>
                 <ReportsPanel
+                  data={this.state.data}
                   workOuts={this.state.allWorkOuts}
+                  getWorkOuts={this.getWorkOutByTimeframe}
                   cardioArray={this.state.cardioExerciseNames}
                   resistanceArray={this.state.resistanceExerciseNames}
+                  clickExerciseName={this.clickExerciseName}
+                  clickExerciseType={this.clickExerciseType}
+                  handleChange={this.handleChange}
+                  type={this.state.type}
+                  exercise={this.state.exercise}
+                  reps={this.state.reps}
+                  timeframe={this.state.timeframe}
                 />
               </Paper>
             </Grid>
           </Grid>
           <Grid container spacing={8} className={classes.demo}>
+            <Typography
+              style={{ width: "100%", marginTop: 20 }}
+              variant="h5"
+              gutterBottom
+            >
+              Nutrition
+            </Typography>
             <Grid item xs={6}>
               <Paper className={classes.paper}>
-                Nutrition tab
                 <Meal />
               </Paper>
             </Grid>
             <Grid item xs={6}>
-              <Paper className={classes.paper}>Reports for nutrition</Paper>
+              <Paper className={classes.paper} />
             </Grid>
           </Grid>
         </Grid>
