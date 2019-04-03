@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
+import API from "../utils/API";
+import moment from "moment";
 
 // Material UI imports
 import InputLabel from "@material-ui/core/InputLabel";
@@ -61,23 +63,37 @@ class ReportsPanel extends Component {
 
   clickExerciseType = name => event => {
     const { value } = event.target;
+    this.setState({ [name]: value });
 
-    if (value === "cardio") {
-      let cardioArray = [];
-      if (this.props.workOuts) {
-        this.setExerciseArray(value, name, cardioArray, "cardioExerciseNames");
-      }
-    } else {
-      let resistanceArray = [];
-      if (this.props.workOuts) {
-        this.setExerciseArray(
-          value,
-          name,
-          resistanceArray,
-          "resistanceExerciseNames"
-        );
-      }
-    }
+    // if (value === "cardio") {
+    //   let cardioArray = [];
+    //   if (this.props.workOuts) {
+    //     this.setExerciseArray(value, name, cardioArray, "cardioExerciseNames");
+    //   }
+    // } else if (value === "resistance") {
+    //   let resistanceArray = [];
+    //   if (this.props.workOuts) {
+    //     this.setExerciseArray(
+    //       value,
+    //       name,
+    //       resistanceArray,
+    //       "resistanceExerciseNames"
+    //     );
+    //   }
+    // } else {
+    //   this.setState({ [name]: value });
+    // }
+  };
+
+  componentDidUpdate = () => {
+    // if (
+    //   this.state.type &&
+    //   this.state.exercise &&
+    //   this.state.reps &&
+    //   this.state.timeframe
+    // ) {
+    //   this.getWorkOutByTimeFrame();
+    // }
   };
 
   setExerciseArray = (value, name, array, nameArray) => {
@@ -101,37 +117,78 @@ class ReportsPanel extends Component {
   clickExerciseName = name => event => {
     const { value } = event.target;
     this.setState({ [name]: value }, () => {
-      let newData = [];
-      let newLabels = [];
-
-      for (let i = 0; i < this.props.workOuts.length; i++) {
-        for (
-          let j = 0;
-          j < this.props.workOuts[i][this.state.type].length;
-          j++
-        ) {
-          if (this.props.workOuts[i][this.state.type][j].name === value) {
-            let measure = "";
-            this.state.type === "resistance"
-              ? (measure = "weight")
-              : (measure = "distance");
-            newData.push(this.props.workOuts[i][this.state.type][j][measure]);
-            newLabels.push(this.props.workOuts[i].date);
-          }
-        }
+      if (this.state.timeframe) {
+        this.getWorkOutByTimeFrame();
       }
-
-      let newChartData = Object.assign({}, this.state.data);
-      newChartData.labels = newLabels;
-      newChartData.datasets[0].data = newData;
-      newChartData.datasets[0].label =
-        value.charAt(0).toUpperCase() + value.slice(1);
-      this.setState({ data: newChartData });
     });
   };
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
+    if (name === "timeframe") {
+      this.getWorkOutByTimeFrame();
+    }
+  };
+
+  getWorkOutByTimeFrame = () => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+
+    API.workOutByWeek({
+      week: moment().week(),
+      name: this.state.exercise,
+      user: localStorage.userId
+    }).then(res => {
+      let newChartData = Object.assign({}, this.state.data);
+
+      const dateArray = [
+        moment()
+          .day("Sunday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Monday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Tuesday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Wednesday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Thursday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Friday")
+          .format("MM-DD-YYYY"),
+        moment()
+          .day("Saturday")
+          .format("MM-DD-YYYY")
+      ];
+
+      newChartData.labels = [
+        ["Sunday", dateArray[0]],
+        ["Monday", dateArray[1]],
+        ["Tuesday", dateArray[2]],
+        ["Wednesday", dateArray[3]],
+        ["Thursday", dateArray[4]],
+        ["Friday", dateArray[5]],
+        ["Saturday", dateArray[6]]
+      ];
+
+      let newData = [null, null, null, null, null, null, null];
+
+      for (let i = 0; i < res.data.length; i++) {
+        const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
+        const id = dateArray.indexOf(dateToFind);
+        newData[id] = res.data[i].resistance.weight[0];
+      }
+      newChartData.datasets[0].data = newData;
+
+      this.setState({ data: newChartData });
+    });
   };
 
   render() {
@@ -265,10 +322,10 @@ class ReportsPanel extends Component {
             <option value="" />
             {this.state.type
               ? this.state.type === "resistance"
-                ? this.state.resistanceExerciseNames.map(exercise => (
+                ? this.props.resistanceArray.map(exercise => (
                     <option>{exercise}</option>
                   ))
-                : this.state.cardioExerciseNames.map(exercise => (
+                : this.props.cardioArray.map(exercise => (
                     <option>{exercise}</option>
                   ))
               : null}
@@ -306,9 +363,8 @@ class ReportsPanel extends Component {
             }}
           >
             <option value="" />
-            <option value={10}>Year</option>
-            <option value={20}>Month</option>
-            <option value={20}>Week</option>
+            <option value={"thisWeek"}>This Week</option>
+            <option value={"thisMonth"}>This Month</option>
           </Select>
         </FormControl>
 
