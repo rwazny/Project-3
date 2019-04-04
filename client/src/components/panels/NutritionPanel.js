@@ -251,7 +251,7 @@ class NutritionPanel extends Component {
         >
           Nutrition
         </Typography>
-        <Grid item xs={6}>
+        <Grid item sm={12} md={6}>
           <NutritionTracker
             classes={classes}
             value={this.state.value}
@@ -264,7 +264,7 @@ class NutritionPanel extends Component {
             nutritionDate={this.state.nutritionDate}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item sm={12} md={6}>
           <NutritionReports
             paper={classes.paper}
             handleInputChange={this.handleInputChange}
