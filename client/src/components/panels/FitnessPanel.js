@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import FitnessTracker from "./FitnessTracker";
 import FitnessReports from "./FitnessReports";
 import moment from "moment";
-import API from "../utils/API";
-import auth from "../firebase.js";
+import API from "../../utils/API";
+import auth from "../../firebase.js";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
@@ -58,7 +58,7 @@ class FitnessPanel extends Component {
     resistanceToAdd: [],
     cardioToAdd: [],
     user: null,
-    workoutDate: "2019-04-03",
+    workoutDate: moment().format("YYYY-MM-DD"),
     selectedWorkout: "None",
     woName: "",
     savedWorkouts: [],
@@ -328,7 +328,8 @@ class FitnessPanel extends Component {
     API.workOutByWeek({
       week: moment().week(),
       name: exercise,
-      user: localStorage.userId
+      user: localStorage.userId,
+      type: this.state.type
     }).then(res => {
       let newChartData = Object.assign({}, this.state.data);
 
@@ -371,9 +372,14 @@ class FitnessPanel extends Component {
       for (let i = 0; i < res.data.length; i++) {
         const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
         const id = dateArray.indexOf(dateToFind);
-        newData[id] = res.data[i].resistance.weight[0];
+        if (this.state.type === "resistance") {
+          newData[id] = res.data[i].resistance.weight[0];
+        } else if (this.state.type === "cardio") {
+          newData[id] = res.data[i].cardio.distance;
+        }
       }
       newChartData.datasets[0].data = newData;
+      console.log(res.data);
       console.log(newData);
       this.setState({ data: newChartData });
     });

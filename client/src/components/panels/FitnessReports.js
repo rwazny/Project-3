@@ -1,7 +1,5 @@
-import React, { Component, useCallback } from "react";
+import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
-import API from "../utils/API";
-import moment from "moment";
 
 // Material UI imports
 import InputLabel from "@material-ui/core/InputLabel";

@@ -11,7 +11,8 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200
+    width: 200,
+    float: "right"
   }
 });
 
@@ -22,10 +23,10 @@ function DatePickers(props) {
     <form className={classes.container} noValidate>
       <TextField
         id="date"
-        value={props.defaultDate}
+        value={props.value}
         name={props.name}
         onChange={props.changeHandler}
-        label="Workout Date"
+        label={props.label}
         type="date"
         className={classes.textField}
         InputLabelProps={{

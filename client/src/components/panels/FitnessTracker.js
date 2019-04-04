@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 
 // Material UI imports
 import Typography from "@material-ui/core/Typography";
@@ -10,35 +11,8 @@ import Grow from "@material-ui/core/Grow";
 import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
-import DatePickers from "../components/DatePicker";
-import SimpleTable from "../components/Table";
-
-const styles = theme => ({
-  demo: {
-    [theme.breakpoints.up("lg")]: {
-      width: 1170
-    }
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 120
-  },
-  container: {
-    display: "grid",
-    gridTemplateColumns: "repeat(12, 1fr)",
-    gridGap: `${theme.spacing.unit * 3}px`
-  },
-  paper: {
-    padding: theme.spacing.unit,
-    color: theme.palette.text.secondary,
-    whiteSpace: "nowrap",
-    marginBottom: theme.spacing.unit,
-    height: 400
-  },
-  divider: {
-    margin: `${theme.spacing.unit * 2}px 0`
-  }
-});
+import DatePickers from "../DatePicker";
+import SimpleTable from "../Table";
 
 function FitnessTracker(props) {
   return (
@@ -69,10 +43,10 @@ function FitnessTracker(props) {
         </TextField>
         <DatePickers
           margin="dense"
+          label="Workout Date"
           variant="filled"
           style={{ float: "right" }}
           value={props.workoutDate}
-          defaultDate={props.workoutDate}
           changeHandler={props.selectDate}
           name="workoutDate"
         />

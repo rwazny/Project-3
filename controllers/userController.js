@@ -20,16 +20,30 @@ module.exports = {
       .then(data => res.json(data));
   },
   findWorkOutsByWeek: function(req, res) {
-    let { week, name, user } = req.params;
+    let { week, name, user, type } = req.params;
     week = parseInt(week);
     console.log(req.params);
-    db.WorkOut.aggregate([
-      { $unwind: "$resistance" },
-      {
-        $match: {
-          $and: [{ "resistance.name": name }, { week: week }, { user: user }]
-        }
-      }
-    ]).then(workOutData => res.json(workOutData));
+
+    type === "resistance"
+      ? db.WorkOut.aggregate([
+          { $unwind: "$resistance" },
+          {
+            $match: {
+              $and: [
+                { "resistance.name": name },
+                { week: week },
+                { user: user }
+              ]
+            }
+          }
+        ]).then(workOutData => res.json(workOutData))
+      : db.WorkOut.aggregate([
+          { $unwind: "$cardio" },
+          {
+            $match: {
+              $and: [{ "cardio.name": name }, { week: week }, { user: user }]
+            }
+          }
+        ]).then(workOutData => res.json(workOutData));
   }
 };
