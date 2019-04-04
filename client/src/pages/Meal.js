@@ -5,6 +5,7 @@ import FoodResults from "../components/FoodResults";
 import Dropdown from "../../src/components/Dropdown";
 import Button from "@material-ui/core/Button";
 import DatePickers from "../components/DatePicker";
+import moment from "moment";
 
 
 
@@ -110,6 +111,19 @@ class Meal extends Component {
     
   };
 
+  saveMeal = () => {
+    let data = {
+      Meal:{
+        date: this.state.mealDate,
+        week: moment(this.state.mealDate, "YYYY-MM-DD"). week(),
+        user: localStorage.userId,
+        foodItem: [{
+          
+        }],
+      }
+    }
+  }
+
 
   render() {
       return(
@@ -132,7 +146,15 @@ class Meal extends Component {
               size="small"
               color="primary"
               onClick={this.handleSubmit}>
-              Submit
+              Search
+              </Button>
+              <Button 
+              style={{ margin: "25px 10px" }}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.handle}>
+              Save
               </Button>
               <br />
             </div>
