@@ -10,7 +10,9 @@ fats:{type:Number, required: true, trim: true}
 });
 
 const mealSchema = new Schema({
-  date:{type: Date, default:Date.now},
+  date: { type: String },
+  week: { type: Number },
+  user: { type: String },
   name:{type: String, min:1, max:250, trim: true},
   foodItem :{type: [foodItemSchema]}
 })
