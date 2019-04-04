@@ -8,7 +8,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
-class ReportsPanel extends Component {
+class FitnessReports extends Component {
   render() {
     const mixedOptions = {
       responsive: true,
@@ -196,4 +196,4 @@ class ReportsPanel extends Component {
   }
 }
 
-export default ReportsPanel;
+export default FitnessReports;

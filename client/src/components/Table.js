@@ -23,7 +23,7 @@ const styles = theme => ({
     width: 200
   },
   numberField: {
-    width: 50
+    width: 80
   },
   tableCell: {
     padding: "0 10px"
@@ -38,22 +38,20 @@ function SimpleTable(props) {
       <Table style={{ width: "auto", tableLayout: "auto" }}>
         <TableBody>
           {props.rows.map((row, index) => (
-            <TableRow hover={true} style={{ height: 60 }} key={index}>
+            <TableRow hover={true} style={{ marginBottom: 10 }} key={index}>
               <TableCell style={{ padding: 10 }}>
-                {/* <TextField
-                  style={{ height: 30 }}
+                <TextField
                   id={index.toString()}
                   name="name"
                   value={props.newValue[index].name}
                   onChange={props.changeHandler}
                   label="Exercise"
                   className={classes.textField}
-                  margin="normal"
-                /> */}
+                  margin="dense"
+                />
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
-                {/* <TextField
-                  style={{ height: 30 }}
+                <TextField
                   id={index.toString()}
                   label={props.headings[1]}
                   name={props.headings[1].toLowerCase()}
@@ -68,12 +66,11 @@ function SimpleTable(props) {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  margin="normal"
-                /> */}
+                  margin="dense"
+                />
               </TableCell>
               <TableCell style={{ padding: 10 }} align="right">
-                {/* <TextField
-                  style={{ height: 30 }}
+                <TextField
                   id={index.toString()}
                   label={props.headings[2]}
                   name={props.headings[2].toLowerCase()}
@@ -88,26 +85,26 @@ function SimpleTable(props) {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  margin="normal"
-                /> */}
+                  margin="dense"
+                />
               </TableCell>
-              {/* {props.headings.length > 3 ? (
+              {props.headings.length > 3 ? (
                 <TableCell style={{ padding: 10 }} align="right">
                   <TextField
-                    style={{ height: 30 }}
                     id={index.toString()}
                     label={props.headings[3]}
                     name={props.headings[3].toLowerCase()}
                     type="number"
+                    value={props.newValue[index].weight}
                     className={classes.numberField}
                     onChange={props.changeHandler}
                     InputLabelProps={{
                       shrink: true
                     }}
-                    margin="normal"
+                    margin="dense"
                   />
                 </TableCell>
-              ) : null} */}
+              ) : null}
             </TableRow>
           ))}
         </TableBody>
