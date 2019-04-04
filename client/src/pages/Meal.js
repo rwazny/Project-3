@@ -1,23 +1,46 @@
 import React, { Component } from "react";
 import API from "../utils/API";
+import auth from "../firebase.js";
 import FoodResults from "../components/FoodResults";
 import Dropdown from "../../src/components/Dropdown";
 import Button from "@material-ui/core/Button";
+import DatePickers from "../components/DatePicker";
+import moment from "moment";
 
 
 
 class Meal extends Component {
   state = {
+    mealDate: null,
     results: [],
     food: ""
   };
 
-  componentDidMount() {
-    this.load();
-  }
+  componentDidMount = () => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+    console.log(today);
+    this.setState({ mealDate: today });
 
-  load = () => {
-      console.log("method to call on loading");
+    auth.onAuthStateChanged(firebaseUser => {
+      this.setState({
+        user: firebaseUser
+      });
+
+      if (firebaseUser) {
+        console.log(firebaseUser);
+      } else {
+        console.log("not logged in");
+      }
+    });
+  };
+
+  selectDate = event => {
+    this.setState({ mealDate: event.target.value });
+  
   };
 
   saveMeal(mealData){
@@ -85,7 +108,21 @@ class Meal extends Component {
     else {
       alert("invalid food");
     }
+    
   };
+
+  saveMeal = () => {
+    let data = {
+      Meal:{
+        date: this.state.mealDate,
+        week: moment(this.state.mealDate, "YYYY-MM-DD"). week(),
+        user: localStorage.userId,
+        foodItem: [{
+          
+        }],
+      }
+    }
+  }
 
 
   render() {
@@ -96,16 +133,29 @@ class Meal extends Component {
             <Dropdown />
             </div>
             <div>
-            <Button 
+              <DatePickers
+                    style={{ float: "right" }}
+                    defaultDate={this.state.mealDate}
+                    changeHandler={this.selectDate}
+                    label="Meal Date"
+                    name="mealDate"
+                  />
+              <Button 
               style={{ margin: "25px 10px" }}
               variant="contained"
               size="small"
               color="primary"
               onClick={this.handleSubmit}>
-              Submit
+              Search
               </Button>
-
-
+              <Button 
+              style={{ margin: "25px 10px" }}
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.handle}>
+              Save
+              </Button>
               <br />
             </div>
             </div>

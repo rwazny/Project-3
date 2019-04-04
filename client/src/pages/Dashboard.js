@@ -339,6 +339,7 @@ class Dashboard extends Component {
                     value={this.state.workoutDate}
                     defaultDate={this.state.workoutDate}
                     changeHandler={this.selectDate}
+                    label="Workout Date"
                     name="workoutDate"
                   />
                 </div>
