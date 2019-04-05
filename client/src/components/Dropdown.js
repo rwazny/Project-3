@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import deburr from 'lodash/deburr';
-import Autosuggest from 'react-autosuggest';
-import match from 'autosuggest-highlight/match';
-import parse from 'autosuggest-highlight/parse';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import deburr from "lodash/deburr";
+import Autosuggest from "react-autosuggest";
+import match from "autosuggest-highlight/match";
+import parse from "autosuggest-highlight/parse";
+import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
+import MenuItem from "@material-ui/core/MenuItem";
+import { withStyles } from "@material-ui/core/styles";
 
-var userInput = '';
+var userInput = "";
 var suggestions = [];
 
 function renderInputComponent(inputProps) {
@@ -24,14 +24,13 @@ function renderInputComponent(inputProps) {
           inputRef(node);
         },
         classes: {
-          input: classes.input,
-        },
+          input: classes.input
+        }
       }}
       {...other}
     />
   );
 }
-
 
 function renderSuggestion(suggestion, { query, isHighlighted }) {
   const matches = match(suggestion.label, query);
@@ -39,10 +38,10 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
   return (
     <MenuItem selected={isHighlighted} component="div">
       <div>
-        <span style={{ fontWeight: 100, fontStyle: 'bold' }}>
-        <img height="35" width="40" src = {suggestion.img}></img>
-              {suggestion.label}
-            </span>
+        <span style={{ fontWeight: 100, fontStyle: "bold" }}>
+          <img height="35" width="40" src={suggestion.img} />
+          {suggestion.label}
+        </span>
       </div>
     </MenuItem>
   );
@@ -57,7 +56,8 @@ function getSuggestions(value) {
     ? []
     : suggestions.filter(suggestion => {
         const keep =
-          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+          count < 5 &&
+          suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
         if (keep) {
           count += 1;
@@ -74,67 +74,65 @@ function getSuggestionValue(suggestion) {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    marginTop: 20,
+    marginTop: 20
   },
   container: {
-    position: 'relative',
+    position: "relative"
   },
   suggestionsContainerOpen: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
     marginTop: theme.spacing.unit,
     left: 0,
-    right: 0,
+    right: 0
   },
   suggestion: {
-    display: 'block',
+    display: "block"
   },
   suggestionsList: {
     margin: 0,
     padding: 0,
-    listStyleType: 'none',
-  },
-
+    listStyleType: "none"
+  }
 });
 
 class IntegrationAutosuggest extends React.Component {
   state = {
-    single: '',
-    popper: '',
-    suggestions: [],
+    single: "",
+    popper: "",
+    suggestions: []
   };
-
 
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
-      suggestions: getSuggestions(value),
+      suggestions: getSuggestions(value)
     });
   };
 
   handleSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: [],
+      suggestions: []
     });
   };
 
   handleChange = name => (event, { newValue }) => {
     userInput = newValue;
-    if(userInput !== undefined){
-        this.getSuggestionsFromAPI();
+    if (userInput !== undefined) {
+      this.getSuggestionsFromAPI();
     }
     this.setState({
-      [name]: newValue,
+      [name]: newValue
     });
   };
 
   getSuggestionsFromAPI = async event => {
-    const APP_ID = 'eb95abc3';
-    const APP_KEY = '368d7805ed86900874f9dc4fb92aba0f';
+    const APP_ID = "eb95abc3";
+    const APP_KEY = "368d7805ed86900874f9dc4fb92aba0f";
 
     let foodSearchQuery = userInput;
-    console.log(foodSearchQuery)
+    console.log(foodSearchQuery);
     const response = await fetch(
-      'https://trackapi.nutritionix.com/v2/search/instant/test',
+      "https://trackapi.nutritionix.com/v2/search/instant/test",
       {
         method: "post",
         headers: {
@@ -151,22 +149,22 @@ class IntegrationAutosuggest extends React.Component {
       console.log("Error: " + response);
     }
     const data = await response.json();
-    console.log(data.branded)
+    console.log(data.branded);
     const results = data.branded;
     let foodItemArr = [];
     if (results !== undefined) {
-    results.forEach(element => {
+      results.forEach(element => {
         let food = {};
-        food['label'] = element.food_name;
-        food['img'] = element.photo.thumb;
+        food["label"] = element.food_name;
+        food["img"] = element.photo.thumb;
         foodItemArr.push(food);
-      });  
+      });
     }
     this.setState({
-        suggestions: foodItemArr,
-      });
-      //console.log("new state" + JSON.stringify(suggestions));
-    };
+      suggestions: foodItemArr
+    });
+    //console.log("new state" + JSON.stringify(suggestions));
+  };
 
   render() {
     const { classes } = this.props;
@@ -177,26 +175,26 @@ class IntegrationAutosuggest extends React.Component {
       onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
       onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
       getSuggestionValue,
-      renderSuggestion,
+      renderSuggestion
     };
 
     return (
-      <div style={{"width": "20vw"}} className={classes.root}>
-        <Autosuggest 
+      <div style={{ width: "20vw" }} className={classes.root}>
+        <Autosuggest
           {...autosuggestProps}
           inputProps={{
             classes,
-            id:"foodSearchInput",
-            placeholder:"Enter your meal here",
-     
+            id: "foodSearchInput",
+            placeholder: "Enter your meal here",
+
             value: this.state.single,
-            onChange: this.handleChange('single'),
+            onChange: this.handleChange("single")
           }}
           theme={{
             container: classes.container,
             suggestionsContainerOpen: classes.suggestionsContainerOpen,
             suggestionsList: classes.suggestionsList,
-            suggestion: classes.suggestion,
+            suggestion: classes.suggestion
           }}
           renderSuggestionsContainer={options => (
             <Paper {...options.containerProps} square>
@@ -205,14 +203,13 @@ class IntegrationAutosuggest extends React.Component {
           )}
         />
         <div className={classes.divider} />
-
       </div>
     );
   }
 }
 
 IntegrationAutosuggest.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(IntegrationAutosuggest);

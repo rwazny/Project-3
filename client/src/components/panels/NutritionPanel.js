@@ -239,6 +239,20 @@ class NutritionPanel extends Component {
     this.setState({ nutritionDate: event.target.value });
   };
 
+  addFoodItem = food => {
+    console.log(food.foodItem);
+    const foodArr = [...this.state.allMeals];
+    foodArr[0].mealsToAdd[this.state.value].food.push({
+      name: food.foodItem[0].name,
+      fat: food.foodItem[0].fats,
+      carbs: food.foodItem[0].carbohydrates,
+      protein: food.foodItem[0].protein,
+      calories: food.foodItem[0].calories
+    });
+    // console.log(this.state.value)
+    // debugger;
+    this.setState({ allMeals: foodArr });
+  };
   render() {
     const { classes } = this.props;
 
@@ -262,6 +276,7 @@ class NutritionPanel extends Component {
             addMeal={this.addMeal}
             selectDate={this.selectDate}
             nutritionDate={this.state.nutritionDate}
+            addFoodItem={this.addFoodItem}
           />
         </Grid>
         <Grid item sm={12} md={6}>

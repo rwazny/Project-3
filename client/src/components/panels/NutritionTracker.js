@@ -141,7 +141,7 @@ function NutritionTracker(props) {
             )
         )}
       </div>
-      <Meal />
+      <Meal addFoodItem={props.addFoodItem} />
     </Paper>
   );
 }
