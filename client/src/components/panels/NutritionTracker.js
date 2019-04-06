@@ -17,6 +17,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Grid from "@material-ui/core/Grid";
 
 function TabContainer(props) {
   return (
@@ -31,14 +32,16 @@ function NutritionTracker(props) {
 
   return (
     <Paper className={classes.paper}>
-      <div style={{ display: "flex" }}>
+      <Grid container>
+      <Grid item sm={12} md={8}>
         <TextField
+          //fullWidth
           id="filled-dense"
           value={props.mealName}
           onChange={props.handleInputChange("mealName")}
           label="Meal name"
           className=""
-          margin="dense"
+          //margin="dense"
           variant="filled"
         />
         <Button
@@ -51,8 +54,11 @@ function NutritionTracker(props) {
         >
           Add Meal
         </Button>
+        </Grid>
+
+        <Grid item sm={12} md={4}>
         <DatePickers
-          margin="dense"
+           //margin="dense"
           label="Meal date"
           variant="filled"
           style={{ width: 200 }}
@@ -60,8 +66,9 @@ function NutritionTracker(props) {
           changeHandler={props.selectDate}
           name="nutritionDate"
         />
-      </div>
-      <div style={{ height: 268 }} className={classes.root}>
+      </Grid>
+      </Grid>
+      <Grid style={{ height: 268 }} className={classes.root}>
         <AppBar position="static" color="default">
           <Tabs
             value={value}
@@ -140,7 +147,7 @@ function NutritionTracker(props) {
               </div>
             )
         )}
-      </div>
+      </Grid>
       <Meal />
     </Paper>
   );
