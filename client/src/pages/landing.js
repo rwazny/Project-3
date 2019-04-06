@@ -49,8 +49,61 @@ const styles = theme => ({
   }
 });
 
-function SignIn(props) {
-  const { classes } = props;
+class SignIn extends React.Component{
+  state = {
+    email: '',
+    password: '',
+    errors: null
+  };
+  handleChange = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({ [name]: value });
+  };
+  createAccount = () => {
+    auth
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(res => {
+        this.setState({
+          errors: null
+        });
+
+        API.createUser({ email: this.state.email }).then(
+          res => { localStorage.userId = res.data._id; }
+        );
+      })
+      .catch(error => {
+        this.setState({
+          errors: error.message
+        });
+      });
+  };
+
+  signIn = () => {
+    auth
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then(res => {
+        this.setState({
+          errors: null
+        });
+        API.findUser({ email: this.state.email }).then(
+          res => (localStorage.userId = res.data._id)
+        );
+      })
+      .catch(function(error) {
+        this.setState({
+          errors: error.message
+        });
+    });
+  };
+
+  signOut = () => {
+    auth.signOut();
+  };
+
+
+render() {
+  const { classes } = this.props;
 
   return (
     <main className={classes.main}>
@@ -66,7 +119,7 @@ function SignIn(props) {
         <form className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="email">Email Address</InputLabel>
-            <Input id="email" name="email" autoComplete="email" autoFocus />
+            <Input id="email" value={this.state.email}  onChange={this.handleChange} name="email" autoComplete="email" autoFocus />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="password">Password</InputLabel>
@@ -74,30 +127,51 @@ function SignIn(props) {
               name="password"
               type="password"
               id="password"
+              value={this.state.password}
+              onChange={this.handleChange}
               autoComplete="current-password"
             />
           </FormControl>
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
+            label="Remember me" */}
+          {/* /> */}
+          <Button onClick={this.createAccount}
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            Sign in
+            Create Account
+          </Button>
+          <Button onClick={this.signIn}
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign In
+          </Button>
+          <Button onClick={this.signOut}
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign Out
           </Button>
         </form>
       </Paper>
     </main>
   );
 }
+}
 
 SignIn.propTypes = {
   classes: PropTypes.object.isRequired
-};
+}
 
 export default withStyles(styles)(SignIn);
