@@ -45,7 +45,7 @@ function NutritionReports(props) {
         <FormControl style={{ float: "left" }}>
           <InputLabel htmlFor="type-native-simple">Type</InputLabel>
           <Select
-            style={{ width: 120, marginRight: 15 }}
+            //style={{ width: 120, marginRight: 15 }}
             native
             value={props.chartType}
             onChange={props.handleInputChange("chartType")}

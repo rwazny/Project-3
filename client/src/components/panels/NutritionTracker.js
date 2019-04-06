@@ -17,6 +17,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Grid from "@material-ui/core/Grid";
 
 function TabContainer(props) {
   return (
@@ -31,37 +32,43 @@ function NutritionTracker(props) {
 
   return (
     <Paper className={classes.paper}>
-      <div style={{ display: "flex" }}>
-        <TextField
-          id="filled-dense"
-          value={props.mealName}
-          onChange={props.handleInputChange("mealName")}
-          label="Meal name"
-          className=""
-          margin="dense"
-          variant="filled"
-        />
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          disabled={!props.mealName.trim()}
-          className={classes.margin}
-          onClick={props.addMeal}
-        >
-          Add Meal
-        </Button>
-        <DatePickers
-          margin="dense"
-          label="Meal date"
-          variant="filled"
-          style={{ width: 200 }}
-          value={props.nutritionDate}
-          changeHandler={props.selectDate}
-          name="nutritionDate"
-        />
-      </div>
-      <div style={{ height: 268 }} className={classes.root}>
+      <Grid container>
+        <Grid item sm={12} md={8}>
+          <TextField
+            //fullWidth
+            id="filled-dense"
+            value={props.mealName}
+            onChange={props.handleInputChange("mealName")}
+            label="Meal name"
+            className=""
+            //margin="dense"
+            variant="filled"
+          />
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            disabled={!props.mealName.trim()}
+            className={classes.margin}
+            onClick={props.addMeal}
+          >
+            Add Meal
+          </Button>
+        </Grid>
+
+        <Grid item sm={12} md={4}>
+          <DatePickers
+            //margin="dense"
+            label="Meal date"
+            variant="filled"
+            style={{ width: 200 }}
+            value={props.nutritionDate}
+            changeHandler={props.selectDate}
+            name="nutritionDate"
+          />
+        </Grid>
+      </Grid>
+      <Grid style={{ height: 268 }} className={classes.root}>
         <AppBar position="static" color="default">
           <Tabs
             value={value}
@@ -140,13 +147,13 @@ function NutritionTracker(props) {
               </div>
             )
         )}
-      </div>
-      {props.mealsToAdd.length ? (
-        <Meal
-          addFoodItem={props.addFoodItem}
-          saveNutritionDay={props.saveNutritionDay}
-        />
-      ) : null}
+        {props.mealsToAdd.length ? (
+          <Meal
+            addFoodItem={props.addFoodItem}
+            saveNutritionDay={props.saveNutritionDay}
+          />
+        ) : null}
+      </Grid>
     </Paper>
   );
 }

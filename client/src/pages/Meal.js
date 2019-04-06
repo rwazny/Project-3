@@ -110,7 +110,7 @@ class Meal extends Component {
   render() {
     return (
       <Grid container justify="space-between">
-        <Grid item>
+        <Grid item> 
           <Dropdown />
         </Grid>
         <Grid item>

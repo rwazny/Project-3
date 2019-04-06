@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
+
 const styles = theme => ({
   demo: {
     [theme.breakpoints.up("lg")]: {
@@ -31,11 +32,14 @@ const styles = theme => ({
     gridGap: `${theme.spacing.unit * 3}px`
   },
   paper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit * 2,
     color: theme.palette.text.secondary,
     whiteSpace: "nowrap",
     marginBottom: theme.spacing.unit,
-    height: 400
+    height: 400,
+    display: "flex",
+    flexDirection: "column"
+
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
