@@ -46,7 +46,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper
   },
   table: {
-    minWidth: 400,
+    minWidth: 200,
     marginTop: 8
   },
   cell: {
@@ -133,7 +133,6 @@ class NutritionPanel extends Component {
   };
 
   getNutritionByTimeframe = () => {
-    console.log(moment().week());
     API.getMealsByDate(moment().week(), localStorage.userId).then(res => {
       console.log(res);
       let newChartData = Object.assign({}, this.state.data);
@@ -194,26 +193,63 @@ class NutritionPanel extends Component {
 
         this.setState({ data: newChartData });
       } else if (this.state.xAxis === "today") {
-        newChartData.labels = [
-          "Calories",
-          "Fat (g)",
-          "Carbs (g)",
-          "Protein (g)"
-        ];
+        API.getMealsByDate(
+          moment().format("YYYY-MM-DD"),
+          localStorage.userId
+        ).then(res => {
+          let dailyData = [0, 0, 0, 0];
+          res.data[0].meal.forEach(meal => {
+            meal.foodItem.forEach(foodItem => {
+              dailyData[0] += foodItem.calories;
+              dailyData[1] += foodItem.fats;
+              dailyData[2] += foodItem.carbohydrates;
+              dailyData[3] += foodItem.protein;
+            });
+          });
 
-        newChartData.datasets = [
-          {
-            label: "Daily",
-            backgroundColor: ["yellow", "red", "green", "blue"],
-            borderColor: "rgba(255,99,132,1)",
-            borderWidth: 1,
-            hoverBackgroundColor: "rgba(255,99,132,0.4)",
-            hoverBorderColor: "rgba(255,99,132,1)",
-            data: [300, 60, 30, 45]
-          }
-        ];
+          newChartData.labels = ["Daily Tracking"];
 
-        this.setState({ data: newChartData });
+          newChartData.datasets = [
+            {
+              label: "Calories",
+              backgroundColor: "yellow",
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 1,
+              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: [dailyData[0]]
+            },
+            {
+              label: "Calories",
+              backgroundColor: "red",
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 1,
+              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: [dailyData[1]]
+            },
+            {
+              label: "Calories",
+              backgroundColor: "green",
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 1,
+              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: [dailyData[2]]
+            },
+            {
+              label: "Calories",
+              backgroundColor: "blue",
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 1,
+              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: [dailyData[3]]
+            }
+          ];
+
+          this.setState({ data: newChartData });
+        });
       }
     });
   };

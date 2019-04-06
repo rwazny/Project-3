@@ -14,7 +14,6 @@ router
 router
   .route("/:id")
   .get(mealController.findById)
-  .put(mealController.update)
   .delete(mealController.remove);
 
 module.exports = router;
