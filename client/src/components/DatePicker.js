@@ -12,7 +12,6 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 200,
-    float: "right"
   }
 });
 
@@ -20,7 +19,7 @@ function DatePickers(props) {
   const { classes } = props;
 
   return (
-    <form className={classes.container} noValidate>
+    //<form className={classes.container} noValidate>
       <TextField
         id="date"
         value={props.value}
@@ -33,7 +32,7 @@ function DatePickers(props) {
           shrink: true
         }}
       />
-    </form>
+    //</form>
   );
 }
 
