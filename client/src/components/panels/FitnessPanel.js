@@ -155,18 +155,6 @@ console.log(name);
     var yyyy = today.getFullYear();
     today = yyyy + "-" + mm + "-" + dd;
     console.log(today);
-
-    auth.onAuthStateChanged(firebaseUser => {
-      this.setState({
-        user: firebaseUser
-      });
-
-      if (firebaseUser) {
-        console.log(firebaseUser);
-      } else {
-        console.log("not logged in");
-      }
-    });
   };
 
   setExerciseArrays = (value, nameArray) => {

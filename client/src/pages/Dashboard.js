@@ -13,14 +13,32 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
 class Dashboard extends Component {
+  state = {};
+  componentDidMount = () =>{
+    auth.onAuthStateChanged(firebaseUser => {
+      this.setState({
+        user: firebaseUser
+      });
+
+      if (firebaseUser) {
+        console.log(firebaseUser);
+      } else {
+        console.log("not logged in");
+      }
+    });
+  }
   render() {
     return (
       <React.Fragment>
         <CssBaseline />
+        {this.state.user ? (
         <Grid container spacing={0} justify="center">
           <NutritionPanel />
           <FitnessPanel />
         </Grid>
+        ): (
+          "No user found"
+        )}
       </React.Fragment>
     );
   }
