@@ -16,6 +16,7 @@ module.exports = {
   },
 
   findWorkOutsByDate: function(req, res) {
+    console.log(req.params.date);
     db.WorkOut.find({ date: req.params.date }).then(workOutData =>
       res.json(workOutData)
     );

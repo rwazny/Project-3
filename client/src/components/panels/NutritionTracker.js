@@ -33,40 +33,40 @@ function NutritionTracker(props) {
   return (
     <Paper className={classes.paper}>
       <Grid container>
-      <Grid item sm={12} md={8}>
-        <TextField
-          //fullWidth
-          id="filled-dense"
-          value={props.mealName}
-          onChange={props.handleInputChange("mealName")}
-          label="Meal name"
-          className=""
-          //margin="dense"
-          variant="filled"
-        />
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          disabled={!props.mealName.trim()}
-          className={classes.margin}
-          onClick={props.addMeal}
-        >
-          Add Meal
-        </Button>
+        <Grid item sm={12} md={8}>
+          <TextField
+            //fullWidth
+            id="filled-dense"
+            value={props.mealName}
+            onChange={props.handleInputChange("mealName")}
+            label="Meal name"
+            className=""
+            //margin="dense"
+            variant="filled"
+          />
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            disabled={!props.mealName.trim()}
+            className={classes.margin}
+            onClick={props.addMeal}
+          >
+            Add Meal
+          </Button>
         </Grid>
 
         <Grid item sm={12} md={4}>
-        <DatePickers
-           //margin="dense"
-          label="Meal date"
-          variant="filled"
-          style={{ width: 200 }}
-          value={props.nutritionDate}
-          changeHandler={props.selectDate}
-          name="nutritionDate"
-        />
-      </Grid>
+          <DatePickers
+            //margin="dense"
+            label="Meal date"
+            variant="filled"
+            style={{ width: 200 }}
+            value={props.nutritionDate}
+            changeHandler={props.selectDate}
+            name="nutritionDate"
+          />
+        </Grid>
       </Grid>
       <Grid style={{ height: 268 }} className={classes.root}>
         <AppBar position="static" color="default">
@@ -120,8 +120,8 @@ function NutritionTracker(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {meal.food
-                        ? meal.food.map(food => (
+                      {meal.foodItem
+                        ? meal.foodItem.map(food => (
                             <TableRow>
                               <TableCell component="th" scope="row">
                                 {food.name}
@@ -130,10 +130,10 @@ function NutritionTracker(props) {
                                 {food.calories}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
-                                {food.fat}
+                                {food.fats}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
-                                {food.carbs}
+                                {food.carbohydrates}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
                                 {food.protein}
@@ -147,8 +147,13 @@ function NutritionTracker(props) {
               </div>
             )
         )}
+        {props.mealsToAdd.length ? (
+          <Meal
+            addFoodItem={props.addFoodItem}
+            saveNutritionDay={props.saveNutritionDay}
+          />
+        ) : null}
       </Grid>
-      <Meal />
     </Paper>
   );
 }

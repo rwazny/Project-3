@@ -83,7 +83,7 @@ class Meal extends Component {
 
     if (results !== undefined) {
       this.setState({ results });
-      let foodItemArr = [];
+      const foodItemArr = [];
       results.forEach(element => {
         let food = {};
         food["name"] = element.food_name;
@@ -101,21 +101,10 @@ class Meal extends Component {
         }
       };
 
-      this.saveMeal(data.Meal);
+      this.props.addFoodItem(data.Meal);
     } else {
       alert("invalid food");
     }
-  };
-
-  saveMeal = () => {
-    let data = {
-      Meal: {
-        date: this.state.mealDate,
-        week: moment(this.state.mealDate, "YYYY-MM-DD").week(),
-        user: localStorage.userId,
-        foodItem: [{}]
-      }
-    };
   };
 
   render() {
@@ -139,7 +128,7 @@ class Meal extends Component {
             variant="contained"
             size="small"
             color="primary"
-            onClick={this.handle}
+            onClick={this.props.saveNutritionDay}
           >
             Save
           </Button>

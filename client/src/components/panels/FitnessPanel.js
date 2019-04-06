@@ -60,7 +60,7 @@ class FitnessPanel extends Component {
     resistanceToAdd: [],
     cardioToAdd: [],
     user: null,
-    workoutDate: moment().format("YYYY-MM-DD"),
+    workoutDate: "",
     selectedWorkout: "None",
     woName: "",
     savedWorkouts: [],
@@ -116,7 +116,7 @@ class FitnessPanel extends Component {
     // if (this.anchorEl.contains(event.target)) {
     //   return;
     // }
-console.log(name);
+    console.log(name);
     if (name) {
       let joined = this.state[name].concat({ name: "" });
       this.setState({ open: false, [name]: joined });
@@ -144,17 +144,11 @@ console.log(name);
         () => {
           this.setExerciseArrays("resistance", "resistanceExerciseNames");
           this.setExerciseArrays("cardio", "cardioExerciseNames");
-          this.returnWorkoutsByDate(today);
+          console.log("mount date: " + moment().format("YYYY-MM-DD"));
+          this.returnWorkoutsByDate(moment().format("YYYY-MM-DD"));
         }
       );
     });
-
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + "-" + mm + "-" + dd;
-    console.log(today);
   };
 
   setExerciseArrays = (value, nameArray) => {
@@ -200,6 +194,7 @@ console.log(name);
   loadWorkOuts = event => {
     API.findUserWorkOuts(localStorage.userId).then(res => console.log(res));
   };
+
   saveDay = () => {
     let data = {
       WorkOut: {
@@ -270,7 +265,6 @@ console.log(name);
   returnWorkoutsByDate = date => {
     this.setState({ workoutDate: date }, () => {
       API.getWorkOutsByDate(this.state.workoutDate).then(res => {
-        console.log(res.data);
         if (res.data.length) {
           let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
           if (res.data[0].resistance) {
@@ -292,15 +286,17 @@ console.log(name);
               });
             });
           }
+
           this.setState({
             resistanceToAdd: newWorkOutState.resistanceToAdd,
             cardioToAdd: newWorkOutState.cardioToAdd,
-            selectedWorkout: res.data[0].name
+            selectedWorkout: res.data[0].name ? res.data[0].name : "None"
           });
         } else {
           this.setState({
             resistanceToAdd: [],
-            cardioToAdd: []
+            cardioToAdd: [],
+            selectedWorkout: "None"
           });
         }
       });
@@ -308,13 +304,6 @@ console.log(name);
   };
 
   getWorkOutByTimeframe = exercise => {
-    console.log(exercise);
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
-    today = yyyy + "-" + mm + "-" + dd;
-
     API.workOutByWeek({
       week: moment().week(),
       name: exercise,
@@ -369,8 +358,6 @@ console.log(name);
         }
       }
       newChartData.datasets[0].data = newData;
-      console.log(res.data);
-      console.log(newData);
       this.setState({ data: newChartData });
     });
   };
@@ -387,44 +374,8 @@ console.log(name);
   };
 
   selectDate = event => {
-    this.setState({ workoutDate: event.target.value }, () => {
-      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
-        if (res.data.length) {
-          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
-          if (res.data[0].resistance) {
-            res.data[0].resistance.map(resistance => {
-              newWorkOutState.resistanceToAdd.push({
-                name: resistance.name,
-                sets: resistance.sets,
-                reps: resistance.reps,
-                weight: resistance.weight
-              });
-            });
-          }
-          if (res.data[0].cardio) {
-            res.data[0].cardio.map(cardio => {
-              newWorkOutState.cardioToAdd.push({
-                name: cardio.name,
-                time: cardio.time,
-                distance: cardio.distance
-              });
-            });
-          }
-
-          this.setState({
-            resistanceToAdd: newWorkOutState.resistanceToAdd,
-            cardioToAdd: newWorkOutState.cardioToAdd,
-            selectedWorkout: res.data[0].name ? res.data[0].name : "None"
-          });
-        } else {
-          this.setState({
-            resistanceToAdd: [],
-            cardioToAdd: [],
-            selectedWorkout: "None"
-          });
-        }
-      });
-    });
+    let newDate = event.target.value;
+    this.returnWorkoutsByDate(newDate);
   };
 
   selectWorktout = name => event => {
