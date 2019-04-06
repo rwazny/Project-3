@@ -107,33 +107,6 @@ class Meal extends Component {
     }
   };
 
-  saveMeal = () => {
-    let data = {
-      Nutrition: {
-        date: "2019-04-04",
-        week: 14,
-        user: localStorage.userId,
-        meal: [
-          {
-            name: "yummy in my tummy",
-            foodItem: [
-              {
-                name: "burger",
-                protein: 150,
-                carbohydrates: 150,
-                fats: 666,
-                calories: 15
-              }
-            ]
-          }
-        ]
-      }
-    };
-    API.saveMeal(data.Nutrition).then(res => {
-      console.log(res);
-    });
-  };
-
   render() {
     return (
       <Grid container justify="space-between">
@@ -155,7 +128,7 @@ class Meal extends Component {
             variant="contained"
             size="small"
             color="primary"
-            onClick={this.saveMeal}
+            onClick={this.props.saveNutritionDay}
           >
             Save
           </Button>

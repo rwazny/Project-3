@@ -22,8 +22,6 @@ module.exports = {
   findWorkOutsByWeek: function(req, res) {
     let { week, name, user, type } = req.params;
     week = parseInt(week);
-    console.log(req.params);
-
     type === "resistance"
       ? db.WorkOut.aggregate([
           { $unwind: "$resistance" },

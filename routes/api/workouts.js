@@ -15,10 +15,4 @@ router
   .get(workOutController.findSavedWorkOuts)
   .post(workOutController.saveWorkOut);
 
-// router
-//   .route("/api/workouts/:id")
-//   .get(workOutController.findById)
-//   .put(workOutController.update)
-//   .delete(workOutController.remove);
-
 module.exports = router;

@@ -44,14 +44,15 @@ export default {
   //------------------------------------MEAL---------------------------
   // Saves meal to the database
   saveMeal: function(mealData) {
-    console.log("inside API saveMeal");
     return axios.post("/api/meals", mealData);
   },
   //Gets all Meal
-  getMeal: function() {
-    return axios.get("/api/meals");
+  getMeal: function(date) {
+    return axios.get("/api/meals", date);
   },
-
+  getMealsByDate: function(date, user) {
+    return axios.get(`/api/meals/${date}&${user}`);
+  },
   saveWorkOut: function(data) {
     return axios.post("/api/workouts/savedworkouts", data);
   }

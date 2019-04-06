@@ -139,10 +139,10 @@ class FitnessReports extends Component {
             {this.props.type
               ? this.props.type === "resistance"
                 ? this.props.resistanceArray.map(exercise => (
-                    <option>{exercise}</option>
+                    <option key={exercise}>{exercise}</option>
                   ))
                 : this.props.cardioArray.map(exercise => (
-                    <option>{exercise}</option>
+                    <option key={exercise}>{exercise}</option>
                   ))
               : null}
           </Select>

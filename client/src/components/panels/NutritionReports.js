@@ -64,6 +64,23 @@ function NutritionReports(props) {
           props.chartType === "barChart" ? (
             <div style={{ float: "left" }}>
               <FormControl>
+                <InputLabel htmlFor="type-native-simple">X-Axis</InputLabel>
+                <Select
+                  style={{ width: 120, marginRight: 15 }}
+                  native
+                  value={props.xAxis}
+                  onChange={props.handleInputChange("xAxis")}
+                  inputProps={{
+                    name: "xAxis",
+                    id: "type-native-simple"
+                  }}
+                >
+                  <option value="" />
+                  <option value={"thisWeek"}>This Week</option>
+                  <option value={"today"}>Today</option>
+                </Select>
+              </FormControl>
+              <FormControl>
                 <InputLabel htmlFor="type-native-simple">Y-Axis</InputLabel>
                 <Select
                   style={{ width: 120, marginRight: 15 }}
@@ -82,22 +99,6 @@ function NutritionReports(props) {
                   <option value={"carbs"}>Carbs</option>
                 </Select>
               </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="type-native-simple">X-Axis</InputLabel>
-                <Select
-                  style={{ width: 120, marginRight: 15 }}
-                  native
-                  value={props.xAxis}
-                  onChange={props.handleInputChange("xAxis")}
-                  inputProps={{
-                    name: "xAxis",
-                    id: "type-native-simple"
-                  }}
-                >
-                  <option value="" />
-                  <option value={"thisWeek"}>This Week</option>
-                </Select>
-              </FormControl>
             </div>
           ) : (
             <div style={{ float: "left" }}>Pie Chart</div>
@@ -105,43 +106,6 @@ function NutritionReports(props) {
         ) : (
           "Select a chart type"
         )}
-
-        {/* <FormControl disabled={!props.exercise}>
-          <InputLabel htmlFor="reps-native-simple">Reps</InputLabel>
-          <Select
-            style={{ width: 120, marginRight: 15 }}
-            native
-            value={props.reps}
-            onChange={props.handleChange("reps")}
-            inputProps={{
-              name: "reps",
-              id: "reps-native-simple"
-            }}
-          >
-            <option value="" />
-            <option value={10}>1</option>
-            <option value={20}>5</option>
-          </Select>
-        </FormControl> */}
-
-        {/* <FormControl disabled={!props.reps}>
-          <InputLabel htmlFor="timeframe-native-simple">Timeframe</InputLabel>
-          <Select
-            style={{ width: 120, marginRight: 15 }}
-            native
-            value={props.timeframe}
-            onChange={props.handleChange("timeframe")}
-            inputProps={{
-              name: "timeframe",
-              id: "timeframe-native-simple"
-            }}
-          >
-            <option value="" />
-            <option value={"thisWeek"}>This Week</option>
-            <option value={"thisMonth"}>This Month</option>
-          </Select>
-        </FormControl> */}
-
         <Bar data={props.data} width={100} height={50} options={barOptions} />
       </div>
     </Paper>

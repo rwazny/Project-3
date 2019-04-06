@@ -113,8 +113,8 @@ function NutritionTracker(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {meal.food
-                        ? meal.food.map(food => (
+                      {meal.foodItem
+                        ? meal.foodItem.map(food => (
                             <TableRow>
                               <TableCell component="th" scope="row">
                                 {food.name}
@@ -123,10 +123,10 @@ function NutritionTracker(props) {
                                 {food.calories}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
-                                {food.fat}
+                                {food.fats}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
-                                {food.carbs}
+                                {food.carbohydrates}
                               </TableCell>
                               <TableCell className={classes.cell} align="right">
                                 {food.protein}
@@ -141,7 +141,12 @@ function NutritionTracker(props) {
             )
         )}
       </div>
-      <Meal addFoodItem={props.addFoodItem} />
+      {props.mealsToAdd.length ? (
+        <Meal
+          addFoodItem={props.addFoodItem}
+          saveNutritionDay={props.saveNutritionDay}
+        />
+      ) : null}
     </Paper>
   );
 }
