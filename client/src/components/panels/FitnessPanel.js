@@ -27,11 +27,13 @@ const styles = theme => ({
     gridGap: `${theme.spacing.unit * 3}px`
   },
   paper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit * 2,
     color: theme.palette.text.secondary,
     whiteSpace: "nowrap",
     marginBottom: theme.spacing.unit,
-    height: 400
+    height: 400,
+    display: "flex",
+    flexDirection: "column"
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
@@ -111,10 +113,10 @@ class FitnessPanel extends Component {
   };
 
   handleClose = name => event => {
-    if (this.anchorEl.contains(event.target)) {
-      return;
-    }
-
+    // if (this.anchorEl.contains(event.target)) {
+    //   return;
+    // }
+console.log(name);
     if (name) {
       let joined = this.state[name].concat({ name: "" });
       this.setState({ open: false, [name]: joined });
@@ -153,18 +155,6 @@ class FitnessPanel extends Component {
     var yyyy = today.getFullYear();
     today = yyyy + "-" + mm + "-" + dd;
     console.log(today);
-
-    auth.onAuthStateChanged(firebaseUser => {
-      this.setState({
-        user: firebaseUser
-      });
-
-      if (firebaseUser) {
-        console.log(firebaseUser);
-      } else {
-        console.log("not logged in");
-      }
-    });
   };
 
   setExerciseArrays = (value, nameArray) => {
@@ -454,7 +444,7 @@ class FitnessPanel extends Component {
         >
           Fitness
         </Typography>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <FitnessTracker
             classes={classes}
             handleAnchorEl={this.handleAnchorEl}
@@ -478,7 +468,7 @@ class FitnessPanel extends Component {
             open={open}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6}>
           <Paper className={classes.paper}>
             <FitnessReports
               data={this.state.data}

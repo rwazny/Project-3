@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Paper from "@material-ui/core/Paper";
 import HomeIcon from "@material-ui/icons/Home";
 import DnsIcon from "@material-ui/icons/Dns";
+import Button from "@material-ui/core/Button";
 
 class App extends Component {
   state = {

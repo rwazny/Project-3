@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from "@material-ui/core/Grid";
 
 var userInput = '';
 var suggestions = [];
@@ -181,7 +182,7 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     return (
-      <div style={{"width": "20vw"}} className={classes.root}>
+      <Grid className={classes.root}>
         <Autosuggest 
           {...autosuggestProps}
           inputProps={{
@@ -206,7 +207,7 @@ class IntegrationAutosuggest extends React.Component {
         />
         <div className={classes.divider} />
 
-      </div>
+      </Grid>
     );
   }
 }
