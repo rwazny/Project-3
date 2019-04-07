@@ -11,7 +11,7 @@ import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-
+import FormControl from "@material-ui/core/FormControl";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -32,16 +32,21 @@ function NutritionTracker(props) {
 
   return (
     <Paper className={classes.paper}>
-      <Grid container>
-        <Grid item sm={12} md={8}>
+      <h2 className={classes.panelHeader}>Tracking</h2>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={12} sm={6}>
           <TextField
-            //fullWidth
             id="filled-dense"
             value={props.mealName}
             onChange={props.handleInputChange("mealName")}
-            label="Meal name"
+            label="Meal Name"
             className=""
-            //margin="dense"
+            margin="dense"
             variant="filled"
           />
           <Button
@@ -56,104 +61,107 @@ function NutritionTracker(props) {
           </Button>
         </Grid>
 
-        <Grid item sm={12} md={4}>
+        <Grid item xs={12} sm={5}>
           <DatePickers
             //margin="dense"
-            label="Meal date"
+            label="Meal Date"
             variant="filled"
-            style={{ width: 200 }}
+            //style={{ width: 200 }}
             value={props.nutritionDate}
             changeHandler={props.selectDate}
             name="nutritionDate"
           />
         </Grid>
       </Grid>
-      <Grid style={{ height: 268 }} className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={props.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="auto"
-          >
-            {props.mealsToAdd.length ? (
-              props.mealsToAdd.map((meal, index) => (
-                <Tab key={index} label={meal.name} />
-              ))
-            ) : (
-              <Tab label="No meals" />
-            )}
-          </Tabs>
-        </AppBar>
-        {props.mealsToAdd.map(
-          (meal, index) =>
-            value === index && (
-              <div
-                style={{ height: 239, overflowY: "auto", overflowX: "hidden" }}
-              >
-                <TabContainer key={index}>
-                  <Table style={{ width: "auto", tableLayout: "auto" }}>
-                    <colgroup>
-                      <col style={{ width: "60%" }} />
-                      <col style={{ width: "10%" }} />
-                      <col style={{ width: "10%" }} />
-                      <col style={{ width: "10%" }} />
-                      <col style={{ width: "10%" }} />
-                    </colgroup>
-                    <TableHead>
-                      <TableRow style={{ height: 30 }}>
-                        <TableCell>Food</TableCell>
-                        <TableCell className={classes.cell} align="right">
-                          Calories
-                        </TableCell>
-                        <TableCell className={classes.cell} align="right">
-                          Fat (g)
-                        </TableCell>
-                        <TableCell className={classes.cell} align="right">
-                          Carbs (g)
-                        </TableCell>
-                        <TableCell className={classes.cell} align="right">
-                          Protein (g)
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {meal.foodItem
-                        ? meal.foodItem.map(food => (
-                            <TableRow>
-                              <TableCell component="th" scope="row">
-                                {food.name}
-                              </TableCell>
-                              <TableCell className={classes.cell} align="right">
-                                {food.calories}
-                              </TableCell>
-                              <TableCell className={classes.cell} align="right">
-                                {food.fats}
-                              </TableCell>
-                              <TableCell className={classes.cell} align="right">
-                                {food.carbohydrates}
-                              </TableCell>
-                              <TableCell className={classes.cell} align="right">
-                                {food.protein}
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        : null}
-                    </TableBody>
-                  </Table>
-                </TabContainer>
-              </div>
-            )
-        )}
-        {props.mealsToAdd.length ? (
-          <Meal
-            addFoodItem={props.addFoodItem}
-            saveNutritionDay={props.saveNutritionDay}
-          />
-        ) : null}
-      </Grid>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={props.handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {props.mealsToAdd.length ? (
+            props.mealsToAdd.map((meal, index) => (
+              <Tab key={index} label={meal.name} />
+            ))
+          ) : (
+            <Tab label="No meals" />
+          )}
+        </Tabs>
+      </AppBar>
+      {props.mealsToAdd.map(
+        (meal, index) =>
+          value === index && (
+            <div
+              style={{
+                flexGrow: 1,
+                flexDirection: "column",
+                overflowY: "auto",
+                overflowX: "hidden"
+              }}
+            >
+              <TabContainer key={index}>
+                <Table style={{ width: "auto", tableLayout: "auto" }}>
+                  <colgroup>
+                    <col style={{ width: "60%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "10%" }} />
+                  </colgroup>
+                  <TableHead>
+                    <TableRow style={{ height: 30 }}>
+                      <TableCell>Food</TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Calories
+                      </TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Fat (g)
+                      </TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Carbs (g)
+                      </TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Protein (g)
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {meal.foodItem
+                      ? meal.foodItem.map(food => (
+                          <TableRow>
+                            <TableCell component="th" scope="row">
+                              {food.name}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {food.calories}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {food.fats}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {food.carbohydrates}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {food.protein}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      : null}
+                  </TableBody>
+                </Table>
+              </TabContainer>
+            </div>
+          )
+      )}
+      {props.mealsToAdd.length ? (
+        <Meal
+          addFoodItem={props.addFoodItem}
+          saveNutritionDay={props.saveNutritionDay}
+        />
+      ) : null}
     </Paper>
   );
 }

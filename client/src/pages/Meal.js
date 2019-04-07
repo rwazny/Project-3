@@ -109,31 +109,41 @@ class Meal extends Component {
 
   render() {
     return (
-      <Grid container justify="space-between">
-        <Grid item> 
+      <Grid
+        style={{ marginTop: 6 }}
+        container
+        spacing={8}
+        direction="row"
+        justify="space-between"
+      >
+        <Grid item md={6}>
           <Dropdown />
         </Grid>
-        <Grid item>
-          <Button
-            style={{ margin: "25px 10px" }}
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={this.handleSubmit}
-          >
-            Search
-          </Button>
-          <Button
-            style={{ margin: "25px 10px" }}
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={this.props.saveNutritionDay}
-          >
-            Save
-          </Button>
+        <Grid item md={6}>
+          <Grid container justify="space-between">
+            <Grid item>
+              <Button
+                style={{ marginRight: 6 }}
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={this.handleSubmit}
+              >
+                Search
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={this.props.saveNutritionDay}
+              >
+                Save
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
-        {/* <FoodResults results={this.state.results} /> */}
       </Grid>
     );
   }

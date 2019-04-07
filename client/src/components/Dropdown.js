@@ -180,7 +180,7 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     return (
-      <Grid className={classes.root}>
+      <React.Fragment>
         <Autosuggest
           {...autosuggestProps}
           inputProps={{
@@ -204,7 +204,7 @@ class IntegrationAutosuggest extends React.Component {
           )}
         />
         <div className={classes.divider} />
-      </Grid>
+      </React.Fragment>
     );
   }
 }

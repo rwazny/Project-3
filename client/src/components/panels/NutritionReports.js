@@ -1,11 +1,12 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 
 // Material UI imports
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Typography from "@material-ui/core/Typography";
 
 const barOptions = {
   maintainAspectRatio: true,
@@ -39,13 +40,15 @@ const barOptions = {
 };
 
 function NutritionReports(props) {
+  const { classes } = props;
   return (
-    <Paper className={props.paper}>
+    <Paper className={classes.paper}>
+      <h2 className={classes.panelHeader}>Reports</h2>
       <div>
         <FormControl style={{ float: "left" }}>
           <InputLabel htmlFor="type-native-simple">Type</InputLabel>
           <Select
-            //style={{ width: 120, marginRight: 15 }}
+            style={{ width: 120, marginRight: 15 }}
             native
             value={props.chartType}
             onChange={props.handleInputChange("chartType")}
@@ -80,33 +83,58 @@ function NutritionReports(props) {
                   <option value={"today"}>Today</option>
                 </Select>
               </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="type-native-simple">Y-Axis</InputLabel>
-                <Select
-                  style={{ width: 120, marginRight: 15 }}
-                  native
-                  value={props.yAxis}
-                  onChange={props.handleInputChange("yAxis")}
-                  inputProps={{
-                    name: "yAxis",
-                    id: "type-native-simple"
-                  }}
-                >
-                  <option value="" />
-                  <option value={"calories"}>Calories</option>
-                  <option value={"protein"}>Protein</option>
-                  <option value={"fat"}>Fat</option>
-                  <option value={"carbs"}>Carbs</option>
-                </Select>
-              </FormControl>
+              {props.xAxis === "thisWeek" ? (
+                <FormControl>
+                  <InputLabel htmlFor="type-native-simple">Y-Axis</InputLabel>
+                  <Select
+                    style={{ width: 120, marginRight: 15 }}
+                    native
+                    value={props.yAxis}
+                    onChange={props.handleInputChange("yAxis")}
+                    inputProps={{
+                      name: "yAxis",
+                      id: "type-native-simple"
+                    }}
+                  >
+                    <option value="" />
+                    <option value={"calories"}>Calories</option>
+                    <option value={"protein"}>Protein</option>
+                    <option value={"fat"}>Fat</option>
+                    <option value={"carbs"}>Carbs</option>
+                  </Select>
+                </FormControl>
+              ) : null}
             </div>
           ) : (
-            <div style={{ float: "left" }}>Pie Chart</div>
+            <FormControl>
+              <InputLabel htmlFor="type-native-simple">Timeframe</InputLabel>
+              <Select
+                style={{ width: 120, marginRight: 15 }}
+                native
+                value={props.xAxis}
+                onChange={props.handleInputChange("xAxis")}
+                inputProps={{
+                  name: "xAxis",
+                  id: "type-native-simple"
+                }}
+              >
+                <option value="" />
+                <option value={"thisWeek"}>This Week</option>
+                <option value={"today"}>Today</option>
+              </Select>
+            </FormControl>
           )
         ) : (
-          "Select a chart type"
+          <Typography variant="caption">
+            Select a chart type to see more options
+          </Typography>
         )}
-        <Bar data={props.data} width={100} height={50} options={barOptions} />
+
+        {props.chartType === "barChart" ? (
+          <Bar data={props.data} width={100} height={50} options={barOptions} />
+        ) : (
+          <Pie data={props.data} width={100} height={50} />
+        )}
       </div>
     </Paper>
   );
