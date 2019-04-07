@@ -53,8 +53,7 @@ const workOutSchema = new mongoose.Schema({
   user: { type: String },
   name: {
     type: String,
-    min: 0,
-    sparse: true,
+   
     max: 250,
     trim: true
   },
