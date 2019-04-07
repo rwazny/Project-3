@@ -140,7 +140,7 @@ class SignIn extends React.Component {
                 onChange={this.handleChange}
                 autoComplete="current-password"
               />
-           {this.state.password.length <6 && this.state.password.length >0? <div style={{color:'red', paddingTop: 10,fontFamily: "Helvetica",fontSize: 12, textAlign: 'center'}} >Password Must Be at Least 6 Characters</div>:""}
+           {this.state.password.length <6 && this.state.password.length >0 ? <div style={{color:'red', paddingTop: 10,fontFamily: "Helvetica",fontSize: 12, textAlign: 'center'}} >Password Must Be at Least 6 Characters</div>:""}
             </FormControl>
             {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
