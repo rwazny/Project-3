@@ -3,60 +3,35 @@ import moment from "moment";
 
 // Material UI imports
 import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Grow from "@material-ui/core/Grow";
-import Popper from "@material-ui/core/Popper";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import DatePickers from "../DatePicker";
-import SimpleTable from "../Table";
+import Input from "@material-ui/core/Input";
 import Grid from "@material-ui/core/Grid";
 
-function FitnessTracker(props) {
+function TabContainer(props) {
   return (
-    <Paper className={props.classes.paper}>
-      <Grid container> 
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            select
-            label="Saved Workouts"
-            className={props.classes.textField}
-            SelectProps={{
-              native: true,
-              MenuProps: {
-                className: props.classes.menu
-              }
-            }}
-            margin="dense"
-            variant="filled"
-            value={props.selectedWorkout}
-            onChange={props.clickSavedWorkout}
-          >
-            <option>None</option>
-            {props.savedWorkouts.length
-              ? props.savedWorkouts.map(workout => (
-                  <option key={workout.name}>{workout.name}</option>
-                ))
-              : null}
-          </TextField>
-        </Grid>
-        <Grid item xs={6}>
-          <DatePickers
-            margin="dense"
-            label="Workout Date"
-            variant="filled"
-            style={{ float: "right" }}
-            value={props.workoutDate}
-            changeHandler={props.selectDate}
-            name="workoutDate"
-          />
-        </Grid>
-      </Grid>
-      <Grid container>
+    <Typography component="div" style={{ padding: 5 }}>
+      {props.children}
+    </Typography>
+  );
+}
+
+function FitnessTracker(props) {
+  const { value, classes } = props;
+  return (
+    <Paper className={classes.paper}>
+      <h2 className={classes.panelHeader}>Tracking</h2>
+      <Grid justify="space-between" container>
         <Grid item xs={6}>
           <TextField
             fullWidth
@@ -64,132 +39,217 @@ function FitnessTracker(props) {
             label="Name"
             value={props.woName}
             onChange={props.handleNameChange}
-            className={props.classes.textField}
+            className={classes.textField}
             margin="dense"
             variant="filled"
           />
         </Grid>
-        <Grid>
-          <Button
-            style={{ margin: "25px 10px" }}
-            variant="contained"
-            size="small"
-            color="primary"
-            className={props.classes.button}
-            onClick={props.loadWorkOuts}
-          >
-            Save Workout
-          </Button>
-
-          <Button
-            style={{ margin: "25px 10px" }}
-            variant="contained"
-            size="small"
-            color="primary"
-            className={props.classes.button}
-          >
-            New Workout
-          </Button>
+        <Grid item xs={5}>
+          <DatePickers
+            margin="dense"
+            label="Workout Date"
+            variant="filled"
+            value={props.workoutDate}
+            changeHandler={props.selectDate}
+            name="workoutDate"
+          />
         </Grid>
-        </Grid>
-      {!props.resistanceToAdd.length && !props.cardioToAdd.length ? (
-        <h3 style={{ flexGrow: 1, textAlign: "center" }}>
-          No exercises :(
-        </h3>
-      ) : (
-        <div>
-          {props.resistanceToAdd.length ? (
-            <SimpleTable
-              style={{ marginTop: 0 }}
-              exerciseType="resistanceToAdd"
-              changeHandler={props.handleInputChange}
-              newValue={props.resistanceToAdd}
-              headings={["Exercise", "Sets", "Reps", "Weight"]}
-              rows={props.resistanceToAdd}
-            />
-          ) : (
-            ""
-          )}
-          {props.cardioToAdd.length ? (
-            <SimpleTable
-              exerciseType="cardioToAdd"
-              changeHandler={props.handleCardio}
-              newValue={props.cardioToAdd}
-              headings={["Exercise", "Distance", "Time"]}
-              rows={props.cardioToAdd}
-            />
-          ) : (
-            ""
-          )}
-        </div>
-      )}
-      <Grid container >
-      <Grid item xs={3}>
-      <Button
-        color="primary"
-        onClick={props.handleClose("resistanceToAdd")}
-      >
-        Add Resistance
-      </Button>
       </Grid>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={props.handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label="Resistance" />
+          <Tab label="Cardio" />
+        </Tabs>
+      </AppBar>
 
-      <Grid item xs={3}>
-      <Button
-        color="primary"
-        onClick={props.handleClose("cardioToAdd")}
+      <div
+        style={{
+          flexGrow: 1,
+          flexDirection: "column",
+          overflowY: "auto",
+          overflowX: "hidden"
+        }}
       >
-        Add Cardio
-      </Button>
-      </Grid>
-
-    {/*   <Popper
-        open={props.open}
-        anchorEl={props.anchorEl}
-        transition
-        disablePortal
-        placement="top-end"
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            id="menu-list-grow"
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom"
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={props.handleClickAway}>
-                <MenuList>
-                  <MenuItem onClick={props.handleClose("resistanceToAdd")}>
-                    Add Resistance
-                  </MenuItem>
-                  <MenuItem onClick={props.handleClose("cardioToAdd")}>
-                    Add Cardio
-                  </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
+        {value === 0 && (
+          <TabContainer>
+            <Table style={{ tableLayout: "auto" }}>
+              <colgroup>
+                <col style={{ width: "70%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "10%" }} />
+              </colgroup>
+              <TableHead>
+                <TableRow style={{ height: 30 }}>
+                  <TableCell className={classes.cell} align="right">
+                    Exercise
+                  </TableCell>
+                  <TableCell className={classes.cell} align="right">
+                    Reps
+                  </TableCell>
+                  <TableCell className={classes.cell} align="right">
+                    Sets
+                  </TableCell>
+                  <TableCell className={classes.cell} align="right">
+                    Weight
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.resistanceToAdd.map((exercise, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("resistanceToAdd")}
+                        name="name"
+                        placeholder="Exercise"
+                        className={classes.input}
+                        value={exercise.name}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="right">
+                      <Input
+                        id={index.toString()}
+                        name="reps"
+                        onChange={props.handleInputChange("resistanceToAdd")}
+                        style={{ width: 50 }}
+                        placeholder="Reps"
+                        type="number"
+                        className={classes.input}
+                        value={exercise.reps}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="right">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("resistanceToAdd")}
+                        name="sets"
+                        placeholder="Sets"
+                        type="number"
+                        className={classes.input}
+                        value={exercise.sets}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="right">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("resistanceToAdd")}
+                        name="weight"
+                        placeholder="Weight"
+                        type="number"
+                        className={classes.input}
+                        value={exercise.weight}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TabContainer>
         )}
-      </Popper> */}
+        {value === 1 && (
+          <TabContainer>
+            <Table style={{ tableLayout: "auto" }}>
+              <TableHead>
+                <TableRow style={{ height: 30 }}>
+                  <TableCell className={classes.cell} align="right">
+                    Exercise
+                  </TableCell>
+                  <TableCell className={classes.cell} align="right">
+                    Distance (mi)
+                  </TableCell>
+                  <TableCell className={classes.cell} align="right">
+                    Time (mins)
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.cardioToAdd.map((exercise, index) => (
+                  <TableRow key={index}>
+                    <TableCell component="th" scope="row">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("cardioToAdd")}
+                        name="name"
+                        placeholder="Exercise"
+                        className={classes.input}
+                        value={exercise.name}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="right">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("cardioToAdd")}
+                        name="distance"
+                        style={{ width: 50 }}
+                        placeholder="Distance"
+                        type="number"
+                        className={classes.input}
+                        value={exercise.distance}
+                      />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="right">
+                      <Input
+                        id={index.toString()}
+                        onChange={props.handleInputChange("cardioToAdd")}
+                        name="time"
+                        style={{ width: 50 }}
+                        placeholder="Time"
+                        type="number"
+                        className={classes.input}
+                        value={exercise.time}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TabContainer>
+        )}
+      </div>
+      <Grid style={{ marginTop: 6 }} container>
+        <Grid item xs={8}>
+          <Button
+            style={{ marginRight: 6 }}
+            color="primary"
+            variant="contained"
+            onClick={props.handleClose("resistanceToAdd")}
+          >
+            Add Resistance
+          </Button>
 
-      <Grid item xs={6}>
-      <Button
-        variant="contained"
-        style={{ float: "right" }}
-        // size="small"
-        color="primary"
-        disabled={!props.resistanceToAdd.length && !props.cardioToAdd.length}
-        onClick={props.saveDay}
-        className={props.classes.button}
-      >
-        Save
-      </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={props.handleClose("cardioToAdd")}
+          >
+            Add Cardio
+          </Button>
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            style={{ float: "right" }}
+            // size="small"
+            color="primary"
+            disabled={
+              !props.resistanceToAdd.length && !props.cardioToAdd.length
+            }
+            onClick={props.saveDay}
+            className={classes.button}
+          >
+            Save
+          </Button>
+        </Grid>
       </Grid>
-      </Grid>
-
-
     </Paper>
   );
 }

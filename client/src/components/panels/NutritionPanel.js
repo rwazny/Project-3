@@ -12,7 +12,6 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-
 const styles = theme => ({
   demo: {
     [theme.breakpoints.up("lg")]: {
@@ -37,9 +36,12 @@ const styles = theme => ({
     whiteSpace: "nowrap",
     marginBottom: theme.spacing.unit,
     height: 400,
+    [theme.breakpoints.down("md")]: {
+      height: 700
+    },
     display: "flex",
-    flexDirection: "column"
-
+    flexDirection: "column",
+    position: "relative"
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
@@ -55,6 +57,17 @@ const styles = theme => ({
   },
   cell: {
     padding: 10
+  },
+  panelHeader: {
+    fontFamily: "'Lobster', cursive",
+    position: "absolute",
+    top: -38
+  },
+  panelName: {
+    width: "100%",
+    marginTop: 20,
+    fontFamily: "'Lobster', cursive",
+    textAlign: "center"
   }
 });
 
@@ -137,70 +150,114 @@ class NutritionPanel extends Component {
   };
 
   getNutritionByTimeframe = () => {
-    API.getMealsByDate(moment().week(), localStorage.userId).then(res => {
-      console.log(res);
-      let newChartData = Object.assign({}, this.state.data);
-      if (this.state.xAxis === "thisWeek") {
-        const dateArray = [
-          moment()
-            .day("Sunday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Monday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Tuesday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Wednesday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Thursday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Friday")
-            .format("MM-DD-YYYY"),
-          moment()
-            .day("Saturday")
-            .format("MM-DD-YYYY")
-        ];
+    let newChartData = Object.assign({}, this.state.data);
 
-        newChartData.labels = [
-          ["Sunday", dateArray[0]],
-          ["Monday", dateArray[1]],
-          ["Tuesday", dateArray[2]],
-          ["Wednesday", dateArray[3]],
-          ["Thursday", dateArray[4]],
-          ["Friday", dateArray[5]],
-          ["Saturday", dateArray[6]]
-        ];
+    if (this.state.xAxis === "thisWeek") {
+      API.getMealsByDate(moment().week(), localStorage.userId).then(res => {
+        console.log(res);
 
-        let newData = [null, null, null, null, null, null, null];
-        for (let i = 0; i < res.data.length; i++) {
-          let newSum = this.dayTotalsSum(this.state.yAxis, res.data[i]);
-          const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
-          const id = dateArray.indexOf(dateToFind);
-          newData[id] = newSum;
+        if (this.state.chartType === "pieChart") {
+          newChartData.labels = ["Fat", "Carbs", "Protein"];
+
+          let newData = [0, 0, 0];
+
+          for (let b = 0; b < newData.length; b++) {
+            for (let i = 0; i < res.data.length; i++) {
+              let newSum = this.dayTotalsSum(
+                newChartData.labels[b].toLowerCase(),
+                res.data[i]
+              );
+              newData[b] += newSum;
+            }
+          }
+
+          newChartData.datasets = [
+            {
+              data: [newData[0], newData[1], newData[2]],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+              hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+            }
+          ];
+        } else {
+          const dateArray = [
+            moment()
+              .day("Sunday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Monday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Tuesday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Wednesday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Thursday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Friday")
+              .format("MM-DD-YYYY"),
+            moment()
+              .day("Saturday")
+              .format("MM-DD-YYYY")
+          ];
+
+          newChartData.labels = [
+            ["Sunday", dateArray[0]],
+            ["Monday", dateArray[1]],
+            ["Tuesday", dateArray[2]],
+            ["Wednesday", dateArray[3]],
+            ["Thursday", dateArray[4]],
+            ["Friday", dateArray[5]],
+            ["Saturday", dateArray[6]]
+          ];
+
+          let newData = [null, null, null, null, null, null, null];
+          for (let i = 0; i < res.data.length; i++) {
+            let newSum = this.dayTotalsSum(this.state.yAxis, res.data[i]);
+            const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
+            const id = dateArray.indexOf(dateToFind);
+            newData[id] = newSum;
+          }
+
+          let color = "";
+          switch (this.state.yAxis) {
+            case "calories":
+              color = "cadetblue";
+              break;
+            case "fat":
+              color = "#FF6384";
+              break;
+            case "carbs":
+              color = "#36A2EB";
+              break;
+            case "protein":
+              color = "#FFCE56";
+              break;
+          }
+
+          newChartData.datasets = [
+            {
+              label: this.state.yAxis,
+              backgroundColor: color,
+              borderColor: "rgba(255,99,132,1)",
+              borderWidth: 1,
+              hoverBackgroundColor: color,
+              hoverBorderColor: "rgba(255,99,132,1)",
+              data: newData
+            }
+          ];
         }
 
-        newChartData.datasets = [
-          {
-            label: this.state.yAxis,
-            backgroundColor: "rgba(255,99,132,0.2)",
-            borderColor: "rgba(255,99,132,1)",
-            borderWidth: 1,
-            hoverBackgroundColor: "rgba(255,99,132,0.4)",
-            hoverBorderColor: "rgba(255,99,132,1)",
-            data: newData
-          }
-        ];
-
         this.setState({ data: newChartData });
-      } else if (this.state.xAxis === "today") {
-        API.getMealsByDate(
-          moment().format("YYYY-MM-DD"),
-          localStorage.userId
-        ).then(res => {
+      });
+    } else if (this.state.xAxis === "today") {
+      API.getMealsByDate(
+        moment().format("YYYY-MM-DD"),
+        localStorage.userId
+      ).then(res => {
+        if (res.data.length) {
           let dailyData = [0, 0, 0, 0];
           res.data[0].meal.forEach(meal => {
             meal.foodItem.forEach(foodItem => {
@@ -211,51 +268,63 @@ class NutritionPanel extends Component {
             });
           });
 
-          newChartData.labels = ["Daily Tracking"];
+          if (this.state.chartType === "pieChart") {
+            newChartData.labels = ["Fat", "Carbs", "Protein"];
 
-          newChartData.datasets = [
-            {
-              label: "Calories",
-              backgroundColor: "yellow",
-              borderColor: "rgba(255,99,132,1)",
-              borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-              hoverBorderColor: "rgba(255,99,132,1)",
-              data: [dailyData[0]]
-            },
-            {
-              label: "Calories",
-              backgroundColor: "red",
-              borderColor: "rgba(255,99,132,1)",
-              borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-              hoverBorderColor: "rgba(255,99,132,1)",
-              data: [dailyData[1]]
-            },
-            {
-              label: "Calories",
-              backgroundColor: "green",
-              borderColor: "rgba(255,99,132,1)",
-              borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-              hoverBorderColor: "rgba(255,99,132,1)",
-              data: [dailyData[2]]
-            },
-            {
-              label: "Calories",
-              backgroundColor: "blue",
-              borderColor: "rgba(255,99,132,1)",
-              borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-              hoverBorderColor: "rgba(255,99,132,1)",
-              data: [dailyData[3]]
-            }
-          ];
+            newChartData.datasets = [
+              {
+                data: [dailyData[1], dailyData[2], dailyData[3]],
+                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+                hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+              }
+            ];
+          } else {
+            newChartData.labels = ["Daily Tracking"];
+
+            newChartData.datasets = [
+              {
+                label: "Calories",
+                backgroundColor: "cadetblue",
+                borderColor: "rgba(255,99,132,1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "cadetblue",
+                hoverBorderColor: "rgba(255,99,132,1)",
+                data: [dailyData[0]]
+              },
+              {
+                label: "Fat",
+                backgroundColor: "#FF6384",
+                borderColor: "rgba(255,99,132,1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "#FF6384",
+                hoverBorderColor: "rgba(255,99,132,1)",
+                data: [dailyData[1]]
+              },
+              {
+                label: "Carbs",
+                backgroundColor: "#36A2EB",
+                borderColor: "rgba(255,99,132,1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "#36A2EB",
+                hoverBorderColor: "rgba(255,99,132,1)",
+                data: [dailyData[2]]
+              },
+              {
+                label: "Protein",
+                backgroundColor: "#FFCE56",
+                borderColor: "rgba(255,99,132,1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "#FFCE56",
+                hoverBorderColor: "rgba(255,99,132,1)",
+                data: [dailyData[3]]
+              }
+            ];
+          }
 
           this.setState({ data: newChartData });
-        });
-      }
-    });
+        }
+      });
+    }
   };
 
   handleChange = (event, value) => {
@@ -339,11 +408,7 @@ class NutritionPanel extends Component {
 
     return (
       <Grid container spacing={8} className={classes.demo}>
-        <Typography
-          style={{ width: "100%", marginTop: 20 }}
-          variant="h5"
-          gutterBottom
-        >
+        <Typography className={classes.panelName} variant="h3" gutterBottom>
           Nutrition
         </Typography>
         <Grid item sm={12} md={6}>
@@ -363,9 +428,10 @@ class NutritionPanel extends Component {
         </Grid>
         <Grid item sm={12} md={6}>
           <NutritionReports
-            paper={classes.paper}
+            classes={classes}
             handleInputChange={this.handleInputChange}
             chartType={this.state.chartType}
+            xAxis={this.state.xAxis}
             data={this.state.data}
             changeChartData={this.changeChartData}
           />

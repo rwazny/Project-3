@@ -32,16 +32,32 @@ const styles = theme => ({
     whiteSpace: "nowrap",
     marginBottom: theme.spacing.unit,
     height: 400,
+    [theme.breakpoints.down("md")]: {
+      height: 700
+    },
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    position: "relative"
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
+  },
+  panelHeader: {
+    fontFamily: "'Lobster', cursive",
+    position: "absolute",
+    top: -38
+  },
+  panelName: {
+    width: "100%",
+    marginTop: 20,
+    fontFamily: "'Lobster', cursive",
+    textAlign: "center"
   }
 });
 
 class FitnessPanel extends Component {
   state = {
+    value: 0,
     data: {
       labels: [],
       datasets: [
@@ -93,6 +109,10 @@ class FitnessPanel extends Component {
     });
   };
 
+  handleTabChange = (event, value) => {
+    this.setState({ value });
+  };
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
     if (name === "timeframe") {
@@ -113,13 +133,12 @@ class FitnessPanel extends Component {
   };
 
   handleClose = name => event => {
-    // if (this.anchorEl.contains(event.target)) {
-    //   return;
-    // }
-    console.log(name);
+    let value = 0;
+    if (name === "cardioToAdd") value = 1;
+
     if (name) {
       let joined = this.state[name].concat({ name: "" });
-      this.setState({ open: false, [name]: joined });
+      this.setState({ open: false, [name]: joined, value });
     } else {
       this.setState({ open: false });
     }
@@ -144,7 +163,6 @@ class FitnessPanel extends Component {
         () => {
           this.setExerciseArrays("resistance", "resistanceExerciseNames");
           this.setExerciseArrays("cardio", "cardioExerciseNames");
-          console.log("mount date: " + moment().format("YYYY-MM-DD"));
           this.returnWorkoutsByDate(moment().format("YYYY-MM-DD"));
         }
       );
@@ -163,24 +181,21 @@ class FitnessPanel extends Component {
         }
       }
     }
-
-    console.log(array);
-
     this.setState({
       [nameArray]: array
     });
   };
 
   addExercise = name => {
-    console.log(name);
     let joined = this.state[name].concat({ name: "" });
     this.setState({ open: false, [name]: joined });
   };
 
-  handleInputChange = event => {
+  handleInputChange = type => event => {
     const { value, id, name } = event.currentTarget;
-    this.state.resistanceToAdd[id][name] = value;
-    this.setState({ resistanceToAdd: this.state.resistanceToAdd });
+    let newExerciseArr = [...this.state[type]];
+    newExerciseArr[id][name] = value;
+    this.setState({ [type]: newExerciseArr });
   };
   handleNameChange = event => {
     const { value } = event.currentTarget;
@@ -388,15 +403,12 @@ class FitnessPanel extends Component {
 
     return (
       <Grid container spacing={8} className={classes.demo}>
-        <Typography
-          style={{ width: "100%", marginTop: 20 }}
-          variant="h5"
-          gutterBottom
-        >
+        <Typography className={classes.panelName} variant="h3" gutterBottom>
           Fitness
         </Typography>
         <Grid item xs={12} md={6}>
           <FitnessTracker
+            value={this.state.value}
             classes={classes}
             handleAnchorEl={this.handleAnchorEl}
             selectWorktout={this.state.selectedWorkout}
@@ -417,10 +429,12 @@ class FitnessPanel extends Component {
             handleClose={this.handleClose}
             saveDay={this.saveDay}
             open={open}
+            handleChange={this.handleTabChange}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper className={classes.paper}>
+            <h2 className={classes.panelHeader}>Reports</h2>
             <FitnessReports
               data={this.state.data}
               workOuts={this.state.allWorkOuts}
