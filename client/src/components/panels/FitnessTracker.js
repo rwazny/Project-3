@@ -239,7 +239,7 @@ function FitnessTracker(props) {
             variant="contained"
             style={{ float: "right" }}
             // size="small"
-            color="primary"
+            color="secondary"
             disabled={
               !props.resistanceToAdd.length && !props.cardioToAdd.length
             }

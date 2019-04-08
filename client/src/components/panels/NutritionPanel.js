@@ -216,7 +216,7 @@ class NutritionPanel extends Component {
             let newSum = this.dayTotalsSum(this.state.yAxis, res.data[i]);
             const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
             const id = dateArray.indexOf(dateToFind);
-            newData[id] = newSum;
+            newData[id] = newSum.toFixed(2);
           }
 
           let color = "";

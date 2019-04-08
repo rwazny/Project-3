@@ -226,41 +226,6 @@ class App extends Component {
                       >
                         {this.state.user}
                       </Typography>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.pinkTheme}
-                      >
-                        Pink
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.theme}
-                      >
-                        Orange
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.cyanTheme}
-                      >
-                        Cyan
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.greyTheme}
-                      >
-                        Grey
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.switchUp}
-                      >
-                        Light/Dark
-                      </Button>
 
                       {this.state.user ? (
                         <Button
@@ -276,7 +241,18 @@ class App extends Component {
                     </ToolBar>
                   </AppBar>
                   <Switch>
-                    <Route path="/settings" component={Settings} />
+                    <Route
+                      path="/settings"
+                      render={() => (
+                        <Settings
+                          orangeTheme={this.theme}
+                          pinkTheme={this.pinkTheme}
+                          greyTheme={this.greyTheme}
+                          cyanTheme={this.cyanTheme}
+                          switchUp={this.switchUp}
+                        />
+                      )}
+                    />
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/" component={Landing} />
                   </Switch>
