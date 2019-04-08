@@ -3,13 +3,10 @@ import NutritionTracker from "./NutritionTracker";
 import NutritionReports from "./NutritionReports";
 import moment from "moment";
 import API from "../../utils/API";
-import auth from "../../firebase.js";
-import Meal from "../../pages/Meal";
 
 // Material UI imports
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
@@ -61,7 +58,8 @@ const styles = theme => ({
   panelHeader: {
     fontFamily: "'Lobster', cursive",
     position: "absolute",
-    top: -38
+    top: -38,
+    fontWeight: 300
   },
   panelName: {
     width: "100%",

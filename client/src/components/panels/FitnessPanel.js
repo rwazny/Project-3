@@ -45,7 +45,8 @@ const styles = theme => ({
   panelHeader: {
     fontFamily: "'Lobster', cursive",
     position: "absolute",
-    top: -38
+    top: -38,
+    fontWeight: 300
   },
   panelName: {
     width: "100%",

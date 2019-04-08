@@ -9,8 +9,10 @@ import ToolBar from "@material-ui/core/Toolbar";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Landing from "./pages/landing";
 import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
 import HomeIcon from "@material-ui/icons/Home";
 import DnsIcon from "@material-ui/icons/Dns";
+import SettingsIcon from "@material-ui/icons/Settings";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import pink from "@material-ui/core/colors/pink";
@@ -24,6 +26,7 @@ import {
 } from "@material-ui/core/colors";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import { Typography } from "@material-ui/core";
+import { setTimeout } from "timers";
 
 const theme = createMuiTheme({
   palette: {
@@ -160,8 +163,14 @@ class App extends Component {
                           component={Link}
                           to="/dashboard"
                         />
+                        <Tab
+                          icon={<SettingsIcon />}
+                          label="Settings"
+                          component={Link}
+                          to="/settings"
+                        />
                       </Tabs>
-                      
+
                       <Button
                         variant="contained"
                         color="primary"
@@ -197,7 +206,7 @@ class App extends Component {
                       >
                         Light/Dark
                       </Button>
-                     
+
                       <Typography
                         color="inherit"
                         style={{ paddingLeft: 10, fontWeight: "bold" }}
@@ -219,6 +228,7 @@ class App extends Component {
                     </ToolBar>
                   </AppBar>
                   <Switch>
+                    <Route path="/settings" component={Settings} />
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/" component={Landing} />
                   </Switch>
