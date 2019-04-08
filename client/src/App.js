@@ -1,6 +1,5 @@
 import React, { Fragment, Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import "typeface-roboto";
 import auth from "./firebase";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -28,48 +27,14 @@ import { Typography } from "@material-ui/core";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: deepOrange[300]
-    },
-    secondary: {
-      main: blueGrey[200]
-    },
-    type: "light"
-  }
-});
-
-const pinkTheme = createMuiTheme({
-  palette: {
-    primary: {
       main: pink[300]
     },
     secondary: {
       main: "#74d6c8"
     },
-    type: "dark"
+    type: 'dark'
   }
-});
-
-const cyanTheme = createMuiTheme({
-  palette: {
-    primary: cyan,
-    secondary: {
-      main: yellow[400]
-    },
-    type: "dark"
-  }
-});
-
-const greyTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#d4d4dc"
-    },
-    secondary: {
-      main: "#eccc69"
-    },
-    type: "dark"
-  }
-});
+})
 
 class App extends Component {
   state = {
@@ -102,28 +67,114 @@ class App extends Component {
   };
   //THEME STUFF
   theme = () => {
-    this.setState({ theme: theme });
+    let colorType = "";
+    if (this.state.theme.palette.type === "dark") {
+      colorType = "dark";
+    } else {
+      colorType = "light";
+    }
+    this.setState({
+      theme: createMuiTheme({
+        palette: {
+          primary: {
+            main: deepOrange[300]
+          },
+          secondary: {
+            main: blueGrey[200]
+          },
+          type: colorType
+        }
+      })
+    });
   };
 
   pinkTheme = () => {
-    this.setState({ theme: pinkTheme });
+    let colorType = "";
+    if (this.state.theme.palette.type === "dark") {
+      colorType = "dark";
+    } else {
+      colorType = "light";
+    }
+    this.setState({
+      theme: createMuiTheme({
+        palette: {
+          primary: {
+            main: pink[300]
+          },
+          secondary: {
+            main: "#74d6c8"
+          },
+          type: colorType
+        }
+      })
+    });
   };
 
   cyanTheme = () => {
-    this.setState({ theme: cyanTheme });
+    let colorType = "";
+    if (this.state.theme.palette.type === "dark") {
+      colorType = "dark";
+    } else {
+      colorType = "light";
+    }
+    this.setState({
+      theme: createMuiTheme({
+        palette: {
+          primary: cyan,
+          secondary: {
+            main: yellow[400]
+          },
+          type: colorType
+        }
+      })
+    });
   };
 
   greyTheme = () => {
-    this.setState({ theme: greyTheme });
+    let colorType = "";
+    if (this.state.theme.palette.type === "dark") {
+      colorType = "dark";
+    } else {
+      colorType = "light";
+    }
+    this.setState({
+      theme: createMuiTheme({
+        palette: {
+          primary: {
+            main: "#d4d4dc"
+          },
+          secondary: {
+            main: "#eccc69"
+          },
+          type: colorType
+        }
+      })
+    });
   };
 
   switchUp = () => {
-    if (this.state.theme.palette.type === "light") {
-      console.log(`Hey: ${this.state.theme.palette.type}`);
-      this.setState(prevState =>
-        Object.assign({}, prevState, { theme: { palette: { type: "dark" } } })
-      );
+    let colorType = "";
+    if (this.state.theme.palette.type === "dark") {
+      colorType = "light";
+    } else {
+      colorType = "dark";
     }
+    let newVar = Object.assign({}, this.state.theme);
+    newVar.palette.type = "light";
+    this.setState({
+      theme: createMuiTheme({
+        palette: {
+          primary: {
+            main: newVar.palette.primary.main
+          },
+          secondary: {
+            main: newVar.palette.secondary.main
+          },
+          type: colorType
+        }
+      })
+    });
+    console.log(newVar);
   };
 
   render() {
@@ -143,8 +194,7 @@ class App extends Component {
                   <AppBar position="static">
                     <ToolBar
                       style={{
-                        margin: "auto",
-                        justifyContent: "space-between"
+                        justifyContent: "space-evenly"
                       }}
                     >
                       <Tabs value={value} onChange={this.handleChange} centered>
@@ -161,7 +211,12 @@ class App extends Component {
                           to="/dashboard"
                         />
                       </Tabs>
-                      
+                      <Typography
+                        color="inherit"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        {this.state.user}
+                      </Typography>
                       <Button
                         variant="contained"
                         color="primary"
@@ -197,13 +252,6 @@ class App extends Component {
                       >
                         Light/Dark
                       </Button>
-                     
-                      <Typography
-                        color="inherit"
-                        style={{ paddingLeft: 10, fontWeight: "bold" }}
-                      >
-                        {this.state.user}
-                      </Typography>
 
                       {this.state.user ? (
                         <Button
