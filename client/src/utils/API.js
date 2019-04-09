@@ -46,6 +46,9 @@ export default {
   saveMeal: function(mealData) {
     return axios.post("/api/meals", mealData);
   },
+  getMealNames: function(user) {
+    return axios.get(`/api/meals/${user}`);
+  },
   //Gets all Meal
   getMeal: function(date) {
     return axios.get("/api/meals", date);

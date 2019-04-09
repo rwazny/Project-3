@@ -30,7 +30,13 @@ function FitnessTracker(props) {
   const { value, classes } = props;
   return (
     <Paper className={classes.paper}>
-      <h2 className={classes.panelHeader}>Tracking</h2>
+      <Typography
+        component="h1"
+        className={classes.panelHeader}
+        color="secondary"
+      >
+        Tracking
+      </Typography>
       <Grid justify="space-between" container>
         <Grid item xs={6}>
           <TextField

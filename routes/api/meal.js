@@ -4,6 +4,9 @@ const mealController = require("../../controllers/meal/mealController");
 // Matches with "/api/meals/:date"
 router.route("/:date&:user").get(mealController.findByDate);
 
+//
+router.route("/:user").get(mealController.findMealNames);
+
 // Matches with "/api/meals"
 router
   .route("/")

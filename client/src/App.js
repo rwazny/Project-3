@@ -177,7 +177,6 @@ class App extends Component {
         }
       })
     });
-    console.log(newVar);
   };
 
   render() {
@@ -197,9 +196,16 @@ class App extends Component {
                   <AppBar position="static">
                     <ToolBar
                       style={{
-                        justifyContent: "space-evenly"
+                        justifyContent: "space-between"
                       }}
                     >
+                      <Typography
+                        variant="h2"
+                        color="inherit"
+                        style={{ fontFamily: "Lobster" }}
+                      >
+                        Phit
+                      </Typography>
                       <Tabs value={value} onChange={this.handleChange} centered>
                         <Tab
                           icon={<HomeIcon />}
@@ -220,24 +226,22 @@ class App extends Component {
                           to="/settings"
                         />
                       </Tabs>
-                      <Typography
-                        color="inherit"
-                        style={{ fontWeight: "bold" }}
-                      >
-                        {this.state.user}
-                      </Typography>
+                      <div>
+                        <Typography inline variant="h5" color="inherit">
+                          {this.state.user}
+                        </Typography>
 
-                      {this.state.user ? (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.signOut}
-                        >
-                          Sign Out
-                        </Button>
-                      ) : (
-                        ""
-                      )}
+                        {this.state.user ? (
+                          <Button
+                            variant="contained"
+                            style={{ marginLeft: 8 }}
+                            color="secondary"
+                            onClick={this.signOut}
+                          >
+                            Sign Out
+                          </Button>
+                        ) : null}
+                      </div>
                     </ToolBar>
                   </AppBar>
                   <Switch>
@@ -253,7 +257,10 @@ class App extends Component {
                         />
                       )}
                     />
-                    <Route path="/dashboard" component={Dashboard} />
+                    <Route
+                      path="/dashboard"
+                      render={() => <Dashboard theme={this.state.theme} />}
+                    />
                     <Route path="/" component={Landing} />
                   </Switch>
                 </Fragment>

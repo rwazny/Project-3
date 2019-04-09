@@ -2,7 +2,6 @@ const db = require("../../models");
 
 module.exports = {
   findAll: function(req, res) {
-    console.log(req.body);
     db.Nutrition.find(req.query)
       .sort({ date: -1 })
       .then(dbModel => res.json(dbModel))
@@ -12,6 +11,10 @@ module.exports = {
     db.Nutrition.findById(req.params.id)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+  findMealNames: function(req, res) {
+    const { user } = req.params;
+    db.Nutrition.find({ user }).then(mealData => res.json(mealData));
   },
   findByDate: function(req, res) {
     let timeFrame = "";

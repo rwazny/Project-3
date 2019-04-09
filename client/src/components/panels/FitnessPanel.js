@@ -45,7 +45,9 @@ const styles = theme => ({
   panelHeader: {
     fontFamily: "'Lobster', cursive",
     position: "absolute",
-    top: -38,
+    top: -20,
+    fontSize: "1.5em",
+    textShadow: "1px 1px 1px " + theme.palette.secondary.contrastText,
     fontWeight: 300
   },
   panelName: {
@@ -63,13 +65,26 @@ class FitnessPanel extends Component {
       labels: [],
       datasets: [
         {
-          label: "Workout",
-          backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
+          label: "Y-Axis",
+          type: "line",
+          backgroundColor: this.props.theme.palette.secondary.main,
+          borderColor: this.props.theme.palette.secondary.main,
           borderWidth: 1,
-          hoverBackgroundColor: "rgba(255,99,132,0.4)",
-          hoverBorderColor: "rgba(255,99,132,1)",
-          data: []
+          hoverBackgroundColor: this.props.theme.palette.secondary.main,
+          hoverBorderColor: this.props.theme.palette.primary.contrastText,
+          data: [],
+          yAxisID: "y-axis-2"
+        },
+        {
+          label: "Weight",
+          type: "bar",
+          backgroundColor: this.props.theme.palette.primary.main,
+          borderColor: this.props.theme.palette.primary.main,
+          borderWidth: 1,
+          hoverBackgroundColor: this.props.theme.palette.primary.main,
+          hoverBorderColor: this.props.theme.palette.primary.contrastText,
+          data: [],
+          yAxisID: "y-axis-1"
         }
       ]
     },
@@ -116,7 +131,7 @@ class FitnessPanel extends Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
-    if (name === "timeframe") {
+    if (name === "timeframe" || (name === "yAxis" && this.state.timeframe)) {
       this.getWorkOutByTimeframe(this.state.exercise);
     }
   };
@@ -363,17 +378,25 @@ class FitnessPanel extends Component {
       ];
 
       let newData = [null, null, null, null, null, null, null];
+      let lineData = [null, null, null, null, null, null, null];
 
       for (let i = 0; i < res.data.length; i++) {
         const dateToFind = moment(res.data[i].date).format("MM-DD-YYYY");
         const id = dateArray.indexOf(dateToFind);
         if (this.state.type === "resistance") {
           newData[id] = res.data[i].resistance.weight[0];
+          lineData[id] = res.data[i].resistance[this.state.yAxis];
         } else if (this.state.type === "cardio") {
           newData[id] = res.data[i].cardio.distance;
+          lineData[id] = res.data[i].cardio[this.state.yAxis];
         }
       }
-      newChartData.datasets[0].data = newData;
+
+      newChartData.datasets[1].data = newData;
+      newChartData.datasets[0].label =
+        this.state.yAxis.charAt(0).toUpperCase() + this.state.yAxis.slice(1);
+      newChartData.datasets[0].data = lineData;
+
       this.setState({ data: newChartData });
     });
   };
@@ -435,7 +458,13 @@ class FitnessPanel extends Component {
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper className={classes.paper}>
-            <h2 className={classes.panelHeader}>Reports</h2>
+            <Typography
+              component="h1"
+              className={classes.panelHeader}
+              color="secondary"
+            >
+              Reports
+            </Typography>
             <FitnessReports
               data={this.state.data}
               workOuts={this.state.allWorkOuts}
@@ -447,7 +476,7 @@ class FitnessPanel extends Component {
               handleChange={this.handleChange}
               type={this.state.type}
               exercise={this.state.exercise}
-              reps={this.state.reps}
+              yAxis={this.state.yAxis}
               timeframe={this.state.timeframe}
             />
           </Paper>

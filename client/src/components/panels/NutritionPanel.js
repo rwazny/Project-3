@@ -58,7 +58,9 @@ const styles = theme => ({
   panelHeader: {
     fontFamily: "'Lobster', cursive",
     position: "absolute",
-    top: -38,
+    top: -20,
+    fontSize: "1.5em",
+    textShadow: "1px 1px 1px " + theme.palette.secondary.contrastText,
     fontWeight: 300
   },
   panelName: {
@@ -330,11 +332,16 @@ class NutritionPanel extends Component {
   };
 
   handleInputChange = name => event => {
+    console.log(name);
     this.setState({ [name]: event.target.value }, () => {
       if (this.state.xAxis) {
         this.getNutritionByTimeframe();
       }
     });
+  };
+
+  dropDownChange = name => {
+    console.log(name);
   };
 
   addMeal = () => {
@@ -412,6 +419,7 @@ class NutritionPanel extends Component {
         <Grid item sm={12} md={6}>
           <NutritionTracker
             classes={classes}
+            dropDownChange={this.dropDownChange}
             value={this.state.value}
             handleChange={this.handleChange}
             mealsToAdd={this.state.mealsToAdd}
