@@ -136,7 +136,7 @@ class Meal extends Component {
               <Button
                 variant="contained"
                 size="small"
-                color="primary"
+                color="secondary"
                 onClick={this.props.saveNutritionDay}
               >
                 Save

@@ -43,7 +43,13 @@ function NutritionReports(props) {
   const { classes } = props;
   return (
     <Paper className={classes.paper}>
-      <h2 className={classes.panelHeader}>Reports</h2>
+      <Typography
+        component="h1"
+        className={classes.panelHeader}
+        color="secondary"
+      >
+        Reports
+      </Typography>
       <div>
         <FormControl style={{ float: "left" }}>
           <InputLabel htmlFor="type-native-simple">Type</InputLabel>

@@ -8,8 +8,10 @@ import ToolBar from "@material-ui/core/Toolbar";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Landing from "./pages/landing";
 import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
 import HomeIcon from "@material-ui/icons/Home";
 import DnsIcon from "@material-ui/icons/Dns";
+import SettingsIcon from "@material-ui/icons/Settings";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import pink from "@material-ui/core/colors/pink";
@@ -23,18 +25,19 @@ import {
 } from "@material-ui/core/colors";
 import blueGrey from "@material-ui/core/colors/blueGrey";
 import { Typography } from "@material-ui/core";
+import { setTimeout } from "timers";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: pink[300]
+      main: localStorage.primaryTheme || pink[300]
     },
     secondary: {
-      main: "#74d6c8"
+      main: localStorage.secondaryTheme || "#74d6c8"
     },
-    type: 'dark'
+    type: localStorage.darkToggle || "dark"
   }
-})
+});
 
 class App extends Component {
   state = {
@@ -61,9 +64,8 @@ class App extends Component {
     });
   };
   signOut = event => {
-    event.preventDefault();
     auth.signOut();
-    this.setState({ user: "" });
+    this.setState({ user: "", value: 0 });
   };
   //THEME STUFF
   theme = () => {
@@ -73,19 +75,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: deepOrange[300]
-          },
-          secondary: {
-            main: blueGrey[200]
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: deepOrange[300]
+            },
+            secondary: {
+              main: blueGrey[200]
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   pinkTheme = () => {
@@ -95,19 +100,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: pink[300]
-          },
-          secondary: {
-            main: "#74d6c8"
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: pink[300]
+            },
+            secondary: {
+              main: "#74d6c8"
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   cyanTheme = () => {
@@ -117,17 +125,20 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: cyan,
-          secondary: {
-            main: yellow[400]
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: cyan,
+            secondary: {
+              main: yellow[400]
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   greyTheme = () => {
@@ -137,19 +148,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: "#d4d4dc"
-          },
-          secondary: {
-            main: "#eccc69"
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: "#d4d4dc"
+            },
+            secondary: {
+              main: "#eccc69"
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   switchUp = () => {
@@ -161,20 +175,31 @@ class App extends Component {
     }
     let newVar = Object.assign({}, this.state.theme);
     newVar.palette.type = "light";
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: newVar.palette.primary.main
-          },
-          secondary: {
-            main: newVar.palette.secondary.main
-          },
-          type: colorType
-        }
-      })
-    });
-    console.log(newVar);
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: newVar.palette.primary.main
+            },
+            secondary: {
+              main: newVar.palette.secondary.main
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
+  };
+
+  setLocalTheme = () => {
+    localStorage.setItem("primaryTheme", this.state.theme.palette.primary.main);
+    localStorage.setItem(
+      "secondaryTheme",
+      this.state.theme.palette.secondary.main
+    );
+    localStorage.setItem("darkToggle", this.state.theme.palette.type);
   };
 
   render() {
@@ -194,80 +219,81 @@ class App extends Component {
                   <AppBar position="static">
                     <ToolBar
                       style={{
-                        justifyContent: "space-evenly"
+                        justifyContent: "space-between"
                       }}
                     >
-                      <Tabs value={value} onChange={this.handleChange} centered>
-                        <Tab
-                          icon={<HomeIcon />}
-                          label="Home"
-                          component={Link}
-                          to="/"
-                        />
-                        <Tab
-                          icon={<DnsIcon />}
-                          label="Dashboard"
-                          component={Link}
-                          to="/dashboard"
-                        />
-                      </Tabs>
                       <Typography
+                        variant="h2"
                         color="inherit"
-                        style={{ fontWeight: "bold" }}
+                        style={{ fontFamily: "Lobster" }}
                       >
-                        {this.state.user}
+                        Phit
                       </Typography>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.pinkTheme}
-                      >
-                        Pink
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.theme}
-                      >
-                        Orange
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.cyanTheme}
-                      >
-                        Cyan
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.greyTheme}
-                      >
-                        Grey
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.switchUp}
-                      >
-                        Light/Dark
-                      </Button>
 
                       {this.state.user ? (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.signOut}
+                        <Tabs
+                          value={value}
+                          onChange={this.handleChange}
+                          centered
                         >
-                          Sign Out
-                        </Button>
-                      ) : (
-                        ""
-                      )}
+                          <Tab
+                            icon={<HomeIcon />}
+                            label="Home"
+                            component={Link}
+                            to="/"
+                          />
+                          <Tab
+                            icon={<DnsIcon />}
+                            label="Dashboard"
+                            component={Link}
+                            to="/dashboard"
+                          />
+                          <Tab
+                            icon={<SettingsIcon />}
+                            label="Settings"
+                            component={Link}
+                            to="/settings"
+                          />
+                        </Tabs>
+                      ) : null}
+                      {this.state.user ? (
+                        <div>
+                          <Typography inline variant="body1" color="inherit">
+                            Welcome, {this.state.user}!
+                          </Typography>
+
+                          <Button
+                            variant="contained"
+                            style={{ marginLeft: 8 }}
+                            color="secondary"
+                            component={Link}
+                            to="/"
+                            onClick={this.signOut}
+                          >
+                            Sign Out
+                          </Button>
+                        </div>
+                      ) : null}
                     </ToolBar>
                   </AppBar>
                   <Switch>
-                    <Route path="/dashboard" component={Dashboard} />
+                    <Route
+                      path="/settings"
+                      render={() => (
+                        <Settings
+                          orangeTheme={this.theme}
+                          pinkTheme={this.pinkTheme}
+                          greyTheme={this.greyTheme}
+                          cyanTheme={this.cyanTheme}
+                          switchUp={this.switchUp}
+                          theme={this.state.theme}
+                        />
+                      )}
+                    />
+                    <Route
+                      path="/dashboard"
+                      render={() => <Dashboard theme={this.state.theme} />}
+                    />
                     <Route path="/" component={Landing} />
                   </Switch>
                 </Fragment>

@@ -1,17 +1,28 @@
 const db = require("../../models");
+var ObjectId = require("mongodb").ObjectID;
 
 module.exports = {
   findAll: function(req, res) {
-    console.log(req.body);
     db.Nutrition.find(req.query)
       .sort({ date: -1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   findById: function(req, res) {
-    db.Nutrition.findById(req.params.id)
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
+    db.Nutrition.aggregate([
+      { $unwind: "$meal" },
+      { $match: { "meal._id": ObjectId(req.params.id) } }
+    ])
+      .then(dbData => {
+        res.json(dbData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  findMealNames: function(req, res) {
+    const { user } = req.params;
+    db.Nutrition.find({ user }).then(mealData => res.json(mealData));
   },
   findByDate: function(req, res) {
     let timeFrame = "";
