@@ -79,10 +79,8 @@ class NutritionPanel extends Component {
         {
           label: "Nutrition",
           backgroundColor: "rgba(255,99,132,0.2)",
-          borderColor: "rgba(255,99,132,1)",
           borderWidth: 1,
           hoverBackgroundColor: "rgba(255,99,132,0.4)",
-          hoverBorderColor: "rgba(255,99,132,1)",
           data: []
         }
       ]
@@ -122,7 +120,8 @@ class NutritionPanel extends Component {
         ]
       }
     ],
-    nutritionDate: moment().format("YYYY-MM-DD")
+    nutritionDate: moment().format("YYYY-MM-DD"),
+    mealToLoad: { label: null }
   };
 
   componentDidMount = () => {
@@ -173,7 +172,11 @@ class NutritionPanel extends Component {
 
           newChartData.datasets = [
             {
-              data: [newData[0], newData[1], newData[2]],
+              data: [
+                newData[0].toFixed(2),
+                newData[1].toFixed(2),
+                newData[2].toFixed(2)
+              ],
               backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
               hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
             }
@@ -241,10 +244,9 @@ class NutritionPanel extends Component {
             {
               label: this.state.yAxis,
               backgroundColor: color,
-              borderColor: "rgba(255,99,132,1)",
-              borderWidth: 1,
+              borderColor: "lightgrey",
+              borderWidth: 2,
               hoverBackgroundColor: color,
-              hoverBorderColor: "rgba(255,99,132,1)",
               data: newData
             }
           ];
@@ -273,7 +275,11 @@ class NutritionPanel extends Component {
 
             newChartData.datasets = [
               {
-                data: [dailyData[1], dailyData[2], dailyData[3]],
+                data: [
+                  dailyData[1].toFixed(2),
+                  dailyData[2].toFixed(2),
+                  dailyData[3].toFixed(2)
+                ],
                 backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
                 hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
               }
@@ -285,38 +291,30 @@ class NutritionPanel extends Component {
               {
                 label: "Calories",
                 backgroundColor: "cadetblue",
-                borderColor: "rgba(255,99,132,1)",
                 borderWidth: 1,
                 hoverBackgroundColor: "cadetblue",
-                hoverBorderColor: "rgba(255,99,132,1)",
-                data: [dailyData[0]]
+                data: [dailyData[0].toFixed(2)]
               },
               {
                 label: "Fat",
                 backgroundColor: "#FF6384",
-                borderColor: "rgba(255,99,132,1)",
                 borderWidth: 1,
                 hoverBackgroundColor: "#FF6384",
-                hoverBorderColor: "rgba(255,99,132,1)",
-                data: [dailyData[1]]
+                data: [dailyData[1].toFixed(2)]
               },
               {
                 label: "Carbs",
                 backgroundColor: "#36A2EB",
-                borderColor: "rgba(255,99,132,1)",
                 borderWidth: 1,
                 hoverBackgroundColor: "#36A2EB",
-                hoverBorderColor: "rgba(255,99,132,1)",
-                data: [dailyData[2]]
+                data: [dailyData[2].toFixed(2)]
               },
               {
                 label: "Protein",
                 backgroundColor: "#FFCE56",
-                borderColor: "rgba(255,99,132,1)",
                 borderWidth: 1,
                 hoverBackgroundColor: "#FFCE56",
-                hoverBorderColor: "rgba(255,99,132,1)",
-                data: [dailyData[3]]
+                data: [dailyData[3].toFixed(2)]
               }
             ];
           }
@@ -329,6 +327,10 @@ class NutritionPanel extends Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
+  };
+
+  handleLoadMealChange = meal => {
+    this.setState({ mealToLoad: meal });
   };
 
   handleInputChange = name => event => {
@@ -346,8 +348,32 @@ class NutritionPanel extends Component {
 
   addMeal = () => {
     let mealArray = [...this.state.mealsToAdd];
-    mealArray.push({ name: this.state.mealName, foodItem: [] });
-    this.setState({ mealsToAdd: mealArray, mealName: "" });
+    mealArray.push({
+      name: this.state.mealToLoad.label || this.state.mealName,
+      foodItem: []
+    });
+
+    if (this.state.mealToLoad.label) {
+      API.getMeal(this.state.mealToLoad.value).then(res => {
+        res.data[0].meal.foodItem.forEach(foodItem => {
+          mealArray[mealArray.length - 1].foodItem.push({
+            name: foodItem.name,
+            carbohydrates: foodItem.carbohydrates,
+            fats: foodItem.fats,
+            protein: foodItem.protein,
+            calories: foodItem.calories
+          });
+        });
+
+        this.setState({ value: mealArray.length - 1 });
+      });
+    }
+
+    this.setState({
+      mealsToAdd: mealArray,
+      mealName: "",
+      mealToLoad: { label: null }
+    });
   };
 
   selectMealsByDate = date => {
@@ -418,6 +444,8 @@ class NutritionPanel extends Component {
         </Typography>
         <Grid item sm={12} md={6}>
           <NutritionTracker
+            handleLoadMealChange={this.handleLoadMealChange}
+            mealToLoad={this.state.mealToLoad.label}
             classes={classes}
             dropDownChange={this.dropDownChange}
             value={this.state.value}

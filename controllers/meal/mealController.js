@@ -1,4 +1,5 @@
 const db = require("../../models");
+var ObjectId = require("mongodb").ObjectID;
 
 module.exports = {
   findAll: function(req, res) {
@@ -8,9 +9,16 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   findById: function(req, res) {
-    db.Nutrition.findById(req.params.id)
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
+    db.Nutrition.aggregate([
+      { $unwind: "$meal" },
+      { $match: { "meal._id": ObjectId(req.params.id) } }
+    ])
+      .then(dbData => {
+        res.json(dbData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   findMealNames: function(req, res) {
     const { user } = req.params;

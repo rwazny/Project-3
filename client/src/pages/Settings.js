@@ -80,18 +80,14 @@ class Settings extends Component {
                 <h2 className={classes.panelHeader}>General</h2>
 
                 <Grid style={{ flexGrow: 1 }} item sm={12}>
-                  <Typography variant="body1" gutterBottom>
+                  <Typography
+                    style={{ marginRight: 15 }}
+                    inline
+                    variant="body1"
+                    gutterBottom
+                  >
                     Theme
                   </Typography>
-                  <Typography inline variant="body1" gutterBottom>
-                    Toggle Dark Mode
-                  </Typography>
-                  <Switch
-                    defaultChecked
-                    value="checkedF"
-                    onClick={this.props.switchUp}
-                    color="secondary"
-                  />
                   <Button
                     style={{
                       width: 100,
@@ -140,6 +136,16 @@ class Settings extends Component {
                   >
                     Grey
                   </Button>
+                  <br />
+                  <Typography inline variant="body1" gutterBottom>
+                    Toggle Dark Mode
+                  </Typography>
+                  <Switch
+                    defaultChecked={this.props.theme.palette.type === "dark"}
+                    value="checkedF"
+                    onClick={this.props.switchUp}
+                    color="secondary"
+                  />
                 </Grid>
               </Paper>
             </Grid>

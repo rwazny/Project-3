@@ -69,7 +69,7 @@ class FitnessPanel extends Component {
           type: "line",
           backgroundColor: this.props.theme.palette.secondary.main,
           borderColor: this.props.theme.palette.secondary.main,
-          borderWidth: 1,
+          borderWidth: 3,
           hoverBackgroundColor: this.props.theme.palette.secondary.main,
           hoverBorderColor: this.props.theme.palette.primary.contrastText,
           data: [],
@@ -127,6 +127,37 @@ class FitnessPanel extends Component {
 
   handleTabChange = (event, value) => {
     this.setState({ value });
+  };
+
+  handleLoadWorkoutChange = workout => {
+    API.getWorkOutById(workout.value).then(res => {
+      console.log(res);
+      const newResistance = [];
+      const newCardio = [];
+
+      if (res.data[0].resistance) {
+        res.data[0].resistance.forEach(exercise => {
+          newResistance.push({
+            name: exercise.name,
+            weight: exercise.weight[0],
+            reps: exercise.reps[0],
+            sets: exercise.sets
+          });
+        });
+      }
+
+      if (res.data[0].cardio) {
+        res.data[0].cardio.forEach(exercise => {
+          newCardio.push({
+            name: exercise.name,
+            time: exercise.time,
+            distance: exercise.distance
+          });
+        });
+      }
+
+      this.setState({ resistanceToAdd: newResistance, cardioToAdd: newCardio });
+    });
   };
 
   handleChange = name => event => {
@@ -453,6 +484,7 @@ class FitnessPanel extends Component {
             handleClose={this.handleClose}
             saveDay={this.saveDay}
             open={open}
+            handleLoadWorkoutChange={this.handleLoadWorkoutChange}
             handleChange={this.handleTabChange}
           />
         </Grid>

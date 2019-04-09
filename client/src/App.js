@@ -30,12 +30,12 @@ import { setTimeout } from "timers";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: pink[300]
+      main: localStorage.primaryTheme || pink[300]
     },
     secondary: {
-      main: "#74d6c8"
+      main: localStorage.secondaryTheme || "#74d6c8"
     },
-    type: "dark"
+    type: localStorage.darkToggle || "dark"
   }
 });
 
@@ -64,9 +64,8 @@ class App extends Component {
     });
   };
   signOut = event => {
-    event.preventDefault();
     auth.signOut();
-    this.setState({ user: "" });
+    this.setState({ user: "", value: 0 });
   };
   //THEME STUFF
   theme = () => {
@@ -76,19 +75,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: deepOrange[300]
-          },
-          secondary: {
-            main: blueGrey[200]
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: deepOrange[300]
+            },
+            secondary: {
+              main: blueGrey[200]
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   pinkTheme = () => {
@@ -98,19 +100,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: pink[300]
-          },
-          secondary: {
-            main: "#74d6c8"
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: pink[300]
+            },
+            secondary: {
+              main: "#74d6c8"
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   cyanTheme = () => {
@@ -120,17 +125,20 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: cyan,
-          secondary: {
-            main: yellow[400]
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: cyan,
+            secondary: {
+              main: yellow[400]
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   greyTheme = () => {
@@ -140,19 +148,22 @@ class App extends Component {
     } else {
       colorType = "light";
     }
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: "#d4d4dc"
-          },
-          secondary: {
-            main: "#eccc69"
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: "#d4d4dc"
+            },
+            secondary: {
+              main: "#eccc69"
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
   };
 
   switchUp = () => {
@@ -164,19 +175,31 @@ class App extends Component {
     }
     let newVar = Object.assign({}, this.state.theme);
     newVar.palette.type = "light";
-    this.setState({
-      theme: createMuiTheme({
-        palette: {
-          primary: {
-            main: newVar.palette.primary.main
-          },
-          secondary: {
-            main: newVar.palette.secondary.main
-          },
-          type: colorType
-        }
-      })
-    });
+    this.setState(
+      {
+        theme: createMuiTheme({
+          palette: {
+            primary: {
+              main: newVar.palette.primary.main
+            },
+            secondary: {
+              main: newVar.palette.secondary.main
+            },
+            type: colorType
+          }
+        })
+      },
+      () => this.setLocalTheme()
+    );
+  };
+
+  setLocalTheme = () => {
+    localStorage.setItem("primaryTheme", this.state.theme.palette.primary.main);
+    localStorage.setItem(
+      "secondaryTheme",
+      this.state.theme.palette.secondary.main
+    );
+    localStorage.setItem("darkToggle", this.state.theme.palette.type);
   };
 
   render() {
@@ -206,42 +229,51 @@ class App extends Component {
                       >
                         Phit
                       </Typography>
-                      <Tabs value={value} onChange={this.handleChange} centered>
-                        <Tab
-                          icon={<HomeIcon />}
-                          label="Home"
-                          component={Link}
-                          to="/"
-                        />
-                        <Tab
-                          icon={<DnsIcon />}
-                          label="Dashboard"
-                          component={Link}
-                          to="/dashboard"
-                        />
-                        <Tab
-                          icon={<SettingsIcon />}
-                          label="Settings"
-                          component={Link}
-                          to="/settings"
-                        />
-                      </Tabs>
-                      <div>
-                        <Typography inline variant="h5" color="inherit">
-                          {this.state.user}
-                        </Typography>
 
-                        {this.state.user ? (
+                      {this.state.user ? (
+                        <Tabs
+                          value={value}
+                          onChange={this.handleChange}
+                          centered
+                        >
+                          <Tab
+                            icon={<HomeIcon />}
+                            label="Home"
+                            component={Link}
+                            to="/"
+                          />
+                          <Tab
+                            icon={<DnsIcon />}
+                            label="Dashboard"
+                            component={Link}
+                            to="/dashboard"
+                          />
+                          <Tab
+                            icon={<SettingsIcon />}
+                            label="Settings"
+                            component={Link}
+                            to="/settings"
+                          />
+                        </Tabs>
+                      ) : null}
+                      {this.state.user ? (
+                        <div>
+                          <Typography inline variant="body1" color="inherit">
+                            Welcome, {this.state.user}!
+                          </Typography>
+
                           <Button
                             variant="contained"
                             style={{ marginLeft: 8 }}
                             color="secondary"
+                            component={Link}
+                            to="/"
                             onClick={this.signOut}
                           >
                             Sign Out
                           </Button>
-                        ) : null}
-                      </div>
+                        </div>
+                      ) : null}
                     </ToolBar>
                   </AppBar>
                   <Switch>
@@ -254,6 +286,7 @@ class App extends Component {
                           greyTheme={this.greyTheme}
                           cyanTheme={this.cyanTheme}
                           switchUp={this.switchUp}
+                          theme={this.state.theme}
                         />
                       )}
                     />

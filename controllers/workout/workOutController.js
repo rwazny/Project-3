@@ -1,4 +1,5 @@
 const db = require("../../models");
+var ObjectId = require("mongodb").ObjectID;
 
 module.exports = {
   findSavedWorkOuts: function(req, res) {
@@ -13,6 +14,17 @@ module.exports = {
       .sort({ date: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+
+  findWorkoutById: function(req, res) {
+    console.log(req.params.id);
+    db.WorkOut.find({ _id: ObjectId(req.params.id) })
+      .then(dbData => {
+        res.json(dbData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
 
   findWorkOutsByDate: function(req, res) {

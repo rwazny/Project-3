@@ -1,11 +1,15 @@
 const router = require("express").Router();
 const mealController = require("../../controllers/meal/mealController");
 
+// "/api/meals/find/:id"
+router.route("/find/:id").get(mealController.findById);
+
+router.route("/user/:user").get(mealController.findMealNames);
+
 // Matches with "/api/meals/:date"
 router.route("/:date&:user").get(mealController.findByDate);
 
 //
-router.route("/:user").get(mealController.findMealNames);
 
 // Matches with "/api/meals"
 router
@@ -14,9 +18,5 @@ router
   .post(mealController.create);
 
 // Matches with "/api/meals/:id"
-router
-  .route("/:id")
-  .get(mealController.findById)
-  .delete(mealController.remove);
 
 module.exports = router;

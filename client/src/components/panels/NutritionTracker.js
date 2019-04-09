@@ -48,18 +48,33 @@ function NutritionTracker(props) {
         alignItems="center"
       >
         <Grid item xs={12} sm={5}>
-          <IntegrationReactSelect dropDownChange={props.dropDownChange} />
-          {/* <TextField
+          <IntegrationReactSelect
+            handleLoadMealChange={props.handleLoadMealChange}
+          />
+          <TextField
+            fullWidth
             id="filled-dense"
             value={props.mealName}
             onChange={props.handleInputChange("mealName")}
-            label="Meal Name"
-            className=""
+            label="New meal name"
+            style={{ padding: 0 }}
             margin="dense"
             variant="filled"
-          /> */}
+          />
         </Grid>
         <Grid item sm={2}>
+          <Button
+            disabled={!props.mealToLoad}
+            variant="contained"
+            size="small"
+            color="primary"
+            disabled={!props.mealToLoad}
+            className={classes.margin}
+            onClick={props.addMeal}
+          >
+            Load Meal
+          </Button>
+          <br />
           <Button
             variant="contained"
             size="small"

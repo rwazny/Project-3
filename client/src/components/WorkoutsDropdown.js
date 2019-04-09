@@ -11,8 +11,6 @@ import API from "../utils/API";
 
 let suggestions = [];
 
-let value = "te";
-
 const styles = theme => ({
   root: {
     // flexGrow: 1,
@@ -70,7 +68,6 @@ function Control(props) {
     <TextField
       fullWidth
       variant="filled"
-      value={value}
       onChange={() => handleInputChange("value")}
       InputProps={{
         inputComponent,
@@ -87,8 +84,9 @@ function Control(props) {
 }
 
 const handleInputChange = property => event => {
-  console.log(property);
   console.log(event.target.value);
+
+  this.props.handleLoadMealChange();
 
   return e => {
     this.setState({ [property]: e.target.value });
@@ -168,29 +166,21 @@ function inputHandler(state, props) {
   return { value: state.value + 5 };
 }
 
-class IntegrationReactSelect extends React.Component {
+class WorkoutsDropdown extends React.Component {
   state = {
     single: null,
     multi: null,
     value: 0
   };
 
-  constructor(props) {
-    super(props);
-
-    this.handleInputChange = handleInputChange.bind(this);
-  }
-
   componentDidMount = () => {
-    API.getMealNames(localStorage.userId).then(res => {
-      console.log(res);
-
-      if (res.data.length) {
-        for (let i = 0; i < res.data.length; i++) {
-          for (let j = 0; j < res.data[i].meal.length; j++) {
+    API.findUserWorkOuts(localStorage.userId).then(res => {
+      if (res.data) {
+        for (let i = 0; i < res.data.workouts.length; i++) {
+          if (res.data.workouts[i].name) {
             suggestions.push({
-              label: res.data[i].meal[j].name,
-              value: res.data[i].meal[j]._id
+              label: res.data.workouts[i].name,
+              value: res.data.workouts[i]._id
             });
           }
         }
@@ -203,13 +193,12 @@ class IntegrationReactSelect extends React.Component {
           label: suggestion.label,
           value: suggestion.value
         }));
-        console.log(suggestions);
       }
     });
   };
 
   handleChange = name => value => {
-    this.props.handleLoadMealChange(value);
+    this.props.handleLoadWorkoutChange(value);
     this.setState({
       [name]: value,
       inputHandler
@@ -239,7 +228,7 @@ class IntegrationReactSelect extends React.Component {
             components={components}
             value={this.state.single}
             onChange={this.handleChange("single")}
-            placeholder="Load meal"
+            placeholder="Load workout"
             isClearable
           />
         </NoSsr>
@@ -248,9 +237,9 @@ class IntegrationReactSelect extends React.Component {
   }
 }
 
-IntegrationReactSelect.propTypes = {
+WorkoutsDropdown.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(IntegrationReactSelect);
+export default withStyles(styles, { withTheme: true })(WorkoutsDropdown);
