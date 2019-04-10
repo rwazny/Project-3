@@ -73,7 +73,8 @@ class FitnessPanel extends Component {
           hoverBackgroundColor: this.props.theme.palette.secondary.main,
           hoverBorderColor: this.props.theme.palette.primary.contrastText,
           data: [],
-          yAxisID: "y-axis-2"
+          yAxisID: "y-axis-2",
+          fontColor: this.props.theme.typography.body1.color
         },
         {
           label: "Weight",
@@ -84,7 +85,8 @@ class FitnessPanel extends Component {
           hoverBackgroundColor: this.props.theme.palette.primary.main,
           hoverBorderColor: this.props.theme.palette.primary.contrastText,
           data: [],
-          yAxisID: "y-axis-1"
+          yAxisID: "y-axis-1",
+          fontColor: this.props.theme.typography.body1.color
         }
       ]
     },
@@ -510,6 +512,7 @@ class FitnessPanel extends Component {
               exercise={this.state.exercise}
               yAxis={this.state.yAxis}
               timeframe={this.state.timeframe}
+              textColor={this.props.theme.typography.body1.color}
             />
           </Paper>
         </Grid>
