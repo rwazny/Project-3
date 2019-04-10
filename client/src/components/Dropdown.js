@@ -82,7 +82,7 @@ const styles = theme => ({
   },
   suggestionsContainerOpen: {
     position: "absolute",
-    zIndex: 1,
+    zIndex: 1500,
     marginTop: theme.spacing.unit,
     left: 0,
     right: 0
@@ -118,7 +118,7 @@ class IntegrationAutosuggest extends React.Component {
 
   handleChange = name => (event, { newValue }) => {
     userInput = newValue;
-    if (userInput !== undefined) {
+    if (userInput !== undefined && userInput.length>=3) {
       this.getSuggestionsFromAPI();
     }
     this.setState({
@@ -133,7 +133,7 @@ class IntegrationAutosuggest extends React.Component {
     let foodSearchQuery = userInput;
     console.log(foodSearchQuery);
     const response = await fetch(
-      "https://trackapi.nutritionix.com/v2/search/instant/test",
+      "https://trackapi.nutritionix.com/v2/search/instant",
       {
         method: "post",
         headers: {
@@ -150,8 +150,15 @@ class IntegrationAutosuggest extends React.Component {
       console.log("Error: " + response);
     }
     const data = await response.json();
-    console.log(data.branded);
-    const results = data.branded;
+    console.log(data.common);
+    const results = [];
+    let length = 5;
+    if(data.common.length<length){
+      length=data.common.length
+    }
+    for(let i=0; i<length; i++){
+    results.push(data.common[i])
+    }
     let foodItemArr = [];
     if (results !== undefined) {
       results.forEach(element => {
