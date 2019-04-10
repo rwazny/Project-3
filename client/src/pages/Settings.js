@@ -27,6 +27,12 @@ const styles = theme => ({
   margin: {
     margin: theme.spacing.unit
   },
+  button: {
+    margin: theme.spacing.unit
+  },
+  input: {
+    display: "none"
+  },
   textField: {
     marginLeft: 0,
     marginRight: theme.spacing.unit,
@@ -50,7 +56,9 @@ const styles = theme => ({
   panelHeader: {
     fontFamily: "'Lobster', cursive",
     position: "absolute",
-    top: -38,
+    top: -20,
+    fontSize: "1.5em",
+    textShadow: "1px 1px 1px " + theme.palette.secondary.contrastText,
     fontWeight: 300
   },
   panelName: {
@@ -58,6 +66,14 @@ const styles = theme => ({
     marginTop: 20,
     fontFamily: "'Lobster', cursive",
     textAlign: "center"
+  },
+  buttonBarRight: {
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: 0
+  },
+  buttonBarLeft: {
+    borderBottomRightRadius: 0,
+    borderTopRightRadius: 0
   }
 });
 
@@ -77,7 +93,13 @@ class Settings extends Component {
             </Typography>
             <Grid item sm={12}>
               <Paper className={classes.paper}>
-                <h2 className={classes.panelHeader}>General</h2>
+                <Typography
+                  component="h1"
+                  className={classes.panelHeader}
+                  color="secondary"
+                >
+                  General
+                </Typography>
 
                 <Grid style={{ flexGrow: 1 }} item sm={12}>
                   <Typography
@@ -149,7 +171,7 @@ class Settings extends Component {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item sm={6}>
+            {/* <Grid item sm={6}>
               <Paper style={{ height: 300 }} className={classes.paper}>
                 <h2 className={classes.panelHeader}>User</h2>
                 <Grid container>
@@ -322,10 +344,100 @@ class Settings extends Component {
               <Paper style={{ height: 300 }} className={classes.paper}>
                 <h2 className={classes.panelHeader}>User</h2>
               </Paper>
-            </Grid>
+            </Grid> */}
             <Grid item sm={12}>
               <Paper className={classes.paper}>
-                <h2 className={classes.panelHeader}>Dashboard</h2>
+                <Typography
+                  component="h1"
+                  className={classes.panelHeader}
+                  color="secondary"
+                >
+                  General
+                </Typography>
+                <Grid container>
+                  <Grid item sm={6}>
+                    <Grid item sm={12}>
+                      <Typography
+                        style={{ marginRight: 15 }}
+                        inline
+                        variant="body1"
+                        gutterBottom
+                      >
+                        Top Panel
+                      </Typography>
+                      <Button
+                        className={classes.buttonBarLeft}
+                        disabled={this.props.topPanel === "fitness"}
+                        variant="contained"
+                        value="fitness"
+                        onClick={() =>
+                          this.props.handleSettingsChange("topPanel", "fitness")
+                        }
+                        color="primary"
+                        style={{ width: 100 }}
+                      >
+                        Fitness
+                      </Button>
+                      <Button
+                        className={classes.buttonBarRight}
+                        disabled={this.props.topPanel === "nutrition"}
+                        variant="contained"
+                        onClick={() =>
+                          this.props.handleSettingsChange(
+                            "topPanel",
+                            "nutrition"
+                          )
+                        }
+                        color="primary"
+                        style={{ width: 100 }}
+                      >
+                        Nutrition
+                      </Button>
+                    </Grid>
+                    <Grid item sm={12}>
+                      <Typography
+                        style={{ marginRight: 15 }}
+                        inline
+                        variant="body1"
+                        gutterBottom
+                      >
+                        XL Fitness Panels
+                      </Typography>
+                      <Switch
+                        defaultChecked={this.props.xlFit}
+                        onClick={() =>
+                          this.props.handleSettingsChange(
+                            "xlFit",
+                            !this.props.xlFit
+                          )
+                        }
+                        value="checkedA"
+                        color="secondary"
+                      />
+                    </Grid>
+                    <Grid item sm={12}>
+                      <Typography
+                        style={{ marginRight: 15 }}
+                        inline
+                        variant="body1"
+                        gutterBottom
+                      >
+                        XL Nutrition Panels
+                      </Typography>
+                      <Switch
+                        defaultChecked={this.props.xlNut}
+                        onClick={() =>
+                          this.props.handleSettingsChange(
+                            "xlNut",
+                            !this.props.xlNut
+                          )
+                        }
+                        value="checkedA"
+                        color="secondary"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Paper>
             </Grid>
           </Grid>

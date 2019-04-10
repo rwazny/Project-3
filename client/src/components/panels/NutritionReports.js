@@ -42,7 +42,7 @@ const barOptions = {
 function NutritionReports(props) {
   const { classes } = props;
   return (
-    <Paper className={classes.paper}>
+    <Paper className={props.xlNut ? classes.xlPaperHeight : classes.paper}>
       <Typography
         component="h1"
         className={classes.panelHeader}

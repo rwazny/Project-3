@@ -28,9 +28,8 @@ module.exports = {
   },
 
   findWorkOutsByDate: function(req, res) {
-    console.log(req.params.date);
-    db.WorkOut.find({ date: req.params.date }).then(workOutData =>
-      res.json(workOutData)
+    db.WorkOut.find({ date: req.params.date, user: req.params.id }).then(
+      workOutData => res.json(workOutData)
     );
   },
 

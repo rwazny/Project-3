@@ -5,7 +5,9 @@ module.exports = {
     db.User.create(req.body).then(userData => res.json(userData));
   },
   findUser: function(req, res) {
-    db.User.findOne(req.body).then(dbData => res.json(dbData));
+    db.User.findOne({ email: req.params.email }).then(dbData =>
+      res.json(dbData)
+    );
   },
   pushWorkOut: function(req, res) {
     db.User.findByIdAndUpdate(req.body.userId, {
@@ -43,5 +45,16 @@ module.exports = {
             }
           }
         ]).then(workOutData => res.json(workOutData));
+  },
+
+  updateSettings: function(req, res) {
+    console.log(req.body);
+    db.User.findByIdAndUpdate(req.body.id, {
+      $set: {
+        [req.body.setting]: req.body.settingValue
+      }
+    })
+      .then(data => res.json(data))
+      .catch(err => console.log(err));
   }
 };
