@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const userController = require("../../controllers/userController");
 
-router
-  .route("/user/:email")
-  .get(userController.findUser)
-  .put(userController.pushWorkOut);
+router.route("/user/:email").get(userController.findUser);
+
+router.route("/push").put(userController.pushWorkOut);
 
 router.route("/user").post(userController.createUser);
 

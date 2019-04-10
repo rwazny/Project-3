@@ -17,7 +17,6 @@ module.exports = {
   },
 
   findWorkoutById: function(req, res) {
-    console.log(req.params.id);
     db.WorkOut.find({ _id: ObjectId(req.params.id) })
       .then(dbData => {
         res.json(dbData);
@@ -50,10 +49,4 @@ module.exports = {
         console.log(err);
       });
   }
-  // deleteWorkOut: function(req, res) {
-  //   db.findById({ _id: req.params.id })
-  //     .then(dbModel => dbModel.remove())
-  //     .then(dbModel => res.json(dbModel))
-  //     .catch(err => res.status(422).json(err));
-  // }
 };

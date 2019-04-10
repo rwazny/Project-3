@@ -163,7 +163,6 @@ class FitnessPanel extends Component {
 
   handleLoadWorkoutChange = workout => {
     API.getWorkOutById(workout.value).then(res => {
-      console.log(res);
       const newResistance = [];
       const newCardio = [];
 
@@ -233,11 +232,11 @@ class FitnessPanel extends Component {
 
   componentDidMount = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
-      let savedArray = res.data.workouts.filter(workout => workout.name);
+      let savedArray = res.data[0].workouts.filter(workout => workout.name);
       this.setState(
         {
           savedWorkouts: savedArray,
-          allWorkOuts: res.data.workouts
+          allWorkOuts: res.data[0].workouts
         },
         () => {
           this.setExerciseArrays("resistance", "resistanceExerciseNames");
@@ -334,8 +333,6 @@ class FitnessPanel extends Component {
       });
     }
 
-    console.log(data);
-
     // SAVE WORKOUT, NOT SINGLE EXERCISE
     API.saveWorkOut(data.WorkOut).then(res => {
       if (res.data.upserted) {
@@ -360,7 +357,6 @@ class FitnessPanel extends Component {
     this.setState({ workoutDate: date }, () => {
       API.getWorkOutsByDate(this.state.workoutDate, localStorage.userId).then(
         res => {
-          console.log(res.data);
           if (res.data.length) {
             let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
             if (res.data[0].resistance) {

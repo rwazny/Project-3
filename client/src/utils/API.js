@@ -21,7 +21,7 @@ export default {
   },
   //Push workout to User object
   pushWorkOut: function(data) {
-    return axios.put("/api/users", data);
+    return axios.put("/api/users/push", data);
   },
   //add single exercise
   addExercise: function(data) {

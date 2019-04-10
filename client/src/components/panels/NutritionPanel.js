@@ -183,8 +183,6 @@ class NutritionPanel extends Component {
 
     if (this.state.xAxis === "thisWeek") {
       API.getMealsByDate(moment().week(), localStorage.userId).then(res => {
-        console.log(res);
-
         if (this.state.chartType === "pieChart") {
           newChartData.labels = ["Fat", "Carbs", "Protein"];
 
@@ -364,16 +362,11 @@ class NutritionPanel extends Component {
   };
 
   handleInputChange = name => event => {
-    console.log(name);
     this.setState({ [name]: event.target.value }, () => {
       if (this.state.xAxis) {
         this.getNutritionByTimeframe();
       }
     });
-  };
-
-  dropDownChange = name => {
-    console.log(name);
   };
 
   addMeal = () => {
@@ -410,10 +403,8 @@ class NutritionPanel extends Component {
     this.setState({ nutritionDate: date, value: 0 }, () => {
       API.getMealsByDate(this.state.nutritionDate, localStorage.userId).then(
         res => {
-          console.log(res);
           if (res.data.length) {
             const newMealsArr = [...res.data[0].meal];
-            console.log(newMealsArr);
 
             this.setState({
               mealsToAdd: newMealsArr
@@ -435,7 +426,6 @@ class NutritionPanel extends Component {
   };
 
   addFoodItem = food => {
-    console.log(food.foodItem);
     const foodArr = [...this.state.mealsToAdd];
     foodArr[this.state.value].foodItem.push({
       name: food.foodItem[0].name,
@@ -459,7 +449,6 @@ class NutritionPanel extends Component {
       }
     };
     API.saveMeal(data.Nutrition).then(res => {
-      console.log(res);
       this.getNutritionByTimeframe();
     });
   };
