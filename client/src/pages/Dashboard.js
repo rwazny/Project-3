@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
 class Dashboard extends Component {
-  state = {};
+  state = { xlFit: this.props.xlFit };
   componentDidMount = () => {
     auth.onAuthStateChanged(firebaseUser => {
       this.setState({
@@ -33,8 +33,23 @@ class Dashboard extends Component {
         <CssBaseline />
         {this.state.user ? (
           <Grid container spacing={0} justify="center">
-            <NutritionPanel />
-            <FitnessPanel theme={this.props.theme} />
+            {this.props.topPanel === "fitness" ? (
+              <React.Fragment>
+                <FitnessPanel
+                  xlFit={this.props.xlFit}
+                  theme={this.props.theme}
+                />
+                <NutritionPanel xlNut={this.props.xlNut} />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <NutritionPanel xlNut={this.props.xlNut} />
+                <FitnessPanel
+                  xlFit={this.props.xlFit}
+                  theme={this.props.theme}
+                />
+              </React.Fragment>
+            )}
           </Grid>
         ) : (
           "No user found"

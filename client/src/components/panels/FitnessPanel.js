@@ -39,6 +39,19 @@ const styles = theme => ({
     flexDirection: "column",
     position: "relative"
   },
+  xlPaperHeight: {
+    padding: theme.spacing.unit * 2,
+    color: theme.palette.text.secondary,
+    whiteSpace: "nowrap",
+    marginBottom: theme.spacing.unit,
+    height: 700,
+    [theme.breakpoints.down("md")]: {
+      height: 700
+    },
+    display: "flex",
+    flexDirection: "column",
+    position: "relative"
+  },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
   },
@@ -55,6 +68,23 @@ const styles = theme => ({
     marginTop: 20,
     fontFamily: "'Lobster', cursive",
     textAlign: "center"
+  },
+  tableScrollBar: {
+    "&::-webkit-scrollbar": {
+      width: 8
+    },
+
+    "&::-webkit-scrollbar-track": {
+      background: "#00000040"
+    },
+
+    "&::-webkit-scrollbar-thumb": {
+      background: theme.palette.secondary.main
+    },
+
+    "&::-webkit-scrollbar-thumb:hover": {
+      background: theme.palette.secondary.dark
+    }
   }
 });
 
@@ -328,42 +358,45 @@ class FitnessPanel extends Component {
 
   returnWorkoutsByDate = date => {
     this.setState({ workoutDate: date }, () => {
-      API.getWorkOutsByDate(this.state.workoutDate).then(res => {
-        if (res.data.length) {
-          let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
-          if (res.data[0].resistance) {
-            res.data[0].resistance.map(resistance => {
-              newWorkOutState.resistanceToAdd.push({
-                name: resistance.name,
-                sets: resistance.sets,
-                reps: resistance.reps,
-                weight: resistance.weight
+      API.getWorkOutsByDate(this.state.workoutDate, localStorage.userId).then(
+        res => {
+          console.log(res.data);
+          if (res.data.length) {
+            let newWorkOutState = { resistanceToAdd: [], cardioToAdd: [] };
+            if (res.data[0].resistance) {
+              res.data[0].resistance.map(resistance => {
+                newWorkOutState.resistanceToAdd.push({
+                  name: resistance.name,
+                  sets: resistance.sets,
+                  reps: resistance.reps,
+                  weight: resistance.weight
+                });
               });
-            });
-          }
-          if (res.data[0].cardio) {
-            res.data[0].cardio.map(cardio => {
-              newWorkOutState.cardioToAdd.push({
-                name: cardio.name,
-                time: cardio.time,
-                distance: cardio.distance
+            }
+            if (res.data[0].cardio) {
+              res.data[0].cardio.map(cardio => {
+                newWorkOutState.cardioToAdd.push({
+                  name: cardio.name,
+                  time: cardio.time,
+                  distance: cardio.distance
+                });
               });
-            });
-          }
+            }
 
-          this.setState({
-            resistanceToAdd: newWorkOutState.resistanceToAdd,
-            cardioToAdd: newWorkOutState.cardioToAdd,
-            selectedWorkout: res.data[0].name ? res.data[0].name : "None"
-          });
-        } else {
-          this.setState({
-            resistanceToAdd: [],
-            cardioToAdd: [],
-            selectedWorkout: "None"
-          });
+            this.setState({
+              resistanceToAdd: newWorkOutState.resistanceToAdd,
+              cardioToAdd: newWorkOutState.cardioToAdd,
+              selectedWorkout: res.data[0].name ? res.data[0].name : "None"
+            });
+          } else {
+            this.setState({
+              resistanceToAdd: [],
+              cardioToAdd: [],
+              selectedWorkout: "None"
+            });
+          }
         }
-      });
+      );
     });
   };
 
@@ -463,10 +496,11 @@ class FitnessPanel extends Component {
         <Typography className={classes.panelName} variant="h3" gutterBottom>
           Fitness
         </Typography>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={this.props.xlFit ? 12 : 6}>
           <FitnessTracker
             value={this.state.value}
             classes={classes}
+            xlFit={this.props.xlFit}
             handleAnchorEl={this.handleAnchorEl}
             selectWorktout={this.state.selectedWorkout}
             clickSavedWorkout={this.clickSavedWorkout}
@@ -490,8 +524,10 @@ class FitnessPanel extends Component {
             handleChange={this.handleTabChange}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper className={classes.paper}>
+        <Grid item xs={12} md={this.props.xlFit ? 12 : 6}>
+          <Paper
+            className={this.props.xlFit ? classes.xlPaperHeight : classes.paper}
+          >
             <Typography
               component="h1"
               className={classes.panelHeader}

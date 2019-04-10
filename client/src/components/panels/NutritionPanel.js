@@ -40,6 +40,19 @@ const styles = theme => ({
     flexDirection: "column",
     position: "relative"
   },
+  xlPaperHeight: {
+    padding: theme.spacing.unit * 2,
+    color: theme.palette.text.secondary,
+    whiteSpace: "nowrap",
+    marginBottom: theme.spacing.unit,
+    height: 700,
+    [theme.breakpoints.down("md")]: {
+      height: 700
+    },
+    display: "flex",
+    flexDirection: "column",
+    position: "relative"
+  },
   divider: {
     margin: `${theme.spacing.unit * 2}px 0`
   },
@@ -68,6 +81,23 @@ const styles = theme => ({
     marginTop: 20,
     fontFamily: "'Lobster', cursive",
     textAlign: "center"
+  },
+  tableScrollBar: {
+    "&::-webkit-scrollbar": {
+      width: 8
+    },
+
+    "&::-webkit-scrollbar-track": {
+      background: "#00000040"
+    },
+
+    "&::-webkit-scrollbar-thumb": {
+      background: theme.palette.secondary.main
+    },
+
+    "&::-webkit-scrollbar-thumb:hover": {
+      background: theme.palette.secondary.dark
+    }
   }
 });
 
@@ -442,8 +472,9 @@ class NutritionPanel extends Component {
         <Typography className={classes.panelName} variant="h3" gutterBottom>
           Nutrition
         </Typography>
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={this.props.xlNut ? 12 : 6}>
           <NutritionTracker
+            xlNut={this.props.xlNut}
             handleLoadMealChange={this.handleLoadMealChange}
             mealToLoad={this.state.mealToLoad.label}
             classes={classes}
@@ -460,9 +491,10 @@ class NutritionPanel extends Component {
             saveNutritionDay={this.saveNutritionDay}
           />
         </Grid>
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={this.props.xlNut ? 12 : 6}>
           <NutritionReports
             classes={classes}
+            xlNut={this.props.xlNut}
             handleInputChange={this.handleInputChange}
             chartType={this.state.chartType}
             xAxis={this.state.xAxis}

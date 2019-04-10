@@ -18,7 +18,8 @@ const styles = theme => ({
   },
   input: {
     display: "flex",
-    padding: 0
+    padding: 0,
+    paddingLeft: 12
   },
   valueContainer: {
     display: "flex",
@@ -198,7 +199,7 @@ class WorkoutsDropdown extends React.Component {
   };
 
   handleChange = name => value => {
-    this.props.handleLoadWorkoutChange(value);
+    if (value) this.props.handleLoadWorkoutChange(value);
     this.setState({
       [name]: value,
       inputHandler

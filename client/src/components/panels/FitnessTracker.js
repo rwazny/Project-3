@@ -30,7 +30,7 @@ function TabContainer(props) {
 function FitnessTracker(props) {
   const { value, classes } = props;
   return (
-    <Paper className={classes.paper}>
+    <Paper className={props.xlFit ? classes.xlPaperHeight : classes.paper}>
       <Typography
         component="h1"
         className={classes.panelHeader}
@@ -80,6 +80,7 @@ function FitnessTracker(props) {
       </AppBar>
 
       <div
+        className={classes.tableScrollBar}
         style={{
           flexGrow: 1,
           flexDirection: "column",

@@ -1,18 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import withStyles from '@material-ui/core/styles/withStyles';
-import auth from '../firebase';
-import API from '../utils/API';
-import { Grid } from '@material-ui/core';
+import React from "react";
+import PropTypes from "prop-types";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import withStyles from "@material-ui/core/styles/withStyles";
+import auth from "../firebase";
+import API from "../utils/API";
+import { Link } from "react-router-dom";
+import { Grid } from "@material-ui/core";
 
 const styles = theme => ({
   // root: {
@@ -31,20 +32,20 @@ const styles = theme => ({
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
       .spacing.unit * 3}px`,
-    width: '40vw',
-    marginLeft: '5vw'
+    width: "40vw",
+    marginLeft: "5vw"
   },
   avatar: {
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing.unit
   },
   submit: {
@@ -52,19 +53,19 @@ const styles = theme => ({
   }
 });
 
-const styles2= { 
-  fontFamily: 'Helvetica', 
-  fontSize:"1.2em",  
-  width:"30vw", 
+const styles2 = {
+  fontFamily: "Helvetica",
+  fontSize: "1.2em",
+  width: "30vw",
   marginTop: "5%",
   textAlign: "center",
   padding: "2% 0%"
-}
+};
 
 class SignIn extends React.Component {
   state = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     errors: null
   };
   handleChange = e => {
@@ -83,6 +84,7 @@ class SignIn extends React.Component {
 
         API.createUser({ email: this.state.email }).then(res => {
           localStorage.userId = res.data._id;
+          setTimeout(() => this.props.history.push("/dashboard"), 500);
         });
       })
       .catch(error => {
@@ -100,9 +102,10 @@ class SignIn extends React.Component {
         this.setState({
           errors: null
         });
-        API.findUser({ email: this.state.email }).then(
-          res => (localStorage.userId = res.data._id)
-        );
+        API.findUser(this.state.email).then(res => {
+          localStorage.userId = res.data._id;
+          setTimeout(() => this.props.history.push("/dashboard"), 500);
+        });
       })
       .catch(error => {
         this.setState({
@@ -115,16 +118,17 @@ class SignIn extends React.Component {
     event.preventDefault();
     auth.signOut();
   };
-   
-  
 
   render() {
     const { classes } = this.props;
 
     return (
       <div>
-        <Grid container spacing={8} style={{ display: 'flex', justifyContent: "space-evenly" }}>
-          <Paper className={classes.paper}>xs=12 sm=6</Paper>
+        <Grid
+          container
+          style={{ display: "flex", justifyContent: "space-evenly" }}
+        >
+          {/* <Paper className={classes.paper}>xs=12 sm=6</Paper> */}
 
           <main className={classes.main}>
             <Grid item sm={12} />
@@ -137,7 +141,7 @@ class SignIn extends React.Component {
               <Typography
                 component="h1"
                 variant="h5"
-                style={{ fontFamily: 'Lobster' }}
+                style={{ fontFamily: "Lobster" }}
               >
                 Sign In
               </Typography>
@@ -154,11 +158,11 @@ class SignIn extends React.Component {
                   />
                   <div
                     style={{
-                      color: 'red',
+                      color: "red",
                       paddingTop: 10,
-                      fontFamily: 'Helvetica',
+                      fontFamily: "Helvetica",
                       fontSize: 12,
-                      textAlign: 'center'
+                      textAlign: "center"
                     }}
                   >
                     {this.state.errors}
@@ -178,17 +182,17 @@ class SignIn extends React.Component {
                   this.state.password.length > 0 ? (
                     <div
                       style={{
-                        color: 'red',
+                        color: "red",
                         paddingTop: 10,
-                        fontFamily: 'Helvetica',
+                        fontFamily: "Helvetica",
                         fontSize: 12,
-                        textAlign: 'center'
+                        textAlign: "center"
                       }}
                     >
                       Password Must Be at Least 6 Characters
                     </div>
                   ) : (
-                    ''
+                    ""
                   )}
                 </FormControl>
                 {/* <FormControlLabel
@@ -224,39 +228,38 @@ class SignIn extends React.Component {
               </form>
             </Paper>
           </main>
-          </Grid>
-          {/* FOOTER */}
-
-
-          <Grid container  style={{ display: 'flex', flexDirection: "row", justifyContent: "space-evenly" }}>
-          
-              <Paper   style={styles2}>
-                <Typography style= {{fontSize: "1.1em"}}>
-                  Quisque a finibus velit, non volutpat ipsum. Proin quis urna
-                  nisl. Aenean pulvinar nunc quis cursus viverra. Ut semper arcu
-                  urna.
-                  </Typography> 
-              </Paper>
-
-              <Paper   style={styles2}>
-              <Typography style= {{fontSize: "1.1em"}}>
-                  Quisque a finibus velit, non volutpat ipsum. Proin quis urna
-                  nisl. Aenean pulvinar nunc quis cursus viverra. Ut semper arcu
-                  urna.
-                  </Typography> 
-              </Paper>
-
-              <Paper   style={styles2}>
-              <Typography style= {{fontSize: "1.1em"}}>
-                  Quisque a finibus velit, non volutpat ipsum. Proin quis urna
-                  nisl. Aenean pulvinar nunc quis cursus viverra. Ut semper arcu
-                  urna.
-                  </Typography> 
-              </Paper>
-           
-          
-              
         </Grid>
+        {/* FOOTER */}
+        {/* 
+        <Grid
+          container
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+          }}
+        >
+          <Paper style={styles2}>
+            <Typography style={{ fontSize: "1.1em" }}>
+              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
+              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
+            </Typography>
+          </Paper>
+
+          <Paper style={styles2}>
+            <Typography style={{ fontSize: "1.1em" }}>
+              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
+              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
+            </Typography>
+          </Paper>
+
+          <Paper style={styles2}>
+            <Typography style={{ fontSize: "1.1em" }}>
+              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
+              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
+            </Typography>
+          </Paper>
+        </Grid> */}
       </div>
     );
   }

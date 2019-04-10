@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import auth from "./firebase";
+import API from "./utils/API";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AppBar from "@material-ui/core/AppBar";
@@ -42,7 +43,11 @@ const theme = createMuiTheme({
 class App extends Component {
   state = {
     value: 1,
-    theme: theme
+    theme: theme,
+    darkMode: true,
+    topPanel: "fitness",
+    xlFit: false,
+    xlNut: false
   };
 
   handleChange = (event, value) => {
@@ -57,6 +62,30 @@ class App extends Component {
 
       //USER AUTH STUFF
       if (firebaseUser) {
+        API.findUser(firebaseUser.email).then(res => {
+          this.setState({
+            topPanel: res.data.topPanel,
+            darkMode: res.data.darkMode,
+            xlFit: res.data.xlFit,
+            xlNut: res.data.xlNut
+          });
+
+          switch (res.data.theme) {
+            case "orange":
+              this.theme();
+              break;
+            case "cyan":
+              this.cyanTheme();
+              break;
+            case "pink":
+              this.pinkTheme();
+              break;
+            case "grey":
+              this.greyTheme();
+              break;
+          }
+        });
+
         console.log("I AM THE FB USER" + JSON.stringify(firebaseUser.email));
       } else {
         console.log("not logged in");
@@ -64,17 +93,20 @@ class App extends Component {
     });
   };
   signOut = event => {
-    auth.signOut();
-    this.setState({ user: "", value: 0 });
+    this.setState({ user: null, value: 0, darkMode: true }, () => {
+      auth.signOut();
+      localStorage.userId = null;
+      this.pinkTheme();
+    });
   };
   //THEME STUFF
   theme = () => {
+    this.handleSettingsChange("theme", "orange");
     let colorType = "";
-    if (this.state.theme.palette.type === "dark") {
-      colorType = "dark";
-    } else {
-      colorType = "light";
-    }
+
+    if (this.state.darkMode) colorType = "dark";
+    else colorType = "light";
+
     this.setState(
       {
         theme: createMuiTheme({
@@ -94,12 +126,12 @@ class App extends Component {
   };
 
   pinkTheme = () => {
+    if (this.state.user) this.handleSettingsChange("theme", "pink");
     let colorType = "";
-    if (this.state.theme.palette.type === "dark") {
-      colorType = "dark";
-    } else {
-      colorType = "light";
-    }
+
+    if (this.state.darkMode) colorType = "dark";
+    else colorType = "light";
+
     this.setState(
       {
         theme: createMuiTheme({
@@ -119,12 +151,12 @@ class App extends Component {
   };
 
   cyanTheme = () => {
+    this.handleSettingsChange("theme", "cyan");
     let colorType = "";
-    if (this.state.theme.palette.type === "dark") {
-      colorType = "dark";
-    } else {
-      colorType = "light";
-    }
+
+    if (this.state.darkMode) colorType = "dark";
+    else colorType = "light";
+
     this.setState(
       {
         theme: createMuiTheme({
@@ -142,12 +174,12 @@ class App extends Component {
   };
 
   greyTheme = () => {
+    this.handleSettingsChange("theme", "grey");
     let colorType = "";
-    if (this.state.theme.palette.type === "dark") {
-      colorType = "dark";
-    } else {
-      colorType = "light";
-    }
+
+    if (this.state.darkMode) colorType = "dark";
+    else colorType = "light";
+
     this.setState(
       {
         theme: createMuiTheme({
@@ -167,6 +199,7 @@ class App extends Component {
   };
 
   switchUp = () => {
+    this.handleSettingsChange("darkMode", !this.state.darkMode);
     let colorType = "";
     if (this.state.theme.palette.type === "dark") {
       colorType = "light";
@@ -177,6 +210,7 @@ class App extends Component {
     newVar.palette.type = "light";
     this.setState(
       {
+        darkMode: !this.state.darkMode,
         theme: createMuiTheme({
           palette: {
             primary: {
@@ -191,6 +225,18 @@ class App extends Component {
       },
       () => this.setLocalTheme()
     );
+  };
+
+  handleSettingsChange = (setting, value) => {
+    API.updateSettings({
+      setting: setting,
+      settingValue: value,
+      id: localStorage.userId
+    });
+
+    if (setting === "xlNut") this.setState({ xlNut: value });
+    if (setting === "xlFit") this.setState({ xlFit: value });
+    if (setting === "topPanel") this.setState({ topPanel: value });
   };
 
   setLocalTheme = () => {
@@ -281,18 +327,29 @@ class App extends Component {
                       path="/settings"
                       render={() => (
                         <Settings
+                          handleSettingsChange={this.handleSettingsChange}
+                          topPanel={this.state.topPanel}
                           orangeTheme={this.theme}
                           pinkTheme={this.pinkTheme}
                           greyTheme={this.greyTheme}
                           cyanTheme={this.cyanTheme}
                           switchUp={this.switchUp}
                           theme={this.state.theme}
+                          xlNut={this.state.xlNut}
+                          xlFit={this.state.xlFit}
                         />
                       )}
                     />
                     <Route
                       path="/dashboard"
-                      render={() => <Dashboard theme={this.state.theme} />}
+                      render={() => (
+                        <Dashboard
+                          xlFit={this.state.xlFit}
+                          topPanel={this.state.topPanel}
+                          theme={this.state.theme}
+                          xlNut={this.state.xlNut}
+                        />
+                      )}
                     />
                     <Route path="/" component={Landing} />
                   </Switch>

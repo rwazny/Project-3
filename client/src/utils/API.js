@@ -16,8 +16,8 @@ export default {
   getSavedWorkOuts: function() {
     return axios.get("/api/workouts/saved");
   },
-  getWorkOutsByDate: function(date) {
-    return axios.get("/api/workouts/" + date);
+  getWorkOutsByDate: function(date, id) {
+    return axios.get(`/api/workouts/${date}&${id}`);
   },
   //Push workout to User object
   pushWorkOut: function(data) {
@@ -33,11 +33,11 @@ export default {
   //--------------------------------------------------
 
   createUser: function(data) {
-    return axios.post("/api/users", data);
+    return axios.post("/api/users/user", data);
   },
 
-  findUser: function(data) {
-    return axios.get("/api/users", data);
+  findUser: function(email) {
+    return axios.get("/api/users/user/" + email);
   },
 
   findUserWorkOuts: function(id) {
@@ -48,6 +48,10 @@ export default {
     return axios.get(
       `/api/users/week/${data.week}&${data.type}&${data.name}&${data.user}`
     );
+  },
+
+  updateSettings: function(setting) {
+    return axios.put("/api/users/settings/", setting);
   },
 
   //--------------------------------------------------

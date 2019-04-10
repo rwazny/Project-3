@@ -20,7 +20,8 @@ const styles = theme => ({
   },
   input: {
     display: "flex",
-    padding: 0
+    padding: 0,
+    paddingLeft: 12
   },
   valueContainer: {
     display: "flex",
@@ -209,7 +210,7 @@ class IntegrationReactSelect extends React.Component {
   };
 
   handleChange = name => value => {
-    this.props.handleLoadMealChange(value);
+    if (value) this.props.handleLoadMealChange(value);
     this.setState({
       [name]: value,
       inputHandler
