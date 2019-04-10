@@ -39,7 +39,7 @@ module.exports = {
 
   saveWorkOut: function(req, res) {
     db.WorkOut.updateOne(
-      { date: req.body.date },
+      { date: req.body.date, user: req.body.user },
       { $set: req.body },
       { upsert: true }
     )
