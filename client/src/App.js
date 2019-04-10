@@ -63,27 +63,30 @@ class App extends Component {
       //USER AUTH STUFF
       if (firebaseUser) {
         API.findUser(firebaseUser.email).then(res => {
-          this.setState({
-            topPanel: res.data.topPanel,
-            darkMode: res.data.darkMode,
-            xlFit: res.data.xlFit,
-            xlNut: res.data.xlNut
-          });
-
-          switch (res.data.theme) {
-            case "orange":
-              this.theme();
-              break;
-            case "cyan":
-              this.cyanTheme();
-              break;
-            case "pink":
-              this.pinkTheme();
-              break;
-            case "grey":
-              this.greyTheme();
-              break;
-          }
+          this.setState(
+            {
+              topPanel: res.data.topPanel,
+              darkMode: res.data.darkMode,
+              xlFit: res.data.xlFit,
+              xlNut: res.data.xlNut
+            },
+            () => {
+              switch (res.data.theme) {
+                case "orange":
+                  this.theme();
+                  break;
+                case "cyan":
+                  this.cyanTheme();
+                  break;
+                case "pink":
+                  this.pinkTheme();
+                  break;
+                case "grey":
+                  this.greyTheme();
+                  break;
+              }
+            }
+          );
         });
 
         console.log("I AM THE FB USER" + JSON.stringify(firebaseUser.email));
