@@ -17,6 +17,7 @@ import TableRow from "@material-ui/core/TableRow";
 import DatePickers from "../DatePicker";
 import Input from "@material-ui/core/Input";
 import Grid from "@material-ui/core/Grid";
+import WorkoutsDropdown from "../WorkoutsDropdown";
 
 function TabContainer(props) {
   return (
@@ -30,9 +31,18 @@ function FitnessTracker(props) {
   const { value, classes } = props;
   return (
     <Paper className={classes.paper}>
-      <h2 className={classes.panelHeader}>Tracking</h2>
+      <Typography
+        component="h1"
+        className={classes.panelHeader}
+        color="secondary"
+      >
+        Tracking
+      </Typography>
       <Grid justify="space-between" container>
         <Grid item xs={6}>
+          <WorkoutsDropdown
+            handleLoadWorkoutChange={props.handleLoadWorkoutChange}
+          />
           <TextField
             fullWidth
             id="outlined-name"
@@ -239,7 +249,7 @@ function FitnessTracker(props) {
             variant="contained"
             style={{ float: "right" }}
             // size="small"
-            color="primary"
+            color="secondary"
             disabled={
               !props.resistanceToAdd.length && !props.cardioToAdd.length
             }
