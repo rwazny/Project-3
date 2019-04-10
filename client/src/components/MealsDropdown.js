@@ -88,9 +88,6 @@ function Control(props) {
 }
 
 const handleInputChange = property => event => {
-  console.log(property);
-  console.log(event.target.value);
-
   return e => {
     this.setState({ [property]: e.target.value });
   };
@@ -184,8 +181,6 @@ class IntegrationReactSelect extends React.Component {
 
   componentDidMount = () => {
     API.getMealNames(localStorage.userId).then(res => {
-      console.log(res);
-
       if (res.data.length) {
         for (let i = 0; i < res.data.length; i++) {
           for (let j = 0; j < res.data[i].meal.length; j++) {
@@ -204,7 +199,6 @@ class IntegrationReactSelect extends React.Component {
           label: suggestion.label,
           value: suggestion.value
         }));
-        console.log(suggestions);
       }
     });
   };

@@ -1,4 +1,5 @@
 const db = require("../models");
+
 module.exports = {
   createUser: function(req, res) {
     console.log(req.body);
@@ -17,7 +18,7 @@ module.exports = {
       .catch(err => console.log(err));
   },
   findUserWorkOuts: function(req, res) {
-    db.User.findById({ _id: req.params.id })
+    db.User.find({ _id: req.params.id })
       .populate("workouts")
       .then(data => res.json(data));
   },
