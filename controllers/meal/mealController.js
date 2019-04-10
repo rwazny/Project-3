@@ -41,7 +41,7 @@ module.exports = {
   },
   create: function(req, res) {
     db.Nutrition.updateOne(
-      { date: req.body.date },
+      { date: req.body.date, user: req.body.user },
       { $set: req.body },
       { upsert: true }
     )
