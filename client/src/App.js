@@ -327,6 +327,7 @@ class App extends Component {
                   </AppBar>
                   <Switch>
                     <Route
+                      exact
                       path="/settings"
                       render={() => (
                         <Settings
@@ -344,6 +345,7 @@ class App extends Component {
                       )}
                     />
                     <Route
+                      exact
                       path="/dashboard"
                       render={() => (
                         <Dashboard
@@ -354,7 +356,7 @@ class App extends Component {
                         />
                       )}
                     />
-                    <Route path="/" component={Landing} />
+                    <Route exact path="/" component={Landing} />
                   </Switch>
                 </Fragment>
               )}
