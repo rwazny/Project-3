@@ -83,6 +83,12 @@ class FitnessReports extends Component {
             }
           }
         ]
+      },
+      legend: {
+        labels: {
+          fontColor: "white",
+          fontSize: 18
+        }
       }
     };
 
@@ -102,13 +108,17 @@ class FitnessReports extends Component {
             display: true,
             gridLines: {
               display: false
+            },
+            ticks: {
+              fontColor: this.props.textColor
             }
           }
         ],
         yAxes: [
           {
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              fontColor: this.props.textColor
             },
             type: "linear",
             display: true,
@@ -123,7 +133,8 @@ class FitnessReports extends Component {
           },
           {
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              fontColor: this.props.textColor
             },
             type: "linear",
             display: true,
@@ -137,6 +148,11 @@ class FitnessReports extends Component {
             }
           }
         ]
+      },
+      legend: {
+        labels: {
+          fontColor: this.props.textColor
+        }
       }
     };
 
