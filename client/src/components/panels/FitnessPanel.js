@@ -91,6 +91,7 @@ const styles = theme => ({
 class FitnessPanel extends Component {
   state = {
     value: 0,
+    errorMessage: "",
     fetchDropdownData: false,
     data: {
       labels: [],
@@ -334,25 +335,29 @@ class FitnessPanel extends Component {
       });
     }
 
-    this.setState({ fetchDropdownData: true }, () => {
-      // SAVE WORKOUT, NOT SINGLE EXERCISE
+    this.setState({ fetchDropdownData: true, errorMessage: "" }, () => {
       API.saveWorkOut(data.WorkOut).then(res => {
-        if (res.data.upserted) {
-          API.pushWorkOut({
-            userId: localStorage.userId,
-            id: res.data.upserted[0]._id
+        if (res.data.errors) {
+          this.setState({ errorMessage: "Missing workout info!" });
+        } else {
+          if (res.data.upserted) {
+            API.pushWorkOut({
+              userId: localStorage.userId,
+              id: res.data.upserted[0]._id
+            });
+          }
+
+          if (this.state.timeframe) {
+            this.getWorkOutByTimeframe(this.state.exercise);
+          }
+
+          this.setState({
+            resistanceExerciseNames: resistanceNames,
+            cardioExerciseNames: cardioNames,
+            fetchDropdownData: false,
+            errorMessage: "Saved workout!"
           });
         }
-
-        if (this.state.timeframe) {
-          this.getWorkOutByTimeframe(this.state.exercise);
-        }
-
-        this.setState({
-          resistanceExerciseNames: resistanceNames,
-          cardioExerciseNames: cardioNames,
-          fetchDropdownData: false
-        });
       });
     });
   };
@@ -500,6 +505,7 @@ class FitnessPanel extends Component {
         </Typography>
         <Grid item xs={12} md={this.props.xlFit ? 12 : 6}>
           <FitnessTracker
+            errorMessage={this.state.errorMessage}
             fetchDropdownData={this.state.fetchDropdownData}
             value={this.state.value}
             classes={classes}

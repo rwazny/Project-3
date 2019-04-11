@@ -1,4 +1,3 @@
-// ~~~Worry about breaking into seperate file later~~~
 const mongoose = require(`mongoose`);
 
 const resistanceSchema = new mongoose.Schema({
@@ -6,9 +5,7 @@ const resistanceSchema = new mongoose.Schema({
   sets: { type: Number, required: true, min: 1, max: 10000, trim: true },
   reps: {
     type: [Number],
-    required: function() {
-      return 1 || this.sets;
-    },
+    required: true,
     min: 0,
     max: 10000,
     trim: true
@@ -16,9 +13,6 @@ const resistanceSchema = new mongoose.Schema({
   weight: {
     type: [Number],
     required: true,
-    required: function() {
-      return 1 || this.sets;
-    },
     min: 0,
     max: 10000,
     trim: true
@@ -53,7 +47,6 @@ const workOutSchema = new mongoose.Schema({
   user: { type: String },
   name: {
     type: String,
-   
     max: 250,
     trim: true
   },
