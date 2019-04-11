@@ -8,39 +8,91 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 
-const barOptions = {
-  maintainAspectRatio: true,
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        gridLines: {
-          display: false
-        }
-      }
-    ],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true
-        },
-        type: "linear",
-        display: true,
-        position: "left",
-        id: "y-axis-1",
-        gridLines: {
-          display: false
-        },
-        labels: {
-          show: true
-        }
-      }
-    ]
-  }
-};
-
 function NutritionReports(props) {
+  const barOptions = {
+    maintainAspectRatio: true,
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            fontColor: props.textColor
+          },
+          display: true,
+          gridLines: {
+            display: false
+          }
+        }
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            fontColor: props.textColor
+          },
+          type: "linear",
+          display: true,
+          position: "left",
+          id: "y-axis-1",
+          gridLines: {
+            display: false
+          },
+          labels: {
+            show: true
+          }
+        }
+      ]
+    },
+    legend: {
+      labels: {
+        fontColor: props.textColor
+      },
+      position: "bottom"
+    }
+  };
+
+  const pieOptions = {
+    maintainAspectRatio: true,
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            fontColor: props.textColor
+          },
+          display: false,
+          gridLines: {
+            display: false
+          }
+        }
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            fontColor: props.textColor
+          },
+          type: "linear",
+          display: false,
+          position: "left",
+          id: "y-axis-1",
+          gridLines: {
+            display: false
+          },
+          labels: {
+            show: true
+          }
+        }
+      ]
+    },
+    legend: {
+      labels: {
+        fontColor: props.textColor
+      },
+      position: "bottom"
+    }
+  };
+
   const { classes } = props;
+
   return (
     <Paper className={props.xlNut ? classes.xlPaperHeight : classes.paper}>
       <Typography
@@ -51,7 +103,7 @@ function NutritionReports(props) {
         Reports
       </Typography>
       <div>
-        <FormControl style={{ float: "left" }}>
+        <FormControl style={{ float: "left", marginBottom: 18 }}>
           <InputLabel htmlFor="type-native-simple">Type</InputLabel>
           <Select
             style={{ width: 120, marginRight: 15 }}
@@ -139,7 +191,7 @@ function NutritionReports(props) {
         {props.chartType === "barChart" ? (
           <Bar data={props.data} width={100} height={50} options={barOptions} />
         ) : (
-          <Pie data={props.data} width={100} height={50} />
+          <Pie data={props.data} width={100} height={50} options={pieOptions} />
         )}
       </div>
     </Paper>

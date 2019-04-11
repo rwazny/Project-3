@@ -42,6 +42,7 @@ function FitnessTracker(props) {
         <Grid item xs={6}>
           <WorkoutsDropdown
             handleLoadWorkoutChange={props.handleLoadWorkoutChange}
+            fetchDropdownData={props.fetchDropdownData}
           />
           <TextField
             fullWidth
@@ -85,7 +86,8 @@ function FitnessTracker(props) {
           flexGrow: 1,
           flexDirection: "column",
           overflowY: "auto",
-          overflowX: "hidden"
+          overflowX: "hidden",
+          backgroundColor: "#00000017"
         }}
       >
         {value === 0 && (

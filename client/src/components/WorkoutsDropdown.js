@@ -175,6 +175,16 @@ class WorkoutsDropdown extends React.Component {
   };
 
   componentDidMount = () => {
+    this.updateDropdownSuggestions();
+  };
+
+  componentDidUpdate = () => {
+    if (this.props.fetchDropdownData) {
+      this.updateDropdownSuggestions();
+    }
+  };
+
+  updateDropdownSuggestions = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
       suggestions = [];
       if (res.data.length) {

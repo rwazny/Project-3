@@ -103,6 +103,7 @@ const styles = theme => ({
 
 class NutritionPanel extends Component {
   state = {
+    fetchDropdownData: false,
     data: {
       labels: [],
       datasets: [
@@ -151,11 +152,14 @@ class NutritionPanel extends Component {
       }
     ],
     nutritionDate: moment().format("YYYY-MM-DD"),
-    mealToLoad: { label: null }
+    mealToLoad: { label: null },
+    chartType: "pieChart",
+    xAxis: "today"
   };
 
   componentDidMount = () => {
     this.selectMealsByDate(this.state.nutritionDate);
+    this.getNutritionByTimeframe();
   };
 
   dayTotalsSum = (yAxis, mealData) => {
@@ -440,16 +444,19 @@ class NutritionPanel extends Component {
   };
 
   saveNutritionDay = () => {
-    let data = {
-      Nutrition: {
-        date: this.state.nutritionDate,
-        week: moment(this.state.nutritionDate, "YYYY-MM-DD").week(),
-        user: localStorage.userId,
-        meal: this.state.mealsToAdd
-      }
-    };
-    API.saveMeal(data.Nutrition).then(res => {
-      this.getNutritionByTimeframe();
+    this.setState({ fetchDropdownData: true }, () => {
+      let data = {
+        Nutrition: {
+          date: this.state.nutritionDate,
+          week: moment(this.state.nutritionDate, "YYYY-MM-DD").week(),
+          user: localStorage.userId,
+          meal: this.state.mealsToAdd
+        }
+      };
+      API.saveMeal(data.Nutrition).then(res => {
+        this.getNutritionByTimeframe();
+        this.setState({ fetchDropdownData: false });
+      });
     });
   };
 
@@ -482,6 +489,7 @@ class NutritionPanel extends Component {
         </Grid>
         <Grid item sm={12} md={this.props.xlNut ? 12 : 6}>
           <NutritionReports
+            textColor={this.props.theme.typography.body1.color}
             classes={classes}
             xlNut={this.props.xlNut}
             handleInputChange={this.handleInputChange}

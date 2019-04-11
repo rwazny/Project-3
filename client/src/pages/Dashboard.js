@@ -39,11 +39,17 @@ class Dashboard extends Component {
                   xlFit={this.props.xlFit}
                   theme={this.props.theme}
                 />
-                <NutritionPanel xlNut={this.props.xlNut} />
+                <NutritionPanel
+                  xlNut={this.props.xlNut}
+                  theme={this.props.theme}
+                />
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <NutritionPanel xlNut={this.props.xlNut} />
+                <NutritionPanel
+                  xlNut={this.props.xlNut}
+                  theme={this.props.theme}
+                />
                 <FitnessPanel
                   xlFit={this.props.xlFit}
                   theme={this.props.theme}

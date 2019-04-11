@@ -49,6 +49,7 @@ function NutritionTracker(props) {
       >
         <Grid item xs={12} sm={5}>
           <IntegrationReactSelect
+            fetchDropdownData={props.fetchDropdownData}
             handleLoadMealChange={props.handleLoadMealChange}
           />
           <TextField
@@ -126,7 +127,8 @@ function NutritionTracker(props) {
                 flexGrow: 1,
                 flexDirection: "column",
                 overflowY: "auto",
-                overflowX: "hidden"
+                overflowX: "hidden",
+                backgroundColor: "#00000017"
               }}
             >
               <TabContainer key={index}>

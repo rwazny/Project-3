@@ -180,6 +180,16 @@ class IntegrationReactSelect extends React.Component {
   }
 
   componentDidMount = () => {
+    this.updateDropdownSuggestions();
+  };
+
+  componentDidUpdate = () => {
+    if (this.props.fetchDropdownData) {
+      this.updateDropdownSuggestions();
+    }
+  };
+
+  updateDropdownSuggestions = () => {
     API.getMealNames(localStorage.userId).then(res => {
       suggestions = [];
       if (res.data.length) {
