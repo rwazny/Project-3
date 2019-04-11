@@ -181,6 +181,7 @@ class IntegrationReactSelect extends React.Component {
 
   componentDidMount = () => {
     API.getMealNames(localStorage.userId).then(res => {
+      suggestions = [];
       if (res.data.length) {
         for (let i = 0; i < res.data.length; i++) {
           for (let j = 0; j < res.data[i].meal.length; j++) {

@@ -176,6 +176,7 @@ class WorkoutsDropdown extends React.Component {
 
   componentDidMount = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
+      suggestions = [];
       if (res.data.length) {
         for (let i = 0; i < res.data[0].workouts.length; i++) {
           if (res.data[0].workouts[i].name) {
