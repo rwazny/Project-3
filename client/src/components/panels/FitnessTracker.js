@@ -28,6 +28,13 @@ function TabContainer(props) {
 }
 
 function FitnessTracker(props) {
+  const classNames = {
+    errorTab: {
+      transition: "color 1s",
+      color: "red"
+    }
+  };
+
   const { value, classes } = props;
   return (
     <Paper className={props.xlFit ? classes.xlPaperHeight : classes.paper}>
@@ -42,6 +49,7 @@ function FitnessTracker(props) {
         <Grid item xs={6}>
           <WorkoutsDropdown
             handleLoadWorkoutChange={props.handleLoadWorkoutChange}
+            fetchDropdownData={props.fetchDropdownData}
           />
           <TextField
             fullWidth
@@ -85,7 +93,8 @@ function FitnessTracker(props) {
           flexGrow: 1,
           flexDirection: "column",
           overflowY: "auto",
-          overflowX: "hidden"
+          overflowX: "hidden",
+          backgroundColor: "#00000017"
         }}
       >
         {value === 0 && (
@@ -118,6 +127,7 @@ function FitnessTracker(props) {
                   <TableRow key={index}>
                     <TableCell component="th" scope="row">
                       <Input
+                        error={props.nameError ? true : false}
                         id={index.toString()}
                         onChange={props.handleInputChange("resistanceToAdd")}
                         name="name"
@@ -227,7 +237,7 @@ function FitnessTracker(props) {
         )}
       </div>
       <Grid style={{ marginTop: 6 }} container>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <Button
             style={{ marginRight: 6 }}
             color="primary"
@@ -245,7 +255,20 @@ function FitnessTracker(props) {
             Add Cardio
           </Button>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
+          {/* Check for the first letter in error message, currently "Missing data..." */}
+          <Typography
+            component="body1"
+            style={
+              props.errorMessage.charAt(0) === "M"
+                ? { color: "red", marginTop: 6 }
+                : { color: "#34c334", marginTop: 6 }
+            }
+          >
+            {props.errorMessage}
+          </Typography>
+        </Grid>
+        <Grid item xs={3}>
           <Button
             variant="contained"
             style={{ float: "right" }}

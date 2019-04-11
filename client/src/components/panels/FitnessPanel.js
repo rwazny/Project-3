@@ -91,6 +91,8 @@ const styles = theme => ({
 class FitnessPanel extends Component {
   state = {
     value: 0,
+    errorMessage: "",
+    fetchDropdownData: false,
     data: {
       labels: [],
       datasets: [
@@ -145,7 +147,7 @@ class FitnessPanel extends Component {
 
   clickExerciseType = name => event => {
     const { value } = event.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, yAxis: "" });
   };
 
   clickExerciseName = name => event => {
@@ -333,22 +335,29 @@ class FitnessPanel extends Component {
       });
     }
 
-    // SAVE WORKOUT, NOT SINGLE EXERCISE
-    API.saveWorkOut(data.WorkOut).then(res => {
-      if (res.data.upserted) {
-        API.pushWorkOut({
-          userId: localStorage.userId,
-          id: res.data.upserted[0]._id
-        });
-      }
+    this.setState({ fetchDropdownData: true, errorMessage: "" }, () => {
+      API.saveWorkOut(data.WorkOut).then(res => {
+        if (res.data.errors) {
+          this.setState({ errorMessage: "Missing workout info!" });
+        } else {
+          if (res.data.upserted) {
+            API.pushWorkOut({
+              userId: localStorage.userId,
+              id: res.data.upserted[0]._id
+            });
+          }
 
-      if (this.state.timeframe) {
-        this.getWorkOutByTimeframe(this.state.exercise);
-      }
+          if (this.state.timeframe) {
+            this.getWorkOutByTimeframe(this.state.exercise);
+          }
 
-      this.setState({
-        resistanceExerciseNames: resistanceNames,
-        cardioExerciseNames: cardioNames
+          this.setState({
+            resistanceExerciseNames: resistanceNames,
+            cardioExerciseNames: cardioNames,
+            fetchDropdownData: false,
+            errorMessage: "Saved workout!"
+          });
+        }
       });
     });
   };
@@ -448,8 +457,10 @@ class FitnessPanel extends Component {
         if (this.state.type === "resistance") {
           newData[id] = res.data[i].resistance.weight[0];
           lineData[id] = res.data[i].resistance[this.state.yAxis];
+          newChartData.datasets[1].label = "Weight";
         } else if (this.state.type === "cardio") {
           newData[id] = res.data[i].cardio.distance;
+          newChartData.datasets[1].label = "Distance";
           lineData[id] = res.data[i].cardio[this.state.yAxis];
         }
       }
@@ -494,6 +505,8 @@ class FitnessPanel extends Component {
         </Typography>
         <Grid item xs={12} md={this.props.xlFit ? 12 : 6}>
           <FitnessTracker
+            errorMessage={this.state.errorMessage}
+            fetchDropdownData={this.state.fetchDropdownData}
             value={this.state.value}
             classes={classes}
             xlFit={this.props.xlFit}

@@ -43,7 +43,7 @@ module.exports = {
     db.Nutrition.updateOne(
       { date: req.body.date, user: req.body.user },
       { $set: req.body },
-      { upsert: true }
+      { upsert: true, runValidators: true }
     )
       .then(dbData => {
         res.json(dbData);

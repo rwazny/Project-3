@@ -40,13 +40,14 @@ module.exports = {
     db.WorkOut.updateOne(
       { date: req.body.date, user: req.body.user },
       { $set: req.body },
-      { upsert: true }
+      { upsert: true, runValidators: true }
     )
       .then(dbData => {
         res.json(dbData);
       })
       .catch(err => {
         console.log(err);
+        res.send(err);
       });
   }
 };
