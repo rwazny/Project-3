@@ -12,6 +12,13 @@ import Grid from "@material-ui/core/Grid";
 
 var userInput = "";
 var suggestions = [];
+const searchEx = [
+  "Chicken...",
+  "Ice Cream...",
+  "Egg...",
+  "Taco...",
+  "Cheeseburger..."
+];
 
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
@@ -118,7 +125,7 @@ class IntegrationAutosuggest extends React.Component {
 
   handleChange = name => (event, { newValue }) => {
     userInput = newValue;
-    if (userInput !== undefined && userInput.length>=3) {
+    if (userInput !== undefined && userInput.length >= 3) {
       this.getSuggestionsFromAPI();
     }
     this.setState({
@@ -153,11 +160,11 @@ class IntegrationAutosuggest extends React.Component {
     console.log(data.common);
     const results = [];
     let length = 5;
-    if(data.common.length<length){
-      length=data.common.length
+    if (data.common.length < length) {
+      length = data.common.length;
     }
-    for(let i=0; i<length; i++){
-    results.push(data.common[i])
+    for (let i = 0; i < length; i++) {
+      results.push(data.common[i]);
     }
     let foodItemArr = [];
     if (results !== undefined) {
@@ -165,13 +172,14 @@ class IntegrationAutosuggest extends React.Component {
         let food = {};
         food["label"] = element.food_name;
         food["img"] = element.photo.thumb;
+        food["id"] = element.tag_id;
         foodItemArr.push(food);
       });
     }
+    this.props.fetchInstantData(foodItemArr);
     this.setState({
       suggestions: foodItemArr
     });
-    //console.log("new state" + JSON.stringify(suggestions));
   };
 
   render() {
@@ -193,7 +201,7 @@ class IntegrationAutosuggest extends React.Component {
           inputProps={{
             classes,
             id: "foodSearchInput",
-            placeholder: "Enter your meal here",
+            placeholder: searchEx[Math.floor(Math.random() * searchEx.length)],
 
             value: this.state.single,
             onChange: this.handleChange("single")

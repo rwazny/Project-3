@@ -23,7 +23,7 @@ app.get("*", function(req, res) {
 });
 
 //setting up MongoDB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/TEST_WORKOUT";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/POST_WORKOUT";
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log(`connected to mongoDB`))

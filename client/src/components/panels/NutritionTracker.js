@@ -32,7 +32,10 @@ function NutritionTracker(props) {
   const { value, classes } = props;
 
   return (
-    <Paper className={props.xlNut ? classes.xlPaperHeight : classes.paper}>
+    <Paper
+      className={props.xlNut ? classes.xlPaperHeight : classes.paper}
+      style={{ position: "relative" }}
+    >
       <Typography
         component="h1"
         className={classes.panelHeader}
@@ -80,7 +83,7 @@ function NutritionTracker(props) {
             variant="contained"
             size="small"
             color="primary"
-            disabled={!props.mealName.trim()}
+            disabled={props.mealName.trim().length < 2}
             className={classes.margin}
             onClick={props.addMeal}
           >
