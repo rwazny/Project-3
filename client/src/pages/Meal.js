@@ -140,6 +140,8 @@ class Meal extends Component {
           food["protein"] = element.nf_protein;
           food["carbohydrates"] = element.nf_total_carbohydrate;
           food["fats"] = element.nf_total_fat;
+          food["servingQty"] = element.serving_qty;
+          food["servingUnit"] = element.serving_unit;
           foodItemArr.push(food);
         });
 

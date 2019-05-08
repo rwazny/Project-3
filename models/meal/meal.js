@@ -11,7 +11,9 @@ const foodItemSchema = new mongoose.Schema({
   calories: { type: Number, required: true, trim: true },
   protein: { type: Number, required: true, trim: true },
   carbohydrates: { type: Number, required: true, trim: true },
-  fats: { type: Number, required: true, trim: true }
+  fats: { type: Number, required: true, trim: true },
+  servingUnit: { type: String, required: true, trim: true },
+  servingQty: { type: Number, required: true, trim: true, max: 100 }
 });
 const mealSchema = new mongoose.Schema({
   name: {
