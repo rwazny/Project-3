@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Meal from "../../pages/Meal";
 import DatePickers from "../DatePicker";
 import moment from "moment";
 import IntegrationReactSelect from "../MealsDropdown";
 
 // Material UI imports
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -19,6 +21,14 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
+import Tooltip from "@material-ui/core/Tooltip";
+import Input from "@material-ui/core/Input";
+
+const styles = {
+  root: {
+    width: 500
+  }
+};
 
 function TabContainer(props) {
   return (
@@ -137,7 +147,9 @@ function NutritionTracker(props) {
               <TabContainer key={index}>
                 <Table style={{ width: "auto", tableLayout: "auto" }}>
                   <colgroup>
-                    <col style={{ width: "60%" }} />
+                    <col style={{ width: "30%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "10%" }} />
                     <col style={{ width: "10%" }} />
                     <col style={{ width: "10%" }} />
                     <col style={{ width: "10%" }} />
@@ -145,7 +157,13 @@ function NutritionTracker(props) {
                   </colgroup>
                   <TableHead>
                     <TableRow style={{ height: 30 }}>
-                      <TableCell>Food</TableCell>
+                      <TableCell className={classes.cell}>Food</TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Serving
+                      </TableCell>
+                      <TableCell className={classes.cell} align="right">
+                        Unit
+                      </TableCell>
                       <TableCell className={classes.cell} align="right">
                         Calories
                       </TableCell>
@@ -162,22 +180,61 @@ function NutritionTracker(props) {
                   </TableHead>
                   <TableBody>
                     {meal.foodItem
-                      ? meal.foodItem.map(food => (
+                      ? meal.foodItem.map((food, foodIndex) => (
                           <TableRow>
                             <TableCell component="th" scope="row">
-                              {food.name}
+                              {food.name.length > 10 ? (
+                                <Tooltip
+                                  classes={classes.tooltip}
+                                  title={food.name}
+                                  placement="right"
+                                >
+                                  <div>{food.name.slice(0, 15) + " ..."}</div>
+                                </Tooltip>
+                              ) : (
+                                food.name
+                              )}
                             </TableCell>
                             <TableCell className={classes.cell} align="right">
-                              {food.calories}
+                              <Input
+                                placeholder="1"
+                                inputProps={{
+                                  name: index,
+                                  id: foodIndex
+                                }}
+                                value={food.servingQty}
+                                onChange={props.changeQuantity}
+                                type="number"
+                              />
                             </TableCell>
                             <TableCell className={classes.cell} align="right">
-                              {food.fats}
+                              {food.servingUnit.length > 6 ? (
+                                <Tooltip
+                                  classes={classes.tooltip}
+                                  title={food.servingUnit}
+                                  placement="right"
+                                >
+                                  <div>
+                                    {food.servingUnit.slice(0, 6) + " ..."}
+                                  </div>
+                                </Tooltip>
+                              ) : (
+                                food.servingUnit
+                              )}
                             </TableCell>
                             <TableCell className={classes.cell} align="right">
-                              {food.carbohydrates}
+                              {(food.calories * food.servingQty).toFixed(0)}
                             </TableCell>
                             <TableCell className={classes.cell} align="right">
-                              {food.protein}
+                              {(food.fats * food.servingQty).toFixed(0)}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {(food.carbohydrates * food.servingQty).toFixed(
+                                0
+                              )}
+                            </TableCell>
+                            <TableCell className={classes.cell} align="right">
+                              {(food.protein * food.servingQty).toFixed(0)}
                             </TableCell>
                           </TableRow>
                         ))
@@ -197,5 +254,8 @@ function NutritionTracker(props) {
     </Paper>
   );
 }
+NutritionTracker.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
-export default NutritionTracker;
+export default withStyles(styles)(NutritionTracker);

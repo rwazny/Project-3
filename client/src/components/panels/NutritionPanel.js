@@ -66,7 +66,10 @@ const styles = theme => ({
     marginTop: 8
   },
   cell: {
-    padding: 10
+    padding: 4
+  },
+  tooltip: {
+    backgroundColor: theme.palette.common.black
   },
   panelHeader: {
     fontFamily: "'Lobster', cursive",
@@ -175,7 +178,9 @@ class NutritionPanel extends Component {
 
     for (let j = 0; j < mealData.meal.length; j++) {
       for (let k = 0; k < mealData.meal[j].foodItem.length; k++) {
-        newSum += mealData.meal[j].foodItem[k][yAxis];
+        newSum +=
+          mealData.meal[j].foodItem[k][yAxis] *
+          mealData.meal[j].foodItem[k].servingQty;
       }
     }
 
@@ -295,10 +300,10 @@ class NutritionPanel extends Component {
           let dailyData = [0, 0, 0, 0];
           res.data[0].meal.forEach(meal => {
             meal.foodItem.forEach(foodItem => {
-              dailyData[0] += foodItem.calories;
-              dailyData[1] += foodItem.fats;
-              dailyData[2] += foodItem.carbohydrates;
-              dailyData[3] += foodItem.protein;
+              dailyData[0] += foodItem.calories * foodItem.servingQty;
+              dailyData[1] += foodItem.fats * foodItem.servingQty;
+              dailyData[2] += foodItem.carbohydrates * foodItem.servingQty;
+              dailyData[3] += foodItem.protein * foodItem.servingQty;
             });
           });
 
@@ -361,6 +366,13 @@ class NutritionPanel extends Component {
     this.setState({ value });
   };
 
+  changeQuantity = event => {
+    const { name, id, value } = event.target;
+    let newFoodToAdd = [...this.state.mealsToAdd];
+    newFoodToAdd[name].foodItem[id].servingQty = parseInt(value);
+    this.setState({ mealsToAdd: newFoodToAdd });
+  };
+
   handleLoadMealChange = meal => {
     this.setState({ mealToLoad: meal });
   };
@@ -388,7 +400,9 @@ class NutritionPanel extends Component {
             carbohydrates: foodItem.carbohydrates,
             fats: foodItem.fats,
             protein: foodItem.protein,
-            calories: foodItem.calories
+            calories: foodItem.calories,
+            servingQty: foodItem.servingQty,
+            servingUnit: foodItem.servingUnit
           });
         });
 
@@ -436,7 +450,9 @@ class NutritionPanel extends Component {
       fats: food.foodItem[0].fats,
       carbohydrates: food.foodItem[0].carbohydrates,
       protein: food.foodItem[0].protein,
-      calories: food.foodItem[0].calories
+      calories: food.foodItem[0].calories,
+      servingQty: food.foodItem[0].servingQty,
+      servingUnit: food.foodItem[0].servingUnit
     });
     // console.log(this.state.value)
     // debugger;
@@ -485,6 +501,7 @@ class NutritionPanel extends Component {
             nutritionDate={this.state.nutritionDate}
             addFoodItem={this.addFoodItem}
             saveNutritionDay={this.saveNutritionDay}
+            changeQuantity={this.changeQuantity}
           />
         </Grid>
         <Grid item sm={12} md={this.props.xlNut ? 12 : 6}>
