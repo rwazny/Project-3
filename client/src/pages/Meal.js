@@ -200,6 +200,19 @@ class Meal extends Component {
                     primary={food.foodItem[0].name}
                     secondary={food.foodItem[0].calories}
                   />
+                  <div style={{ color: "white" }}>
+                    Calories: {food.foodItem[0].calories}
+                    <br />
+                    Protien: {food.foodItem[0].protein}
+                    <br />
+                    Carbohydrates: {food.foodItem[0].carbohydrates}
+                    <br />
+                    Fats: {food.foodItem[0].fats}
+                    <br />
+                    Serving Info: {food.foodItem[0].servingQty}{" "}
+                    {food.foodItem[0].servingUnit}
+                    <br />
+                  </div>
                 </ListItem>
                 <Divider />
               </Fragment>
