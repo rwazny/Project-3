@@ -254,9 +254,7 @@ class App extends Component {
   render() {
     const { value } = this.state;
     let { pinkTheme, theme, cyanTheme, greyTheme, switchUp } = this.state;
-    console.log(
-      `this is the theme ${JSON.stringify(this.state.theme.palette.type)}`
-    );
+
     return (
       <Router>
         <MuiThemeProvider theme={theme}>
