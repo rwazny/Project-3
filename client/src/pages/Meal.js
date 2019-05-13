@@ -81,6 +81,10 @@ class Meal extends Component {
     });
   };
 
+  onChange = (value, name) => {
+    this.setState({ [name]: value });
+  };
+
   selectDate = event => {
     this.setState({ mealDate: event.target.value });
   };
@@ -159,6 +163,7 @@ class Meal extends Component {
         alert("invalid food");
       }
     }
+    this.setState({ food: foodSearchQuery });
   };
 
   render() {
@@ -186,20 +191,40 @@ class Meal extends Component {
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6" color="inherit" className={classes.flex}>
-                Food
+                {this.state.foodData
+                  ? `Food results for '${this.state.food}'`
+                  : "Food"}
               </Typography>
             </Toolbar>
           </AppBar>
           <List>
             {this.state.foodData.map((food, index) => (
               <Fragment>
-                <ListItem button>
-                  <ListItemText
-                    id={index}
-                    onClick={() => this.clickFood(index)}
-                    primary={food.foodItem[0].name}
-                    secondary={food.foodItem[0].calories}
-                  />
+                <ListItem
+                  id={index}
+                  onClick={() => this.clickFood(index)}
+                  button
+                >
+                  <ListItemText primary={food.foodItem[0].name} />
+
+                  <div style={{ color: "white", width: "150px" }}>
+                    <Typography>
+                      Calories: {food.foodItem[0].calories}
+                    </Typography>
+
+                    <Typography>Protien: {food.foodItem[0].protein}</Typography>
+
+                    <Typography>
+                      Carbohydrates: {food.foodItem[0].carbohydrates}
+                    </Typography>
+
+                    <Typography>Fats: {food.foodItem[0].fats}</Typography>
+
+                    <Typography>
+                      Serving Info: {food.foodItem[0].servingQty}{" "}
+                      {food.foodItem[0].servingUnit}
+                    </Typography>
+                  </div>
                 </ListItem>
                 <Divider />
               </Fragment>
@@ -207,7 +232,10 @@ class Meal extends Component {
           </List>
         </Dialog>
         <Grid item md={6}>
-          <Dropdown fetchInstantData={this.fetchInstantData} />
+          <Dropdown
+            fetchInstantData={this.fetchInstantData}
+            onChange={this.onChange}
+          />
         </Grid>
         <Grid item md={6}>
           <Grid container justify="space-between">
@@ -218,6 +246,7 @@ class Meal extends Component {
                 size="small"
                 color="primary"
                 onClick={this.handleSubmit}
+                disabled={this.state.food.length < 1}
               >
                 Search For Food
               </Button>

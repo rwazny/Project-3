@@ -124,6 +124,7 @@ class IntegrationAutosuggest extends React.Component {
   };
 
   handleChange = name => (event, { newValue }) => {
+    this.props.onChange(newValue, "food");
     userInput = newValue;
     if (userInput !== undefined && userInput.length >= 3) {
       this.getSuggestionsFromAPI();

@@ -452,7 +452,8 @@ class NutritionPanel extends Component {
       protein: food.foodItem[0].protein,
       calories: food.foodItem[0].calories,
       servingQty: food.foodItem[0].servingQty,
-      servingUnit: food.foodItem[0].servingUnit
+      servingUnit: food.foodItem[0].servingUnit,
+      
     });
     // console.log(this.state.value)
     // debugger;
