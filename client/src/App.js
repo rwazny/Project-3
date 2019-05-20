@@ -15,6 +15,10 @@ import DnsIcon from "@material-ui/icons/Dns";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+
+import SimpleTable from "./components/Table";
+
 import pink from "@material-ui/core/colors/pink";
 import cyan from "@material-ui/core/colors/cyan";
 import {
@@ -251,6 +255,12 @@ class App extends Component {
     localStorage.setItem("darkToggle", this.state.theme.palette.type);
   };
 
+  toggleSettings = (side, open) => () => {
+    this.setState({
+      [side]: open
+    });
+  };
+
   render() {
     const { value } = this.state;
     let { pinkTheme, theme, cyanTheme, greyTheme, switchUp } = this.state;
@@ -298,8 +308,7 @@ class App extends Component {
                           <Tab
                             icon={<SettingsIcon />}
                             label="Settings"
-                            component={Link}
-                            to="/settings"
+                            onClick={this.toggleSettings("right", true)}
                           />
                         </Tabs>
                       ) : null}
@@ -354,11 +363,53 @@ class App extends Component {
                         />
                       )}
                     />
-                    <Route exact path="/" component={Landing} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        this.state.user ? (
+                          <Dashboard
+                            xlFit={this.state.xlFit}
+                            topPanel={this.state.topPanel}
+                            theme={this.state.theme}
+                            xlNut={this.state.xlNut}
+                          />
+                        ) : (
+                          <Landing />
+                        )
+                      }
+                    />
                   </Switch>
                 </Fragment>
               )}
             />
+            <Drawer
+              anchor="right"
+              open={this.state.right}
+              onClose={this.toggleSettings("right", false)}
+            >
+              <div
+                tabIndex={0}
+                role="button"
+                // onClick={this.toggleSettings("right", false)}
+                // onKeyDown={this.toggleSettings("right", false)}
+              >
+                <div style={{ width: 700 }}>
+                  <Settings
+                    handleSettingsChange={this.handleSettingsChange}
+                    topPanel={this.state.topPanel}
+                    orangeTheme={this.theme}
+                    pinkTheme={this.pinkTheme}
+                    greyTheme={this.greyTheme}
+                    cyanTheme={this.cyanTheme}
+                    switchUp={this.switchUp}
+                    theme={this.state.theme}
+                    xlNut={this.state.xlNut}
+                    xlFit={this.state.xlFit}
+                  />
+                </div>
+              </div>
+            </Drawer>
           </div>
         </MuiThemeProvider>
       </Router>

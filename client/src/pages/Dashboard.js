@@ -19,12 +19,6 @@ class Dashboard extends Component {
       this.setState({
         user: firebaseUser
       });
-
-      if (firebaseUser) {
-        console.log(firebaseUser);
-      } else {
-        console.log("not logged in");
-      }
     });
   };
   render() {

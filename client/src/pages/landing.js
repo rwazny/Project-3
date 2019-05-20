@@ -14,31 +14,46 @@ import auth from "../firebase";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
+import landingBG from "../images/landingBG.jpg";
 
 const styles = theme => ({
-  // root: {
-  //   flexGrow: 1,
-  // },
-  main: {
-    // width: 'auto',
-    // display: 'block', // Fix IE 11 issue.
-    // marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      // width: '30vw',
-      // marginLeft: '5vw'
-      // marginRight: '5vw'
+  demo: {
+    [theme.breakpoints.up("lg")]: {
+      width: 1170
     }
   },
+  featureContainer: {
+    [theme.breakpoints.up("lg")]: {
+      width: 1170
+    },
+    margin: "200px 0"
+  },
+  background: {
+    backgroundImage: `url(${landingBG})`,
+    height: 660,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    position: "fixed"
+  },
+  main: {
+    width: 364,
+    margin: "auto",
+    marginTop: 150,
+    display: "block" // Fix IE 11 issue.
+  },
+  title: {
+    fontSize: 200,
+    fontFamily: "Lobster",
+    marginTop: 190
+  },
   paper: {
-    marginTop: theme.spacing.unit * 8,
     display: "flex",
+    minHeight: 260,
     flexDirection: "column",
     alignItems: "center",
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`,
-    width: "40vw",
-    marginLeft: "5vw"
+      .spacing.unit * 3}px`
   },
   avatar: {
     margin: theme.spacing.unit,
@@ -53,26 +68,19 @@ const styles = theme => ({
   }
 });
 
-const styles2 = {
-  fontFamily: "Helvetica",
-  fontSize: "1.2em",
-  width: "30vw",
-  marginTop: "5%",
-  textAlign: "center",
-  padding: "2% 0%"
-};
-
 class SignIn extends React.Component {
   state = {
     email: "",
     password: "",
     errors: null
   };
+
   handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
   };
+
   createAccount = event => {
     event.preventDefault();
     auth
@@ -84,7 +92,7 @@ class SignIn extends React.Component {
 
         API.createUser({ email: this.state.email }).then(res => {
           localStorage.userId = res.data._id;
-          setTimeout(() => this.props.history.push("/dashboard"), 500);
+          // setTimeout(() => this.props.history.push("/dashboard"), 500);
         });
       })
       .catch(error => {
@@ -104,7 +112,7 @@ class SignIn extends React.Component {
         });
         API.findUser(this.state.email).then(res => {
           localStorage.userId = res.data._id;
-          setTimeout(() => this.props.history.push("/dashboard"), 500);
+          // setTimeout(() => this.props.history.push("/dashboard"), 500);
         });
       })
       .catch(error => {
@@ -123,63 +131,38 @@ class SignIn extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        <Grid
-          container
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
-          {/* <Paper className={classes.paper}>xs=12 sm=6</Paper> */}
-
-          <main className={classes.main}>
-            <Grid item sm={12} />
-
-            <CssBaseline />
-            <Paper className={classes.paper}>
-              <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography
-                component="h1"
-                variant="h5"
-                style={{ fontFamily: "Lobster" }}
-              >
-                Sign In
-              </Typography>
-              <form className={classes.form}>
-                <FormControl margin="normal" required fullWidth>
-                  <InputLabel htmlFor="email">Email Address</InputLabel>
-                  <Input
-                    id="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                  />
-                  <div
-                    style={{
-                      color: "red",
-                      paddingTop: 10,
-                      fontFamily: "Helvetica",
-                      fontSize: 12,
-                      textAlign: "center"
-                    }}
-                  >
-                    {this.state.errors}
-                  </div>
-                </FormControl>
-                <FormControl margin="normal" required fullWidth>
-                  <InputLabel htmlFor="password">Password</InputLabel>
-                  <Input
-                    name="password"
-                    type="password"
-                    id="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    autoComplete="current-password"
-                  />
-                  {this.state.password.length < 6 &&
-                  this.state.password.length > 0 ? (
+      <Grid container className={classes.background} justify="center">
+        <Grid container className={classes.demo}>
+          <Grid item sm={6}>
+            <Typography className={classes.title} variant="h1">
+              Phit
+            </Typography>
+          </Grid>
+          <Grid item sm={6}>
+            <main className={classes.main}>
+              <CssBaseline />
+              <Paper className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography
+                  component="h1"
+                  variant="h5"
+                  style={{ fontFamily: "Lobster" }}
+                >
+                  Sign In
+                </Typography>
+                <form className={classes.form}>
+                  <FormControl margin="normal" required fullWidth>
+                    <InputLabel htmlFor="email">Email Address</InputLabel>
+                    <Input
+                      id="email"
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                    />
                     <div
                       style={{
                         color: "red",
@@ -189,78 +172,82 @@ class SignIn extends React.Component {
                         textAlign: "center"
                       }}
                     >
-                      Password Must Be at Least 6 Characters
+                      {this.state.errors}
                     </div>
-                  ) : (
-                    ""
-                  )}
-                </FormControl>
-                {/* <FormControlLabel
+                  </FormControl>
+                  <FormControl margin="normal" required fullWidth>
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <Input
+                      name="password"
+                      type="password"
+                      id="password"
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                      autoComplete="current-password"
+                    />
+                    {this.state.password.length < 6 &&
+                    this.state.password.length > 0 ? (
+                      <div
+                        style={{
+                          color: "red",
+                          paddingTop: 10,
+                          fontFamily: "Helvetica",
+                          fontSize: 12,
+                          textAlign: "center"
+                        }}
+                      >
+                        Password Must Be at Least 6 Characters
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </FormControl>
+                  {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me" */}
-                {/* /> */}
-                <Grid container spacing={8}>
-                  <Grid item sm={12} md={6}>
-                    <Button
-                      onClick={this.createAccount}
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                    >
-                      Create Account
-                    </Button>
+                  {/* /> */}
+                  <Grid container spacing={8}>
+                    <Grid item sm={12} md={6}>
+                      <Button
+                        onClick={this.createAccount}
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                      >
+                        Create Account
+                      </Button>
+                    </Grid>
+                    <Grid item sm={12} md={6}>
+                      <Button
+                        onClick={this.signIn}
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                      >
+                        Sign In
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item sm={12} md={6}>
-                    <Button
-                      onClick={this.signIn}
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                    >
-                      Sign In
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Paper>
-          </main>
+                </form>
+              </Paper>
+            </main>
+          </Grid>
         </Grid>
-        {/* FOOTER */}
-        {/* 
-        <Grid
-          container
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly"
-          }}
-        >
-          <Paper style={styles2}>
-            <Typography style={{ fontSize: "1.1em" }}>
-              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
-              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
-            </Typography>
-          </Paper>
-
-          <Paper style={styles2}>
-            <Typography style={{ fontSize: "1.1em" }}>
-              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
-              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
-            </Typography>
-          </Paper>
-
-          <Paper style={styles2}>
-            <Typography style={{ fontSize: "1.1em" }}>
-              Quisque a finibus velit, non volutpat ipsum. Proin quis urna nisl.
-              Aenean pulvinar nunc quis cursus viverra. Ut semper arcu urna.
-            </Typography>
-          </Paper>
-        </Grid> */}
-      </div>
+        <Grid container className={classes.featureContainer} spacing={32}>
+          <Grid item sm={4}>
+            <Paper className={classes.paper} />
+          </Grid>
+          <Grid item sm={4}>
+            <Paper className={classes.paper} />
+          </Grid>
+          <Grid item sm={4}>
+            <Paper className={classes.paper} />
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }
