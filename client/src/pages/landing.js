@@ -15,6 +15,43 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import landingBG from "../images/landingBG.jpg";
+import { css, cx } from "emotion";
+import FontAwesome from "react-fontawesome";
+import LandingChart from "../components/LandingChart";
+
+const emotionClasses = {
+  exampleBtn: {
+    width: 128,
+    height: 128,
+    borderRadius: "50%",
+    boxShadow: "2px 4px 7px #00000042",
+    transition: "all 0.1s",
+    position: "relative",
+    ":hover": {
+      cursor: "pointer",
+      boxShadow: "3px 6px 10px #00000042",
+      transform: "scale(1.1)"
+    }
+  },
+  exampleIcon: {
+    textShadow: "rgba(0, 0, 0, 0.36) 1px 1px 2px",
+    pointerEvents: "none",
+    position: "absolute",
+    color: "#252525",
+    top: 32,
+    right: 40,
+    fontSize: "4rem"
+  },
+  pieIcon: {
+    textShadow: "rgba(0, 0, 0, 0.36) 1px 1px 2px",
+    pointerEvents: "none",
+    position: "absolute",
+    color: "#252525",
+    top: 32,
+    right: 29,
+    fontSize: "4rem"
+  }
+};
 
 const styles = theme => ({
   demo: {
@@ -88,9 +125,17 @@ const styles = theme => ({
     flexDirection: "column"
   },
   exampleBtn: {
-    width: 100,
-    height: 100,
-    borderRadius: "50%"
+    width: 128,
+    height: 128,
+    borderRadius: "50%",
+    boxShadow: "2px 4px 7px #00000042",
+    ":hover": {
+      cursor: "pointer"
+    }
+  },
+  exampleText: {
+    marginBottom: -12,
+    textAlign: "center"
   },
   btnContainer: {
     display: "flex",
@@ -102,13 +147,305 @@ class SignIn extends React.Component {
   state = {
     email: "",
     password: "",
-    errors: null
+    errors: null,
+    isPie: false,
+    exampleData: {
+      labels: [
+        ["Sun."],
+        ["Mon."],
+        ["Tues."],
+        ["Wed."],
+        ["Thur."],
+        ["Fri."],
+        ["Sat."]
+      ],
+      datasets: [
+        {
+          label: "Calories",
+          backgroundColor: "#f06292",
+          borderColor: "#f06292",
+          borderWidth: 2,
+          hoverBackgroundColor: "#f06292",
+          data: [0, 0, 1653, 1458, 2019, 678]
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: true,
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              fontColor: "white"
+            },
+            display: true,
+            gridLines: {
+              display: false
+            }
+          }
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              fontColor: "white"
+            },
+            type: "linear",
+            display: true,
+            position: "left",
+            id: "y-axis-1",
+            gridLines: {
+              display: false
+            },
+            labels: {
+              show: true
+            }
+          }
+        ]
+      },
+      legend: {
+        labels: {
+          fontColor: "white"
+        },
+        position: "bottom"
+      }
+    }
   };
 
   handleChange = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({ [name]: value });
+  };
+
+  handleExampleClick = event => {
+    let newData = {};
+    let newOptions = {};
+    let isPie = false;
+
+    switch (event.target.id) {
+      case "ex1":
+        newData = {
+          labels: [
+            ["Sun."],
+            ["Mon."],
+            ["Tues."],
+            ["Wed."],
+            ["Thur."],
+            ["Fri."],
+            ["Sat."]
+          ],
+          datasets: [
+            {
+              label: "Calories",
+              backgroundColor: "#f06292",
+              borderColor: "#f06292",
+              borderWidth: 2,
+              hoverBackgroundColor: "#f06292",
+              data: [0, 0, 1653, 1458, 2019, 678]
+            }
+          ]
+        };
+        newOptions = {
+          maintainAspectRatio: true,
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  fontColor: "white"
+                },
+                display: true,
+                gridLines: {
+                  display: false
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  fontColor: "white"
+                },
+                type: "linear",
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+                gridLines: {
+                  display: false
+                },
+                labels: {
+                  show: true
+                }
+              }
+            ]
+          },
+          legend: {
+            labels: {
+              fontColor: "white"
+            },
+            position: "bottom"
+          }
+        };
+        break;
+      case "ex2":
+        newData = {
+          labels: [
+            ["Sun."],
+            ["Mon."],
+            ["Tues."],
+            ["Wed."],
+            ["Thur."],
+            ["Fri."],
+            ["Sat."]
+          ],
+          datasets: [
+            {
+              label: "Time (minutes)",
+              type: "line",
+              backgroundColor: "#74d6c8",
+              borderColor: "#74d6c8",
+              borderWidth: 3,
+              hoverBackgroundColor: "#74d6c8",
+              hoverBorderColor: "#74d6c8",
+              data: [null, null, 19, 26, 39, 24],
+              yAxisID: "y-axis-2",
+              fontColor: "white"
+            },
+            {
+              label: "Distance (miles)",
+              type: "bar",
+              backgroundColor: "#f06292",
+              borderColor: "#f06292",
+              borderWidth: 1,
+              hoverBackgroundColor: "#f06292",
+              hoverBorderColor: "#f06292",
+              data: [null, null, 3, 4, 6, 4],
+              yAxisID: "y-axis-1",
+              fontColor: "white"
+            }
+          ]
+        };
+        newOptions = {
+          responsive: true,
+          tooltips: {
+            mode: "label"
+          },
+          elements: {
+            line: {
+              fill: false
+            }
+          },
+          scales: {
+            xAxes: [
+              {
+                display: true,
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  fontColor: this.props.textColor
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  fontColor: this.props.textColor
+                },
+                type: "linear",
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+                gridLines: {
+                  display: false
+                },
+                labels: {
+                  show: true
+                }
+              },
+              {
+                ticks: {
+                  beginAtZero: true,
+                  fontColor: this.props.textColor
+                },
+                type: "linear",
+                display: true,
+                position: "right",
+                id: "y-axis-2",
+                gridLines: {
+                  display: false
+                },
+                labels: {
+                  show: true
+                }
+              }
+            ]
+          },
+          legend: {
+            labels: {
+              fontColor: this.props.textColor
+            },
+            position: "bottom"
+          }
+        };
+        break;
+      case "ex3":
+        isPie = true;
+        newData = {
+          labels: ["Fat", "Carbs", "Protein"],
+          datasets: [
+            {
+              data: [120, 89, 142],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+              hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+            }
+          ]
+        };
+        newOptions = {
+          maintainAspectRatio: true,
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  fontColor: "white"
+                },
+                display: false,
+                gridLines: {
+                  display: false
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  fontColor: "white"
+                },
+                type: "linear",
+                display: false,
+                position: "left",
+                id: "y-axis-1",
+                gridLines: {
+                  display: false
+                },
+                labels: {
+                  show: true
+                }
+              }
+            ]
+          },
+          legend: {
+            labels: {
+              fontColor: "white"
+            },
+            position: "bottom"
+          }
+        };
+        break;
+    }
+
+    this.setState({ exampleData: newData, options: newOptions, isPie });
   };
 
   createAccount = event => {
@@ -267,45 +604,97 @@ class SignIn extends React.Component {
         {/* Calorie & phitlosophy */}
         <Grid container className={classes.featureContainer} spacing={32}>
           <Grid item sm={6}>
-            <Typography variant="h3" style={{ textAlign: "center" }}>
+            <Typography
+              variant="h3"
+              style={{ textAlign: "center", marginTop: "calc(65% - 170px)" }}
+            >
               The <span style={{ fontFamily: "lobster" }}>Phit</span> Philosophy
             </Typography>
             <Typography variant="body1" style={{ padding: 20 }}>
               Some text about how all individuals are different. As such,
               nutrition & exercise needs differ from person to person. Designied
-              to be intuitive first, while maintaining a high level of
-              customization to track the perfect amount of data for you.{" "}
+              to be <span style={{ color: "#f06292" }}>intuitive</span> first,
+              while maintaining a high level of
+              <span style={{ color: "#f06292" }}>customization</span> to track
+              the perfect amount of data for you.{" "}
             </Typography>
           </Grid>
           <Grid item sm={6} className={classes.calorie}>
             <Typography variant="h5" style={{ textAlign: "center" }}>
               Take the frustration out of calorie counting
             </Typography>
-            <img
-              src="https://via.placeholder.com/400x250"
-              style={{ padding: 20 }}
-            />
+            <Paper style={{ padding: "20px", margin: "30px 0" }}>
+              <LandingChart
+                data={this.state.exampleData}
+                options={this.state.options}
+                isPie={this.state.isPie}
+              />
+            </Paper>
             <div className={classes.btnContainer}>
-              <div
-                className={classes.exampleBtn}
-                style={{ backgroundColor: "#81C0AD" }}
-              />
-              <div
-                className={classes.exampleBtn}
-                style={{ backgroundColor: "#6EBEB9" }}
-              />
-              <div
-                className={classes.exampleBtn}
-                style={{ backgroundColor: "#D3AE75" }}
-              />
-              <div
-                className={classes.exampleBtn}
-                style={{ backgroundColor: "#BA7D8F" }}
-              />
+              <div>
+                <div
+                  className={css(emotionClasses.exampleBtn)}
+                  style={{ backgroundColor: "#81C0AD" }}
+                  id="ex1"
+                  onClick={this.handleExampleClick}
+                >
+                  <FontAwesome
+                    name="utensils"
+                    size="2x"
+                    style={emotionClasses.exampleIcon}
+                  />
+                </div>
+                <Typography variant="overline" className={classes.exampleText}>
+                  Example 1
+                </Typography>
+                <Typography variant="caption" style={{ textAlign: "center" }}>
+                  Weekly Calorie Tracking
+                </Typography>
+              </div>
+              <div>
+                <div
+                  className={css(emotionClasses.exampleBtn)}
+                  style={{ backgroundColor: "#BA7D8F" }}
+                  id="ex2"
+                  onClick={this.handleExampleClick}
+                >
+                  <FontAwesome
+                    name="running"
+                    size="2x"
+                    style={emotionClasses.exampleIcon}
+                  />
+                </div>
+                <Typography variant="overline" className={classes.exampleText}>
+                  Example 2
+                </Typography>
+                <Typography variant="caption" style={{ textAlign: "center" }}>
+                  Weekly Cardio Progress
+                </Typography>
+              </div>
+              <div>
+                <div
+                  className={css(emotionClasses.exampleBtn)}
+                  style={{ backgroundColor: "#D3AE75" }}
+                  id="ex3"
+                  onClick={this.handleExampleClick}
+                >
+                  <FontAwesome
+                    name="chart-pie"
+                    size="2x"
+                    style={emotionClasses.pieIcon}
+                  />
+                </div>
+                <Typography variant="overline" className={classes.exampleText}>
+                  Example 3
+                </Typography>
+                <Typography variant="caption" style={{ textAlign: "center" }}>
+                  Daily Macros
+                </Typography>
+              </div>
             </div>
           </Grid>
         </Grid>
-        <Grid container className={classes.demo}>
+        <Grid style={{ marginTop: 100 }} container className={classes.demo}>
           <Grid item sm={12}>
             <Typography variant="h5" style={{ textAlign: "center" }}>
               Weekend warroir or full-time phitness guru
