@@ -26,6 +26,12 @@ const styles = theme => ({
     gridTemplateColumns: "repeat(12, 1fr)",
     gridGap: `${theme.spacing.unit * 3}px`
   },
+  cancelDiv: {
+    float: "left",
+    paddingRight: 12,
+    paddingTop: 5,
+    marginLeft: -16
+  },
   paper: {
     padding: theme.spacing.unit * 2,
     color: theme.palette.text.secondary,
@@ -143,6 +149,13 @@ class FitnessPanel extends Component {
         width: 140
       }
     }
+  };
+
+  clickDelete = (type, index) => {
+    let name = `${type}ToAdd`;
+    let newArr = [...this.state[name]];
+    newArr.splice(index, 1);
+    this.setState({ [name]: newArr });
   };
 
   clickExerciseType = name => event => {
@@ -505,6 +518,7 @@ class FitnessPanel extends Component {
         </Typography>
         <Grid item xs={12} md={this.props.xlFit ? 12 : 6}>
           <FitnessTracker
+            clickDelete={this.clickDelete}
             errorMessage={this.state.errorMessage}
             fetchDropdownData={this.state.fetchDropdownData}
             value={this.state.value}

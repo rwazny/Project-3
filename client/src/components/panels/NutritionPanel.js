@@ -15,6 +15,12 @@ const styles = theme => ({
       width: 1170
     }
   },
+  cancelDiv: {
+    float: "left",
+    paddingRight: 12,
+    paddingTop: 5,
+    marginLeft: -16
+  },
   margin: {
     margin: theme.spacing.unit
   },
@@ -163,6 +169,13 @@ class NutritionPanel extends Component {
   componentDidMount = () => {
     this.selectMealsByDate(this.state.nutritionDate);
     this.getNutritionByTimeframe();
+  };
+
+  clickDelete = (index, foodIndex) => {
+    console.log(index, foodIndex);
+    let newArr = [...this.state.mealsToAdd];
+    newArr[index].foodItem.splice(foodIndex, 1);
+    this.setState({ mealsToAdd: newArr });
   };
 
   dayTotalsSum = (yAxis, mealData) => {
@@ -452,8 +465,7 @@ class NutritionPanel extends Component {
       protein: food.foodItem[0].protein,
       calories: food.foodItem[0].calories,
       servingQty: food.foodItem[0].servingQty,
-      servingUnit: food.foodItem[0].servingUnit,
-      
+      servingUnit: food.foodItem[0].servingUnit
     });
     // console.log(this.state.value)
     // debugger;
@@ -487,6 +499,7 @@ class NutritionPanel extends Component {
         </Typography>
         <Grid item sm={12} md={this.props.xlNut ? 12 : 6}>
           <NutritionTracker
+            clickDelete={this.clickDelete}
             xlNut={this.props.xlNut}
             handleLoadMealChange={this.handleLoadMealChange}
             mealToLoad={this.state.mealToLoad.label}

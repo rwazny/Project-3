@@ -15,6 +15,7 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import landingBG from "../images/landingBG.jpg";
+import logoImg from "../images/logo.png";
 
 const styles = theme => ({
   demo: {
@@ -29,12 +30,24 @@ const styles = theme => ({
     margin: "200px 0"
   },
   background: {
-    backgroundImage: `url(${landingBG})`,
+    background: `linear-gradient(rgba(84, 138, 130, 0.43), rgba(105, 89, 94, 0.6)), url(${landingBG})`,
     height: 660,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    position: "fixed"
+    backgroundAttachment: "fixed"
+  },
+  logo: {
+    height: 364,
+    width: 364,
+    top: 150,
+    left: "calc(221px / 2)",
+    margin: "auto",
+    backgroundColor: "#f06292",
+    background: "linear-gradient(114deg, #f06292, #ff94b8)",
+    borderRadius: "50%",
+    display: "inline-block",
+    position: "relative"
   },
   main: {
     width: 364,
@@ -43,9 +56,11 @@ const styles = theme => ({
     display: "block" // Fix IE 11 issue.
   },
   title: {
-    fontSize: 200,
+    fontSize: 170,
     fontFamily: "Lobster",
-    marginTop: 190
+    position: "absolute",
+    top: 95,
+    right: 57
   },
   paper: {
     display: "flex",
@@ -92,7 +107,7 @@ class SignIn extends React.Component {
 
         API.createUser({ email: this.state.email }).then(res => {
           localStorage.userId = res.data._id;
-          // setTimeout(() => this.props.history.push("/dashboard"), 500);
+          //setTimeout(() => this.props.history.push("/dashboard"), 500);
         });
       })
       .catch(error => {
@@ -112,7 +127,7 @@ class SignIn extends React.Component {
         });
         API.findUser(this.state.email).then(res => {
           localStorage.userId = res.data._id;
-          // setTimeout(() => this.props.history.push("/dashboard"), 500);
+          //setTimeout(() => this.props.history.push("/dashboard"), 500);
         });
       })
       .catch(error => {
@@ -134,9 +149,11 @@ class SignIn extends React.Component {
       <Grid container className={classes.background} justify="center">
         <Grid container className={classes.demo}>
           <Grid item sm={6}>
-            <Typography className={classes.title} variant="h1">
-              Phit
-            </Typography>
+            <div className={classes.logo}>
+              <Typography className={classes.title} variant="h1">
+                Phit
+              </Typography>
+            </div>
           </Grid>
           <Grid item sm={6}>
             <main className={classes.main}>
@@ -202,10 +219,6 @@ class SignIn extends React.Component {
                       ""
                     )}
                   </FormControl>
-                  {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me" */}
-                  {/* /> */}
                   <Grid container spacing={8}>
                     <Grid item sm={12} md={6}>
                       <Button

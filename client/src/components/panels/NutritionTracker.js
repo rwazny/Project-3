@@ -23,6 +23,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 import Tooltip from "@material-ui/core/Tooltip";
 import Input from "@material-ui/core/Input";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const styles = {
   root: {
@@ -183,17 +184,27 @@ function NutritionTracker(props) {
                       ? meal.foodItem.map((food, foodIndex) => (
                           <TableRow>
                             <TableCell component="th" scope="row">
-                              {food.name.length > 10 ? (
-                                <Tooltip
-                                  classes={classes.tooltip}
-                                  title={food.name}
-                                  placement="right"
-                                >
-                                  <div>{food.name.slice(0, 15) + " ..."}</div>
-                                </Tooltip>
-                              ) : (
-                                food.name
-                              )}
+                              <div
+                                onClick={() =>
+                                  props.clickDelete(index, parseInt(foodIndex))
+                                }
+                                className={classes.cancelDiv}
+                              >
+                                <CancelIcon />
+                              </div>
+                              <div style={{ paddingTop: 5 }}>
+                                {food.name.length > 15 ? (
+                                  <Tooltip
+                                    classes={classes.tooltip}
+                                    title={food.name}
+                                    placement="right"
+                                  >
+                                    <div>{food.name.slice(0, 15) + " ..."}</div>
+                                  </Tooltip>
+                                ) : (
+                                  food.name
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell className={classes.cell} align="right">
                               <Input
