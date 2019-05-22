@@ -15,7 +15,6 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import landingBG from "../images/landingBG.jpg";
-import logoImg from "../images/logo.png";
 
 const styles = theme => ({
   demo: {
@@ -27,7 +26,7 @@ const styles = theme => ({
     [theme.breakpoints.up("lg")]: {
       width: 1170
     },
-    margin: "200px 0"
+    marginTop: "200px "
   },
   background: {
     background: `linear-gradient(rgba(84, 138, 130, 0.43), rgba(105, 89, 94, 0.6)), url(${landingBG})`,
@@ -44,10 +43,11 @@ const styles = theme => ({
     left: "calc(221px / 2)",
     margin: "auto",
     backgroundColor: "#f06292",
-    background: "linear-gradient(114deg, #f06292, #ff94b8)",
+    background: "linear-gradient(-69deg, #f06292, #ff94b8)",
     borderRadius: "50%",
     display: "inline-block",
-    position: "relative"
+    position: "relative",
+    boxShadow: "4px 6px 8px #00000069"
   },
   main: {
     width: 364,
@@ -60,7 +60,8 @@ const styles = theme => ({
     fontFamily: "Lobster",
     position: "absolute",
     top: 95,
-    right: 57
+    right: 57,
+    textShadow: "4px 0px 4px #00000070"
   },
   paper: {
     display: "flex",
@@ -80,6 +81,20 @@ const styles = theme => ({
   },
   submit: {
     marginTop: theme.spacing.unit * 3
+  },
+  phitlosophy: {},
+  calorie: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  exampleBtn: {
+    width: 100,
+    height: 100,
+    borderRadius: "50%"
+  },
+  btnContainer: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 });
 
@@ -249,15 +264,52 @@ class SignIn extends React.Component {
             </main>
           </Grid>
         </Grid>
+        {/* Calorie & phitlosophy */}
         <Grid container className={classes.featureContainer} spacing={32}>
-          <Grid item sm={4}>
-            <Paper className={classes.paper} />
+          <Grid item sm={6}>
+            <Typography variant="h3" style={{ textAlign: "center" }}>
+              The <span style={{ fontFamily: "lobster" }}>Phit</span> Philosophy
+            </Typography>
+            <Typography variant="body1" style={{ padding: 20 }}>
+              Some text about how all individuals are different. As such,
+              nutrition & exercise needs differ from person to person. Designied
+              to be intuitive first, while maintaining a high level of
+              customization to track the perfect amount of data for you.{" "}
+            </Typography>
           </Grid>
-          <Grid item sm={4}>
-            <Paper className={classes.paper} />
+          <Grid item sm={6} className={classes.calorie}>
+            <Typography variant="h5" style={{ textAlign: "center" }}>
+              Take the frustration out of calorie counting
+            </Typography>
+            <img
+              src="https://via.placeholder.com/400x250"
+              style={{ padding: 20 }}
+            />
+            <div className={classes.btnContainer}>
+              <div
+                className={classes.exampleBtn}
+                style={{ backgroundColor: "#81C0AD" }}
+              />
+              <div
+                className={classes.exampleBtn}
+                style={{ backgroundColor: "#6EBEB9" }}
+              />
+              <div
+                className={classes.exampleBtn}
+                style={{ backgroundColor: "#D3AE75" }}
+              />
+              <div
+                className={classes.exampleBtn}
+                style={{ backgroundColor: "#BA7D8F" }}
+              />
+            </div>
           </Grid>
-          <Grid item sm={4}>
-            <Paper className={classes.paper} />
+        </Grid>
+        <Grid container className={classes.demo}>
+          <Grid item sm={12}>
+            <Typography variant="h5" style={{ textAlign: "center" }}>
+              Weekend warroir or full-time phitness guru
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
