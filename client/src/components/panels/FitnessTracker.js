@@ -18,6 +18,7 @@ import DatePickers from "../DatePicker";
 import Input from "@material-ui/core/Input";
 import Grid from "@material-ui/core/Grid";
 import WorkoutsDropdown from "../WorkoutsDropdown";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 function TabContainer(props) {
   return (
@@ -126,6 +127,12 @@ function FitnessTracker(props) {
                 {props.resistanceToAdd.map((exercise, index) => (
                   <TableRow key={index}>
                     <TableCell component="th" scope="row">
+                      <div
+                        onClick={() => props.clickDelete("resistance", index)}
+                        className={classes.cancelDiv}
+                      >
+                        <CancelIcon />
+                      </div>
                       <Input
                         error={props.nameError ? true : false}
                         id={index.toString()}
@@ -196,6 +203,12 @@ function FitnessTracker(props) {
                 {props.cardioToAdd.map((exercise, index) => (
                   <TableRow key={index}>
                     <TableCell component="th" scope="row">
+                      <div
+                        onClick={() => props.clickDelete("cardio", index)}
+                        className={classes.cancelDiv}
+                      >
+                        <CancelIcon />
+                      </div>
                       <Input
                         id={index.toString()}
                         onChange={props.handleInputChange("cardioToAdd")}

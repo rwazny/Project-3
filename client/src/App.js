@@ -15,6 +15,10 @@ import DnsIcon from "@material-ui/icons/Dns";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+
+import SimpleTable from "./components/Table";
+
 import pink from "@material-ui/core/colors/pink";
 import cyan from "@material-ui/core/colors/cyan";
 import {
@@ -251,6 +255,12 @@ class App extends Component {
     localStorage.setItem("darkToggle", this.state.theme.palette.type);
   };
 
+  toggleSettings = (side, open) => () => {
+    this.setState({
+      [side]: open
+    });
+  };
+
   render() {
     const { value } = this.state;
     let { pinkTheme, theme, cyanTheme, greyTheme, switchUp } = this.state;
@@ -263,66 +273,6 @@ class App extends Component {
               path="/"
               render={({ location }) => (
                 <Fragment>
-                  <AppBar position="static">
-                    <ToolBar
-                      style={{
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      <Typography
-                        variant="h2"
-                        color="inherit"
-                        style={{ fontFamily: "Lobster" }}
-                      >
-                        Phit
-                      </Typography>
-
-                      {this.state.user ? (
-                        <Tabs
-                          value={value}
-                          onChange={this.handleChange}
-                          centered
-                        >
-                          <Tab
-                            icon={<HomeIcon />}
-                            label="Home"
-                            component={Link}
-                            to="/"
-                          />
-                          <Tab
-                            icon={<DnsIcon />}
-                            label="Dashboard"
-                            component={Link}
-                            to="/dashboard"
-                          />
-                          <Tab
-                            icon={<SettingsIcon />}
-                            label="Settings"
-                            component={Link}
-                            to="/settings"
-                          />
-                        </Tabs>
-                      ) : null}
-                      {this.state.user ? (
-                        <div>
-                          <Typography inline variant="body1" color="inherit">
-                            Welcome, {this.state.user}!
-                          </Typography>
-
-                          <Button
-                            variant="contained"
-                            style={{ marginLeft: 8 }}
-                            color="secondary"
-                            component={Link}
-                            to="/"
-                            onClick={this.signOut}
-                          >
-                            Sign Out
-                          </Button>
-                        </div>
-                      ) : null}
-                    </ToolBar>
-                  </AppBar>
                   <Switch>
                     <Route
                       exact
@@ -351,10 +301,27 @@ class App extends Component {
                           topPanel={this.state.topPanel}
                           theme={this.state.theme}
                           xlNut={this.state.xlNut}
+                          signOut={this.signOut}
                         />
                       )}
                     />
-                    <Route exact path="/" component={Landing} />
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        this.state.user ? (
+                          <Dashboard
+                            xlFit={this.state.xlFit}
+                            topPanel={this.state.topPanel}
+                            theme={this.state.theme}
+                            xlNut={this.state.xlNut}
+                            signOut={this.signOut}
+                          />
+                        ) : (
+                          <Landing />
+                        )
+                      }
+                    />
                   </Switch>
                 </Fragment>
               )}

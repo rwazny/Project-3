@@ -84,7 +84,7 @@ class Settings extends Component {
     const { classes } = this.props;
 
     return (
-      <React.Fragment>
+      <div style={{ width: 500 }}>
         <CssBaseline />
         <Grid container justify="center">
           <Grid spacing={8} container style={{ width: 1170 }}>
@@ -171,180 +171,6 @@ class Settings extends Component {
                 </Grid>
               </Paper>
             </Grid>
-            {/* <Grid item sm={6}>
-              <Paper style={{ height: 300 }} className={classes.paper}>
-                <h2 className={classes.panelHeader}>User</h2>
-                <Grid container>
-                  <Grid item sm={2}>
-                    <Typography
-                      style={{ paddingTop: 17 }}
-                      variant="body1"
-                      gutterBottom
-                    >
-                      Height
-                    </Typography>
-                    <br />
-                    <br />
-                    <Typography variant="body1" gutterBottom>
-                      Age
-                    </Typography>
-                  </Grid>
-
-                  <Grid item sm={4}>
-                    <TextField
-                      id="filled-number"
-                      style={{ width: 60 }}
-                      label="Feet"
-                      value={this.state.age}
-                      type="number"
-                      className={classes.textField}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      margin="normal"
-                      variant="filled"
-                    />
-                    <TextField
-                      id="filled-number"
-                      style={{ width: 60 }}
-                      label="Inches"
-                      value={this.state.age}
-                      type="number"
-                      className={classes.textField}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      margin="normal"
-                      variant="filled"
-                    />
-                    <br />
-                    <TextField
-                      id="filled-number"
-                      style={{ width: 60 }}
-                      label="Years"
-                      value={this.state.age}
-                      type="number"
-                      className={classes.textField}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      margin="normal"
-                      variant="filled"
-                    />
-                  </Grid>
-
-                  <Grid item sm={2}>
-                    <Typography
-                      style={{ paddingTop: 17 }}
-                      variant="body1"
-                      gutterBottom
-                    >
-                      Weight
-                    </Typography>
-                    <br />
-                    <br />
-                    <Typography variant="body1" gutterBottom>
-                      Gender
-                    </Typography>
-                  </Grid>
-                  <Grid item sm={4}>
-                    <TextField
-                      id="filled-number"
-                      style={{ width: 60 }}
-                      label="Pounds"
-                      value={this.state.age}
-                      type="number"
-                      className={classes.textField}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      margin="normal"
-                      variant="filled"
-                    />
-                    <br />
-                    <FormControl>
-                      <RadioGroup
-                        style={{ fontSize: 8 }}
-                        row
-                        aria-label="Gender"
-                        name="gender1"
-                      >
-                        <FormControlLabel
-                          value="female"
-                          control={<Radio />}
-                          label="f"
-                        />
-                        <FormControlLabel
-                          value="male"
-                          control={<Radio style={{ fontSize: 8 }} />}
-                          label="m"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item sm={12}>
-                    <Divider style={{ margin: "16px 0px" }} variant="middle" />
-                    <Typography inline variant="body1" gutterBottom>
-                      Activity Level
-                    </Typography>
-                    <NativeSelect
-                      style={{ marginLeft: 18, width: 360 }}
-                      input={<Input />}
-                    >
-                      <option>sedentary (little or no exercise)</option>
-                      <option>
-                        lightly active (light exercise/sports 1-3 days/week)
-                      </option>
-                      <option>
-                        moderatetely active (moderate exercise/sports 3-5
-                        days/week)
-                      </option>
-                      <option>
-                        very active (hard exercise/sports 6-7 days a week)
-                      </option>
-                      <option>
-                        extra active (very hard exercise/sports & physical job
-                        or 2x training)
-                      </option>
-                    </NativeSelect>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item sm={12}>
-                    <Divider style={{ margin: "16px 0px" }} variant="middle" />
-                    <Typography inline variant="body1" gutterBottom>
-                      Objective
-                    </Typography>
-                    <FormControl>
-                      <RadioGroup
-                        style={{ marginTop: -13, marginLeft: 40 }}
-                        row
-                        aria-label="Objective"
-                        name="objective"
-                      >
-                        <FormControlLabel
-                          value="weightGain"
-                          control={<Radio />}
-                          label="Weight Gain"
-                        />
-                        <FormControlLabel
-                          value="weightLoss"
-                          control={<Radio />}
-                          label="Weight Loss"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item sm={6}>
-              <Paper style={{ height: 300 }} className={classes.paper}>
-                <h2 className={classes.panelHeader}>User</h2>
-              </Paper>
-            </Grid> */}
             <Grid item sm={12}>
               <Paper className={classes.paper}>
                 <Typography
@@ -442,7 +268,7 @@ class Settings extends Component {
             </Grid>
           </Grid>
         </Grid>
-      </React.Fragment>
+      </div>
     );
   }
 }
