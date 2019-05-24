@@ -12,7 +12,6 @@ import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import auth from "../firebase";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import landingBG from "../images/landingBG.jpg";
 import { css, cx } from "emotion";
@@ -50,6 +49,15 @@ const emotionClasses = {
     top: 32,
     right: 29,
     fontSize: "4rem"
+  },
+  footer: {
+    // position: "fixed",
+    // bottom: 0,
+    // zIndex: -1000,
+    // height: 350,
+    // width: "100%",
+    // color: "white",
+    // background: "red"
   }
 };
 
@@ -124,6 +132,7 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column"
   },
+  fitness: {},
   exampleBtn: {
     width: 128,
     height: 128,
@@ -498,64 +507,46 @@ class SignIn extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Grid container className={classes.background} justify="center">
-        <Grid container className={classes.demo}>
-          <Grid item sm={6}>
-            <div className={classes.logo}>
-              <Typography className={classes.title} variant="h1">
-                Phit
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item sm={6}>
-            <main className={classes.main}>
-              <CssBaseline />
-              <Paper className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                  <LockOutlinedIcon />
-                </Avatar>
-                <Typography
-                  component="h1"
-                  variant="h5"
-                  style={{ fontFamily: "Lobster" }}
-                >
-                  Sign In
+      <div style={{ marginBottom: 350 }}>
+        <Grid
+          container
+          className={classes.background}
+          justify="center"
+          style={{ zIndex: 9001 }}
+        >
+          <Grid container className={classes.demo}>
+            <Grid item sm={6}>
+              <div className={classes.logo}>
+                <Typography className={classes.title} variant="h1">
+                  Phit
                 </Typography>
-                <form className={classes.form}>
-                  <FormControl margin="normal" required fullWidth>
-                    <InputLabel htmlFor="email">Email Address</InputLabel>
-                    <Input
-                      id="email"
-                      value={this.state.email}
-                      onChange={this.handleChange}
-                      name="email"
-                      autoComplete="email"
-                      autoFocus
-                    />
-                    <div
-                      style={{
-                        color: "red",
-                        paddingTop: 10,
-                        fontFamily: "Helvetica",
-                        fontSize: 12,
-                        textAlign: "center"
-                      }}
-                    >
-                      {this.state.errors}
-                    </div>
-                  </FormControl>
-                  <FormControl margin="normal" required fullWidth>
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input
-                      name="password"
-                      type="password"
-                      id="password"
-                      value={this.state.password}
-                      onChange={this.handleChange}
-                      autoComplete="current-password"
-                    />
-                    {this.state.password.length < 6 &&
-                    this.state.password.length > 0 ? (
+              </div>
+            </Grid>
+            <Grid item sm={6}>
+              <main className={classes.main}>
+                <CssBaseline />
+                <Paper className={classes.paper}>
+                  <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                  </Avatar>
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    style={{ fontFamily: "Lobster" }}
+                  >
+                    Sign In
+                  </Typography>
+                  <form className={classes.form}>
+                    <FormControl margin="normal" required fullWidth>
+                      <InputLabel htmlFor="email">Email Address</InputLabel>
+                      <Input
+                        id="email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                      />
                       <div
                         style={{
                           color: "red",
@@ -565,143 +556,228 @@ class SignIn extends React.Component {
                           textAlign: "center"
                         }}
                       >
-                        Password Must Be at Least 6 Characters
+                        {this.state.errors}
                       </div>
-                    ) : (
-                      ""
-                    )}
-                  </FormControl>
-                  <Grid container spacing={8}>
-                    <Grid item sm={12} md={6}>
-                      <Button
-                        onClick={this.createAccount}
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        Create Account
-                      </Button>
+                    </FormControl>
+                    <FormControl margin="normal" required fullWidth>
+                      <InputLabel htmlFor="password">Password</InputLabel>
+                      <Input
+                        name="password"
+                        type="password"
+                        id="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                        autoComplete="current-password"
+                      />
+                      {this.state.password.length < 6 &&
+                      this.state.password.length > 0 ? (
+                        <div
+                          style={{
+                            color: "red",
+                            paddingTop: 10,
+                            fontFamily: "Helvetica",
+                            fontSize: 12,
+                            textAlign: "center"
+                          }}
+                        >
+                          Password Must Be at Least 6 Characters
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </FormControl>
+                    <Grid container spacing={8}>
+                      <Grid item sm={12} md={6}>
+                        <Button
+                          onClick={this.createAccount}
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          Create Account
+                        </Button>
+                      </Grid>
+                      <Grid item sm={12} md={6}>
+                        <Button
+                          onClick={this.signIn}
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          Sign In
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item sm={12} md={6}>
-                      <Button
-                        onClick={this.signIn}
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        Sign In
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </form>
+                  </form>
+                </Paper>
+              </main>
+            </Grid>
+          </Grid>
+          {/* Calorie & phitlosophy */}
+          <Grid container className={classes.featureContainer} spacing={32}>
+            <Grid item sm={6}>
+              <Typography
+                variant="h3"
+                style={{ textAlign: "center", marginTop: "calc(65% - 170px)" }}
+              >
+                The <span style={{ fontFamily: "lobster" }}>Phit</span>{" "}
+                Philosophy
+              </Typography>
+              <Typography variant="body1" style={{ padding: 20 }}>
+                {/* Tired of going through 100 screens before being able to utilize
+                your fitness app? Sick of vague directions about how to store
+                your favorite workouts & meals? Discouraged bby how difficult it
+                is to keep trac of yourr progress? So were we. That's why we
+                created{" "}
+                <span style={{ color: "#f06292", fontFamily: "lobster" }}>
+                  Phit.
+                </span>{" "}
+                Designied to be{" "}
+                <span style={{ color: "#f06292" }}>intuitive</span> first, while
+                maintaining a high level of{" "}
+                <span style={{ color: "#f06292" }}>customization</span> to track
+                the perfect amount of data for you. */}
+                Designied to be{" "}
+                <span style={{ color: "#f06292" }}>intuitive</span>, while
+                maintaining a high level of{" "}
+                <span style={{ color: "#f06292" }}>customization</span>, Phit
+                differentiates itself from similar applications by streamlining
+                the aspects of nutrition and fitness tracking that matter most.
+              </Typography>
+            </Grid>
+            <Grid item sm={6} className={classes.calorie}>
+              <Typography variant="h5" style={{ textAlign: "center" }}>
+                Take the frustration out of calorie counting
+              </Typography>
+              <Paper style={{ padding: "20px", margin: "30px 0" }}>
+                <LandingChart
+                  data={this.state.exampleData}
+                  options={this.state.options}
+                  isPie={this.state.isPie}
+                />
               </Paper>
-            </main>
+              <div className={classes.btnContainer}>
+                <div>
+                  <div
+                    className={css(emotionClasses.exampleBtn)}
+                    style={{ backgroundColor: "#81C0AD" }}
+                    id="ex1"
+                    onClick={this.handleExampleClick}
+                  >
+                    <FontAwesome
+                      name="utensils"
+                      size="2x"
+                      style={emotionClasses.exampleIcon}
+                    />
+                  </div>
+                  <Typography
+                    variant="overline"
+                    className={classes.exampleText}
+                  >
+                    Example 1
+                  </Typography>
+                  <Typography variant="caption" style={{ textAlign: "center" }}>
+                    Weekly Calorie Tracking
+                  </Typography>
+                </div>
+                <div>
+                  <div
+                    className={css(emotionClasses.exampleBtn)}
+                    style={{ backgroundColor: "#BA7D8F" }}
+                    id="ex2"
+                    onClick={this.handleExampleClick}
+                  >
+                    <FontAwesome
+                      name="running"
+                      size="2x"
+                      style={emotionClasses.exampleIcon}
+                    />
+                  </div>
+                  <Typography
+                    variant="overline"
+                    className={classes.exampleText}
+                  >
+                    Example 2
+                  </Typography>
+                  <Typography variant="caption" style={{ textAlign: "center" }}>
+                    Weekly Cardio Progress
+                  </Typography>
+                </div>
+                <div>
+                  <div
+                    className={css(emotionClasses.exampleBtn)}
+                    style={{ backgroundColor: "#D3AE75" }}
+                    id="ex3"
+                    onClick={this.handleExampleClick}
+                  >
+                    <FontAwesome
+                      name="chart-pie"
+                      size="2x"
+                      style={emotionClasses.pieIcon}
+                    />
+                  </div>
+                  <Typography
+                    variant="overline"
+                    className={classes.exampleText}
+                  >
+                    Example 3
+                  </Typography>
+                  <Typography variant="caption" style={{ textAlign: "center" }}>
+                    Daily Macros
+                  </Typography>
+                </div>
+              </div>
+            </Grid>
+          </Grid>
+          {/* Fitness Section */}
+          <Grid
+            style={{ marginTop: 100, marginBottom: 350 }}
+            container
+            className={classes.demo}
+          >
+            <Grid item sm={12}>
+              <Typography variant="h5" style={{ textAlign: "center" }}>
+                Weekend warrior or full-time phitness guru
+              </Typography>
+            </Grid>
+            <Grid item sm={4}>
+              <img src="https://via.placeholder.com/400x250" />
+              <Typography variant="overline" className={classes.exampleText}>
+                Logging exercises & saving them
+              </Typography>
+            </Grid>
+            <Grid item sm={4}>
+              <img src="https://via.placeholder.com/400x250" />
+              <Typography variant="overline" className={classes.exampleText}>
+                Logging exercises & saving them
+              </Typography>
+            </Grid>
+            <Grid item sm={4}>
+              <img src="https://via.placeholder.com/400x250" />
+              <Typography variant="overline" className={classes.exampleText}>
+                Logging exercises & saving them
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid
+            className={classes.footer}
+            style={{
+              position: "fixed",
+              bottom: 0,
+              zIndex: -1,
+              height: 350,
+              width: "100%",
+              color: "white",
+              background: "red"
+            }}
+          >
+            &copy; {new Date().getFullYear()}
           </Grid>
         </Grid>
-        {/* Calorie & phitlosophy */}
-        <Grid container className={classes.featureContainer} spacing={32}>
-          <Grid item sm={6}>
-            <Typography
-              variant="h3"
-              style={{ textAlign: "center", marginTop: "calc(65% - 170px)" }}
-            >
-              The <span style={{ fontFamily: "lobster" }}>Phit</span> Philosophy
-            </Typography>
-            <Typography variant="body1" style={{ padding: 20 }}>
-              Some text about how all individuals are different. As such,
-              nutrition & exercise needs differ from person to person. Designied
-              to be <span style={{ color: "#f06292" }}>intuitive</span> first,
-              while maintaining a high level of
-              <span style={{ color: "#f06292" }}>customization</span> to track
-              the perfect amount of data for you.{" "}
-            </Typography>
-          </Grid>
-          <Grid item sm={6} className={classes.calorie}>
-            <Typography variant="h5" style={{ textAlign: "center" }}>
-              Take the frustration out of calorie counting
-            </Typography>
-            <Paper style={{ padding: "20px", margin: "30px 0" }}>
-              <LandingChart
-                data={this.state.exampleData}
-                options={this.state.options}
-                isPie={this.state.isPie}
-              />
-            </Paper>
-            <div className={classes.btnContainer}>
-              <div>
-                <div
-                  className={css(emotionClasses.exampleBtn)}
-                  style={{ backgroundColor: "#81C0AD" }}
-                  id="ex1"
-                  onClick={this.handleExampleClick}
-                >
-                  <FontAwesome
-                    name="utensils"
-                    size="2x"
-                    style={emotionClasses.exampleIcon}
-                  />
-                </div>
-                <Typography variant="overline" className={classes.exampleText}>
-                  Example 1
-                </Typography>
-                <Typography variant="caption" style={{ textAlign: "center" }}>
-                  Weekly Calorie Tracking
-                </Typography>
-              </div>
-              <div>
-                <div
-                  className={css(emotionClasses.exampleBtn)}
-                  style={{ backgroundColor: "#BA7D8F" }}
-                  id="ex2"
-                  onClick={this.handleExampleClick}
-                >
-                  <FontAwesome
-                    name="running"
-                    size="2x"
-                    style={emotionClasses.exampleIcon}
-                  />
-                </div>
-                <Typography variant="overline" className={classes.exampleText}>
-                  Example 2
-                </Typography>
-                <Typography variant="caption" style={{ textAlign: "center" }}>
-                  Weekly Cardio Progress
-                </Typography>
-              </div>
-              <div>
-                <div
-                  className={css(emotionClasses.exampleBtn)}
-                  style={{ backgroundColor: "#D3AE75" }}
-                  id="ex3"
-                  onClick={this.handleExampleClick}
-                >
-                  <FontAwesome
-                    name="chart-pie"
-                    size="2x"
-                    style={emotionClasses.pieIcon}
-                  />
-                </div>
-                <Typography variant="overline" className={classes.exampleText}>
-                  Example 3
-                </Typography>
-                <Typography variant="caption" style={{ textAlign: "center" }}>
-                  Daily Macros
-                </Typography>
-              </div>
-            </div>
-          </Grid>
-        </Grid>
-        <Grid style={{ marginTop: 100 }} container className={classes.demo}>
-          <Grid item sm={12}>
-            <Typography variant="h5" style={{ textAlign: "center" }}>
-              Weekend warroir or full-time phitness guru
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
+      </div>
     );
   }
 }
