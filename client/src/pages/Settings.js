@@ -17,18 +17,21 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
-  demo: {
-    [theme.breakpoints.up("lg")]: {
-      width: 1170
-    }
-  },
   margin: {
     margin: theme.spacing.unit
   },
   button: {
     margin: theme.spacing.unit
+  },
+  drawerBackground: {
+    backgroundColor: theme.palette.background.default,
+    width: "100%",
+    height: "100vh",
+    overflow: "hidden",
+    padding: 14
   },
   input: {
     display: "none"
@@ -38,6 +41,11 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     marginTop: 0,
     width: 68
+  },
+  themeButton: {
+    width: 100,
+    marginRight: 5,
+    marginBottom: 5
   },
   container: {
     display: "grid",
@@ -84,13 +92,47 @@ class Settings extends Component {
     const { classes } = this.props;
 
     return (
-      <div style={{ width: 500 }}>
+      <div className={classes.drawerBackground}>
         <CssBaseline />
         <Grid container justify="center">
           <Grid spacing={8} container style={{ width: 1170 }}>
             <Typography className={classes.panelName} variant="h3" gutterBottom>
               Settings
             </Typography>
+            <Grid item sm={12}>
+              <Paper className={classes.paper}>
+                <Typography
+                  component="h1"
+                  className={classes.panelHeader}
+                  color="secondary"
+                >
+                  User
+                </Typography>
+
+                <Grid style={{ flexGrow: 1 }} item sm={12}>
+                  <Typography
+                    style={{ marginRight: 15 }}
+                    inline
+                    variant="body1"
+                    gutterBottom
+                  >
+                    {this.props.currentUser}
+                  </Typography>
+                  <FormControl>
+                    <Button
+                      variant="contained"
+                      style={{ marginLeft: 8 }}
+                      color="secondary"
+                      component={Link}
+                      to="/"
+                      onClick={this.props.signOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </FormControl>
+                </Grid>
+              </Paper>
+            </Grid>
             <Grid item sm={12}>
               <Paper className={classes.paper}>
                 <Typography
@@ -110,54 +152,54 @@ class Settings extends Component {
                   >
                     Theme
                   </Typography>
-                  <Button
-                    style={{
-                      width: 100,
-                      marginRight: 5,
-                      color: "#fff",
-                      backgroundColor: "#f06292"
-                    }}
-                    variant="contained"
-                    onClick={this.props.pinkTheme}
-                  >
-                    Pink
-                  </Button>
-                  <Button
-                    style={{
-                      width: 100,
-                      marginRight: 5,
-                      color: "rgba(0, 0, 0, 0.87)",
-                      backgroundColor: "#ff8a65"
-                    }}
-                    variant="contained"
-                    onClick={this.props.orangeTheme}
-                  >
-                    Orange
-                  </Button>
-                  <Button
-                    style={{
-                      width: 100,
-                      marginRight: 5,
-                      color: "rgba(0, 0, 0, 0.87)",
-                      backgroundColor: "#0097a7"
-                    }}
-                    variant="contained"
-                    onClick={this.props.cyanTheme}
-                  >
-                    Cyan
-                  </Button>
-                  <Button
-                    style={{
-                      width: 100,
-                      marginRight: 5,
-                      color: "rgba(0, 0, 0, 0.87)",
-                      backgroundColor: "#d4d4dc"
-                    }}
-                    variant="contained"
-                    onClick={this.props.greyTheme}
-                  >
-                    Grey
-                  </Button>
+                  <FormControl>
+                    <Button
+                      className={classes.themeButton}
+                      style={{
+                        color: "#fff",
+                        backgroundColor: "#f06292"
+                      }}
+                      variant="contained"
+                      onClick={this.props.pinkTheme}
+                    >
+                      Pink
+                    </Button>
+                    <Button
+                      className={classes.themeButton}
+                      style={{
+                        color: "rgba(0, 0, 0, 0.87)",
+                        backgroundColor: "#ff8a65"
+                      }}
+                      variant="contained"
+                      onClick={this.props.orangeTheme}
+                    >
+                      Orange
+                    </Button>
+                  </FormControl>
+                  <FormControl>
+                    <Button
+                      className={classes.themeButton}
+                      style={{
+                        color: "rgba(0, 0, 0, 0.87)",
+                        backgroundColor: "#0097a7"
+                      }}
+                      variant="contained"
+                      onClick={this.props.cyanTheme}
+                    >
+                      Cyan
+                    </Button>
+                    <Button
+                      className={classes.themeButton}
+                      style={{
+                        color: "rgba(0, 0, 0, 0.87)",
+                        backgroundColor: "#d4d4dc"
+                      }}
+                      variant="contained"
+                      onClick={this.props.greyTheme}
+                    >
+                      Grey
+                    </Button>
+                  </FormControl>
                   <br />
                   <Typography inline variant="body1" gutterBottom>
                     Toggle Dark Mode
@@ -178,7 +220,7 @@ class Settings extends Component {
                   className={classes.panelHeader}
                   color="secondary"
                 >
-                  General
+                  Dashboard
                 </Typography>
                 <Grid container>
                   <Grid item sm={6}>

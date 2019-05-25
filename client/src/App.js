@@ -316,6 +316,16 @@ class App extends Component {
                             theme={this.state.theme}
                             xlNut={this.state.xlNut}
                             signOut={this.signOut}
+                            handleSettingsChange={this.handleSettingsChange}
+                            topPanel={this.state.topPanel}
+                            orangeTheme={this.theme}
+                            pinkTheme={this.pinkTheme}
+                            greyTheme={this.greyTheme}
+                            cyanTheme={this.cyanTheme}
+                            switchUp={this.switchUp}
+                            theme={this.state.theme}
+                            xlNut={this.state.xlNut}
+                            xlFit={this.state.xlFit}
                           />
                         ) : (
                           <Landing />

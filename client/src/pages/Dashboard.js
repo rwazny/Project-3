@@ -7,7 +7,6 @@ import FitnessPanel from "../components/panels/FitnessPanel";
 import NutritionPanel from "../components/panels/NutritionPanel";
 
 // Material UI imports
-import { Link } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -47,12 +46,7 @@ class Dashboard extends Component {
       <React.Fragment>
         <CssBaseline />
 
-        <AppBar
-          style={{
-            transition: "background-color 0.5s"
-          }}
-          position="static"
-        >
+        <AppBar position="static">
           <ToolBar
             style={{
               justifyContent: "space-between"
@@ -65,34 +59,17 @@ class Dashboard extends Component {
             >
               Phit
             </Typography>
-
-            {this.state.user ? (
-              <Tabs value={0} onChange={this.handleChange} centered>
-                <Tab
-                  icon={<SettingsIcon />}
-                  label="Settings"
-                  onClick={this.toggleSettings("right", true)}
-                />
-              </Tabs>
-            ) : null}
-            {this.state.user ? (
-              <div>
-                <Typography inline variant="body1" color="inherit">
-                  Welcome, {this.state.user.email}!
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  style={{ marginLeft: 8 }}
-                  color="secondary"
-                  component={Link}
-                  to="/"
-                  onClick={this.props.signOut}
-                >
-                  Sign Out
-                </Button>
-              </div>
-            ) : null}
+            <div>
+              {this.state.user ? (
+                <Tabs value={0} onChange={this.handleChange} centered>
+                  <Tab
+                    icon={<SettingsIcon />}
+                    label={this.state.user.email}
+                    onClick={this.toggleSettings("right", true)}
+                  />
+                </Tabs>
+              ) : null}
+            </div>
           </ToolBar>
         </AppBar>
 
@@ -136,11 +113,15 @@ class Dashboard extends Component {
             // onClick={this.toggleSettings("right", false)}
             // onKeyDown={this.toggleSettings("right", false)}
           >
-            <div style={{ width: 700 }}>
+            <div style={{ width: 350 }}>
               <Settings
-                handleSettingsChange={this.handleSettingsChange}
+                currentUser={
+                  this.state.user ? this.state.user.email : "no user"
+                }
+                signOut={this.props.signOut}
+                handleSettingsChange={this.props.handleSettingsChange}
                 topPanel={this.props.topPanel}
-                orangeTheme={this.theme}
+                orangeTheme={this.props.orangeTheme}
                 pinkTheme={this.props.pinkTheme}
                 greyTheme={this.props.greyTheme}
                 cyanTheme={this.props.cyanTheme}
