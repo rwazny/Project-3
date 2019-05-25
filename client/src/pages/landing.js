@@ -12,12 +12,12 @@ import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import auth from "../firebase";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import landingBG from "../images/landingBG.jpg";
 import { css, cx } from "emotion";
 import FontAwesome from "react-fontawesome";
 import LandingChart from "../components/LandingChart";
+import Showcase from "../components/Showcase";
 
 const emotionClasses = {
   exampleBtn: {
@@ -124,6 +124,7 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column"
   },
+  fitness: {},
   exampleBtn: {
     width: 128,
     height: 128,
@@ -140,6 +141,15 @@ const styles = theme => ({
   btnContainer: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  footer: {
+    position: "fixed !important",
+    bottom: 0,
+    zIndex: -1000,
+    height: 350,
+    width: "100%",
+    color: "white",
+    background: "red"
   }
 });
 
@@ -498,7 +508,12 @@ class SignIn extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Grid container className={classes.background} justify="center">
+      <Grid
+        container
+        className={classes.background}
+        justify="center"
+        style={{ zIndex: 9001 }}
+      >
         <Grid container className={classes.demo}>
           <Grid item sm={6}>
             <div className={classes.logo}>
@@ -611,17 +626,30 @@ class SignIn extends React.Component {
               The <span style={{ fontFamily: "lobster" }}>Phit</span> Philosophy
             </Typography>
             <Typography variant="body1" style={{ padding: 20 }}>
-              Some text about how all individuals are different. As such,
-              nutrition & exercise needs differ from person to person. Designied
-              to be <span style={{ color: "#f06292" }}>intuitive</span> first,
-              while maintaining a high level of
-              <span style={{ color: "#f06292" }}>customization</span> to track
-              the perfect amount of data for you.{" "}
+              {/* Tired of going through 100 screens before being able to utilize
+                your fitness app? Sick of vague directions about how to store
+                your favorite workouts & meals? Discouraged bby how difficult it
+                is to keep trac of yourr progress? So were we. That's why we
+                created{" "}
+                <span style={{ color: "#f06292", fontFamily: "lobster" }}>
+                  Phit.
+                </span>{" "}
+                Designied to be{" "}
+                <span style={{ color: "#f06292" }}>intuitive</span> first, while
+                maintaining a high level of{" "}
+                <span style={{ color: "#f06292" }}>customization</span> to track
+                the perfect amount of data for you. */}
+              Designied to be{" "}
+              <span style={{ color: "#f06292" }}>intuitive</span>, while
+              maintaining a high level of{" "}
+              <span style={{ color: "#f06292" }}>customization</span>, Phit
+              differentiates itself from similar applications by streamlining
+              the aspects of nutrition and fitness tracking that matter most.
             </Typography>
           </Grid>
           <Grid item sm={6} className={classes.calorie}>
             <Typography variant="h5" style={{ textAlign: "center" }}>
-              Take the frustration out of calorie counting
+              Tracking your progress made simple
             </Typography>
             <Paper style={{ padding: "20px", margin: "30px 0" }}>
               <LandingChart
@@ -694,13 +722,51 @@ class SignIn extends React.Component {
             </div>
           </Grid>
         </Grid>
-        <Grid style={{ marginTop: 100 }} container className={classes.demo}>
-          <Grid item sm={12}>
-            <Typography variant="h5" style={{ textAlign: "center" }}>
-              Weekend warroir or full-time phitness guru
-            </Typography>
+        {/* Fitness Section */}
+        <div
+          style={{
+            background: "#292929",
+            width: "-webkit-fill-available",
+            display: "flex",
+            justifyContent: " center",
+            paddingTop: 50,
+            marginTop: 50
+          }}
+        >
+          <Grid
+            style={{ marginTop: 100, marginBottom: 350 }}
+            container
+            className={classes.demo}
+            style={{ zIndex: 100 }}
+          >
+            <Grid item sm={12}>
+              <Typography
+                variant="h2"
+                style={{
+                  textAlign: "center",
+                  fontFamily: "lobster"
+                }}
+              >
+                <span
+                  style={{
+                    color: "#74d6c8",
+                    textShadow: "1px 3px 4px hsla(0, 0%, 0%, 0.49)"
+                  }}
+                >
+                  Easy to use
+                </span>{" "}
+                design & features
+              </Typography>
+
+              <Showcase header="Create and save workouts" body="flavor text" />
+              <Showcase header="Create and save meals" body="tasty text" left />
+              <Showcase
+                header="Customize your dashboard"
+                body="lots of upbeat fun text"
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </div>
       </Grid>
     );
   }
