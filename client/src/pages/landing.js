@@ -729,7 +729,7 @@ class SignIn extends React.Component {
             width: "-webkit-fill-available",
             display: "flex",
             justifyContent: " center",
-            paddingTop: 50,
+            padding: "50px 0",
             marginTop: 50
           }}
         >
@@ -758,14 +758,28 @@ class SignIn extends React.Component {
                 design & features
               </Typography>
 
-              <Showcase header="Create and save workouts" body="flavor text" />
-              <Showcase header="Create and save meals" body="tasty text" left />
               <Showcase
+                background="#ba7d8f"
+                header="Create and save workouts"
+                body="Both regular workouts and that one day you felt like changing it up can easily be added. See your progress report updated instantly."
+                workout
+              />
+              <Showcase
+                background="#81c0ad"
+                header="Create and save meals"
+                body="All your favorite meals can be loaded up and saved with just a couple of clicks. Want to change the serving size or add some food? No problem!"
+                left
+              />
+              <Showcase
+                background="#d3ae75"
                 header="Customize your dashboard"
-                body="lots of upbeat fun text"
+                body="Your look, your layout. Change your panels, theme, and sizing to whatever fits your current goals. Whenever you want to change it, click a few buttons and you're done."
               />
             </Grid>
           </Grid>
+        </div>
+        <div style={{ padding: 50 }}>
+          <Typography variant="body2">Copyright Phit Boyz</Typography>
         </div>
       </Grid>
     );
