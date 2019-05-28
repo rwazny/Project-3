@@ -779,7 +779,9 @@ class SignIn extends React.Component {
           </Grid>
         </div>
         <div style={{ padding: 50 }}>
-          <Typography variant="body2">Copyright Phit Boyz</Typography>
+          <Typography variant="body2">
+            &copy; {new Date().getFullYear()} Phit Boyz
+          </Typography>
         </div>
       </Grid>
     );

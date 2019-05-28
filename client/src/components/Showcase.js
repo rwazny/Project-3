@@ -30,7 +30,12 @@ const classes = {
     flex-direction: column;
     justify-content: center;
     width: -webkit-fill-available;
-    padding: 0px 80px;
+    padding: 74px;
+    margin: 30px;
+    background: #00000030;
+    border-radius: 4px;
+    box-shadow: 2px 4px 8px #00000063;
+    text-shadow: 1px 1px 2px #0000008a;
   `,
   gifDiv: css`
     width: 740px;
