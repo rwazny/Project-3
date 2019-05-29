@@ -9,8 +9,6 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import API from "../utils/API";
 
-let suggestions = [];
-
 let value = "te";
 
 const styles = theme => ({
@@ -170,7 +168,8 @@ class IntegrationReactSelect extends React.Component {
   state = {
     single: null,
     multi: null,
-    value: 0
+    value: 0,
+    suggestions: []
   };
 
   constructor(props) {
@@ -191,7 +190,7 @@ class IntegrationReactSelect extends React.Component {
 
   updateDropdownSuggestions = () => {
     API.getMealNames(localStorage.userId).then(res => {
-      suggestions = [];
+      let suggestions = [];
       if (res.data.length) {
         for (let i = 0; i < res.data.length; i++) {
           for (let j = 0; j < res.data[i].meal.length; j++) {
@@ -210,6 +209,8 @@ class IntegrationReactSelect extends React.Component {
           label: suggestion.label,
           value: suggestion.value
         }));
+
+        this.setState({ suggestions });
       }
     });
   };
@@ -241,7 +242,7 @@ class IntegrationReactSelect extends React.Component {
           <Select
             classes={classes}
             styles={selectStyles}
-            options={suggestions}
+            options={this.state.suggestions}
             components={components}
             value={this.state.single}
             onChange={this.handleChange("single")}

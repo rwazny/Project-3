@@ -285,11 +285,7 @@ function FitnessTracker(props) {
           <Button
             variant="contained"
             style={{ float: "right" }}
-            // size="small"
             color="secondary"
-            disabled={
-              !props.resistanceToAdd.length && !props.cardioToAdd.length
-            }
             onClick={props.saveDay}
             className={classes.button}
           >
