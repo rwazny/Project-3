@@ -286,6 +286,22 @@ class SignIn extends React.Component {
                 labels: {
                   show: true
                 }
+              },
+              {
+                ticks: {
+                  beginAtZero: true,
+                  fontColor: "white"
+                },
+                type: "linear",
+                display: true,
+                position: "left",
+                id: "y-axis-1",
+                gridLines: {
+                  display: false
+                },
+                labels: {
+                  show: false
+                }
               }
             ]
           },
@@ -353,7 +369,7 @@ class SignIn extends React.Component {
                   display: false
                 },
                 ticks: {
-                  fontColor: this.props.textColor
+                  fontColor: "white"
                 }
               }
             ],
@@ -361,7 +377,7 @@ class SignIn extends React.Component {
               {
                 ticks: {
                   beginAtZero: true,
-                  fontColor: this.props.textColor
+                  fontColor: "white"
                 },
                 type: "linear",
                 display: true,
@@ -377,7 +393,7 @@ class SignIn extends React.Component {
               {
                 ticks: {
                   beginAtZero: true,
-                  fontColor: this.props.textColor
+                  fontColor: "white"
                 },
                 type: "linear",
                 display: true,
@@ -394,7 +410,7 @@ class SignIn extends React.Component {
           },
           legend: {
             labels: {
-              fontColor: this.props.textColor
+              fontColor: "white"
             },
             position: "bottom"
           }
@@ -423,24 +439,6 @@ class SignIn extends React.Component {
                 display: false,
                 gridLines: {
                   display: false
-                }
-              }
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
-                  fontColor: "white"
-                },
-                type: "linear",
-                display: false,
-                position: "left",
-                id: "y-axis-1",
-                gridLines: {
-                  display: false
-                },
-                labels: {
-                  show: true
                 }
               }
             ]
@@ -626,19 +624,6 @@ class SignIn extends React.Component {
               The <span style={{ fontFamily: "lobster" }}>Phit</span> Philosophy
             </Typography>
             <Typography variant="body1" style={{ padding: 20 }}>
-              {/* Tired of going through 100 screens before being able to utilize
-                your fitness app? Sick of vague directions about how to store
-                your favorite workouts & meals? Discouraged bby how difficult it
-                is to keep trac of yourr progress? So were we. That's why we
-                created{" "}
-                <span style={{ color: "#f06292", fontFamily: "lobster" }}>
-                  Phit.
-                </span>{" "}
-                Designied to be{" "}
-                <span style={{ color: "#f06292" }}>intuitive</span> first, while
-                maintaining a high level of{" "}
-                <span style={{ color: "#f06292" }}>customization</span> to track
-                the perfect amount of data for you. */}
               Designied to be{" "}
               <span style={{ color: "#f06292" }}>intuitive</span>, while
               maintaining a high level of{" "}

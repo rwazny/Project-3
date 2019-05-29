@@ -9,8 +9,6 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import API from "../utils/API";
 
-let suggestions = [];
-
 const styles = theme => ({
   root: {
     // flexGrow: 1,
@@ -171,14 +169,15 @@ class WorkoutsDropdown extends React.Component {
   state = {
     single: null,
     multi: null,
-    value: 0
+    value: 0,
+    suggestions: []
   };
 
   componentDidMount = () => {
     this.updateDropdownSuggestions();
   };
 
-  componentDidUpdate = () => {
+  componentWillUpdate = () => {
     if (this.props.fetchDropdownData) {
       this.updateDropdownSuggestions();
     }
@@ -186,7 +185,7 @@ class WorkoutsDropdown extends React.Component {
 
   updateDropdownSuggestions = () => {
     API.findUserWorkOuts(localStorage.userId).then(res => {
-      suggestions = [];
+      let suggestions = [];
       if (res.data.length) {
         for (let i = 0; i < res.data[0].workouts.length; i++) {
           if (res.data[0].workouts[i].name) {
@@ -205,6 +204,9 @@ class WorkoutsDropdown extends React.Component {
           label: suggestion.label,
           value: suggestion.value
         }));
+
+        console.log(suggestions);
+        this.setState({ suggestions });
       }
     });
   };
@@ -236,7 +238,7 @@ class WorkoutsDropdown extends React.Component {
           <Select
             classes={classes}
             styles={selectStyles}
-            options={suggestions}
+            options={this.state.suggestions}
             components={components}
             value={this.state.single}
             onChange={this.handleChange("single")}

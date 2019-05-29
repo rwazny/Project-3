@@ -504,7 +504,7 @@ class NutritionPanel extends Component {
             handleLoadMealChange={this.handleLoadMealChange}
             mealToLoad={this.state.mealToLoad.label}
             classes={classes}
-            dropDownChange={this.dropDownChange}
+            fetchDropdownData={this.state.fetchDropdownData}
             value={this.state.value}
             handleChange={this.handleChange}
             mealsToAdd={this.state.mealsToAdd}
